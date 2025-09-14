@@ -1,0 +1,1215 @@
+GAS LISTING /tmp/ccnrE35E.s 			page 1
+
+
+   1              		.file	"syscall_c.c"
+   2              		.option nopic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.cfi_sections	.debug_frame
+   7              		.align	2
+   8              		.globl	mem_alloc
+  10              	mem_alloc:
+  11              	.LFB0:
+  12              		.file 1 "src/syscall_c.c"
+   1:src/syscall_c.c **** #include "../h/syscall_c.h"
+   2:src/syscall_c.c **** #include "../h/abi.h"
+   3:src/syscall_c.c **** #include "../lib/hw.h"
+   4:src/syscall_c.c **** #include "../h/memory_structs.h"
+   5:src/syscall_c.c **** #include "../lib/console.h"
+   6:src/syscall_c.c **** 
+   7:src/syscall_c.c **** 
+   8:src/syscall_c.c **** extern ThreadContext * getRunningThreadContext();
+   9:src/syscall_c.c **** extern int getWaitStatusForRunning();
+  10:src/syscall_c.c **** 
+  11:src/syscall_c.c **** void* mem_alloc(size_t size) {
+  13              		.loc 1 11 30
+  14              		.cfi_startproc
+  15              	.LVL0:
+  16 0000 130101FE 		addi	sp,sp,-32
+  17              		.cfi_def_cfa_offset 32
+  18 0004 233C1100 		sd	ra,24(sp)
+  19 0008 23388100 		sd	s0,16(sp)
+  20 000c 23349100 		sd	s1,8(sp)
+  21              		.cfi_offset 1, -8
+  22              		.cfi_offset 8, -16
+  23              		.cfi_offset 9, -24
+  24 0010 13040102 		addi	s0,sp,32
+  25              		.cfi_def_cfa 8, 0
+  12:src/syscall_c.c ****     size_t numOfBlocks = (size + sizeof(Header) + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE ;
+  26              		.loc 1 12 5
+  27              		.loc 1 12 66 is_stmt 0
+  28 0014 93047504 		addi	s1,a0,71
+  29              		.loc 1 12 12
+  30 0018 93D46400 		srli	s1,s1,6
+  31              	.LVL1:
+  13:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+  32              		.loc 1 13 5 is_stmt 1
+  33              		.loc 1 13 24 is_stmt 0
+  34 001c 97000000 		call	getRunningThreadContext
+  34      E7800000 
+  35              	.LVL2:
+  14:src/syscall_c.c ****     return (char*)abi_mem_alloc(t, numOfBlocks) + sizeof(Header);
+  36              		.loc 1 14 5 is_stmt 1
+  37              		.loc 1 14 19 is_stmt 0
+  38 0024 93850400 		mv	a1,s1
+  39 0028 97000000 		call	abi_mem_alloc
+  39      E7800000 
+  40              	.LVL3:
+  15:src/syscall_c.c **** }
+  41              		.loc 1 15 1
+GAS LISTING /tmp/ccnrE35E.s 			page 2
+
+
+  42 0030 13058500 		addi	a0,a0,8
+  43 0034 83308101 		ld	ra,24(sp)
+  44              		.cfi_restore 1
+  45 0038 03340101 		ld	s0,16(sp)
+  46              		.cfi_restore 8
+  47              		.cfi_def_cfa 2, 32
+  48 003c 83348100 		ld	s1,8(sp)
+  49              		.cfi_restore 9
+  50              	.LVL4:
+  51 0040 13010102 		addi	sp,sp,32
+  52              		.cfi_def_cfa_offset 0
+  53 0044 67800000 		jr	ra
+  54              		.cfi_endproc
+  55              	.LFE0:
+  57              		.align	2
+  58              		.globl	mem_free
+  60              	mem_free:
+  61              	.LFB1:
+  16:src/syscall_c.c **** int mem_free(void* ptr){
+  62              		.loc 1 16 24 is_stmt 1
+  63              		.cfi_startproc
+  64              	.LVL5:
+  17:src/syscall_c.c ****     if(!ptr) return 0;
+  65              		.loc 1 17 5
+  66              		.loc 1 17 7 is_stmt 0
+  67 0048 63020504 		beqz	a0,.L5
+  16:src/syscall_c.c **** int mem_free(void* ptr){
+  68              		.loc 1 16 24
+  69 004c 130101FE 		addi	sp,sp,-32
+  70              		.cfi_def_cfa_offset 32
+  71 0050 233C1100 		sd	ra,24(sp)
+  72 0054 23388100 		sd	s0,16(sp)
+  73 0058 23349100 		sd	s1,8(sp)
+  74              		.cfi_offset 1, -8
+  75              		.cfi_offset 8, -16
+  76              		.cfi_offset 9, -24
+  77 005c 13040102 		addi	s0,sp,32
+  78              		.cfi_def_cfa 8, 0
+  18:src/syscall_c.c ****     Header* header = (Header*)((char*)ptr - sizeof(Header));
+  79              		.loc 1 18 5 is_stmt 1
+  80              		.loc 1 18 13 is_stmt 0
+  81 0060 930485FF 		addi	s1,a0,-8
+  82              	.LVL6:
+  19:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+  83              		.loc 1 19 5 is_stmt 1
+  84              		.loc 1 19 24 is_stmt 0
+  85 0064 97000000 		call	getRunningThreadContext
+  85      E7800000 
+  86              	.LVL7:
+  20:src/syscall_c.c ****     return abi_mem_free(t, header);
+  87              		.loc 1 20 5 is_stmt 1
+  88              		.loc 1 20 12 is_stmt 0
+  89 006c 93850400 		mv	a1,s1
+  90 0070 97000000 		call	abi_mem_free
+  90      E7800000 
+  91              	.LVL8:
+  21:src/syscall_c.c **** }
+GAS LISTING /tmp/ccnrE35E.s 			page 3
+
+
+  92              		.loc 1 21 1
+  93 0078 83308101 		ld	ra,24(sp)
+  94              		.cfi_restore 1
+  95 007c 03340101 		ld	s0,16(sp)
+  96              		.cfi_restore 8
+  97              		.cfi_def_cfa 2, 32
+  98 0080 83348100 		ld	s1,8(sp)
+  99              		.cfi_restore 9
+ 100              	.LVL9:
+ 101 0084 13010102 		addi	sp,sp,32
+ 102              		.cfi_def_cfa_offset 0
+ 103 0088 67800000 		jr	ra
+ 104              	.LVL10:
+ 105              	.L5:
+  17:src/syscall_c.c ****     Header* header = (Header*)((char*)ptr - sizeof(Header));
+ 106              		.loc 1 17 21
+ 107 008c 13050000 		li	a0,0
+ 108              	.LVL11:
+ 109              		.loc 1 21 1
+ 110 0090 67800000 		ret
+ 111              		.cfi_endproc
+ 112              	.LFE1:
+ 114              		.align	2
+ 115              		.globl	thread_create
+ 117              	thread_create:
+ 118              	.LFB2:
+  22:src/syscall_c.c **** 
+  23:src/syscall_c.c **** int thread_create(thread_t* handle, void(*startRoutine)(void*), void* args)
+  24:src/syscall_c.c **** {
+ 119              		.loc 1 24 1 is_stmt 1
+ 120              		.cfi_startproc
+ 121              	.LVL12:
+ 122 0094 130101FD 		addi	sp,sp,-48
+ 123              		.cfi_def_cfa_offset 48
+ 124 0098 23341102 		sd	ra,40(sp)
+ 125 009c 23308102 		sd	s0,32(sp)
+ 126 00a0 233C9100 		sd	s1,24(sp)
+ 127 00a4 23382101 		sd	s2,16(sp)
+ 128 00a8 23343101 		sd	s3,8(sp)
+ 129 00ac 23304101 		sd	s4,0(sp)
+ 130              		.cfi_offset 1, -8
+ 131              		.cfi_offset 8, -16
+ 132              		.cfi_offset 9, -24
+ 133              		.cfi_offset 18, -32
+ 134              		.cfi_offset 19, -40
+ 135              		.cfi_offset 20, -48
+ 136 00b0 13040103 		addi	s0,sp,48
+ 137              		.cfi_def_cfa 8, 0
+ 138 00b4 13090500 		mv	s2,a0
+ 139 00b8 93890500 		mv	s3,a1
+ 140 00bc 130A0600 		mv	s4,a2
+  25:src/syscall_c.c ****     size_t numOfBlocks = (2 * DEFAULT_STACK_SIZE + sizeof(Header) + MEM_BLOCK_SIZE - 1) / MEM_BLOCK
+ 141              		.loc 1 25 5
+ 142              	.LVL13:
+  26:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+ 143              		.loc 1 26 5
+ 144              		.loc 1 26 24 is_stmt 0
+GAS LISTING /tmp/ccnrE35E.s 			page 4
+
+
+ 145 00c0 97000000 		call	getRunningThreadContext
+ 145      E7800000 
+ 146              	.LVL14:
+ 147 00c8 93040500 		mv	s1,a0
+ 148              	.LVL15:
+  27:src/syscall_c.c ****     void* result = abi_mem_alloc(t, numOfBlocks);
+ 149              		.loc 1 27 5 is_stmt 1
+ 150              		.loc 1 27 20 is_stmt 0
+ 151 00cc 93051008 		li	a1,129
+ 152 00d0 97000000 		call	abi_mem_alloc
+ 152      E7800000 
+ 153              	.LVL16:
+  28:src/syscall_c.c ****     void* stack = (char*)result + sizeof(Header);
+ 154              		.loc 1 28 5 is_stmt 1
+  29:src/syscall_c.c ****     void* stack_top = (char*)stack + 2*DEFAULT_STACK_SIZE;
+ 155              		.loc 1 29 5
+  30:src/syscall_c.c ****     return abi_thread_create(t, handle, startRoutine, args, stack_top);
+ 156              		.loc 1 30 5
+ 157              		.loc 1 30 12 is_stmt 0
+ 158 00d8 B7270000 		li	a5,8192
+ 159 00dc 93878700 		addi	a5,a5,8
+ 160 00e0 3307F500 		add	a4,a0,a5
+ 161 00e4 93060A00 		mv	a3,s4
+ 162 00e8 13860900 		mv	a2,s3
+ 163 00ec 93050900 		mv	a1,s2
+ 164 00f0 13850400 		mv	a0,s1
+ 165              	.LVL17:
+ 166 00f4 97000000 		call	abi_thread_create
+ 166      E7800000 
+ 167              	.LVL18:
+  31:src/syscall_c.c **** }
+ 168              		.loc 1 31 1
+ 169 00fc 83308102 		ld	ra,40(sp)
+ 170              		.cfi_restore 1
+ 171 0100 03340102 		ld	s0,32(sp)
+ 172              		.cfi_restore 8
+ 173              		.cfi_def_cfa 2, 48
+ 174 0104 83348101 		ld	s1,24(sp)
+ 175              		.cfi_restore 9
+ 176              	.LVL19:
+ 177 0108 03390101 		ld	s2,16(sp)
+ 178              		.cfi_restore 18
+ 179              	.LVL20:
+ 180 010c 83398100 		ld	s3,8(sp)
+ 181              		.cfi_restore 19
+ 182              	.LVL21:
+ 183 0110 033A0100 		ld	s4,0(sp)
+ 184              		.cfi_restore 20
+ 185              	.LVL22:
+ 186 0114 13010103 		addi	sp,sp,48
+ 187              		.cfi_def_cfa_offset 0
+ 188 0118 67800000 		jr	ra
+ 189              		.cfi_endproc
+ 190              	.LFE2:
+ 192              		.align	2
+ 193              		.globl	thread_exit
+ 195              	thread_exit:
+GAS LISTING /tmp/ccnrE35E.s 			page 5
+
+
+ 196              	.LFB3:
+  32:src/syscall_c.c **** 
+  33:src/syscall_c.c **** int thread_exit(){
+ 197              		.loc 1 33 18 is_stmt 1
+ 198              		.cfi_startproc
+ 199 011c 130101FF 		addi	sp,sp,-16
+ 200              		.cfi_def_cfa_offset 16
+ 201 0120 23341100 		sd	ra,8(sp)
+ 202 0124 23308100 		sd	s0,0(sp)
+ 203              		.cfi_offset 1, -8
+ 204              		.cfi_offset 8, -16
+ 205 0128 13040101 		addi	s0,sp,16
+ 206              		.cfi_def_cfa 8, 0
+  34:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+ 207              		.loc 1 34 5
+ 208              		.loc 1 34 24 is_stmt 0
+ 209 012c 97000000 		call	getRunningThreadContext
+ 209      E7800000 
+ 210              	.LVL23:
+  35:src/syscall_c.c ****     return abi_thread_exit(t);
+ 211              		.loc 1 35 5 is_stmt 1
+ 212              		.loc 1 35 12 is_stmt 0
+ 213 0134 97000000 		call	abi_thread_exit
+ 213      E7800000 
+ 214              	.LVL24:
+  36:src/syscall_c.c **** }
+ 215              		.loc 1 36 1
+ 216 013c 83308100 		ld	ra,8(sp)
+ 217              		.cfi_restore 1
+ 218 0140 03340100 		ld	s0,0(sp)
+ 219              		.cfi_restore 8
+ 220              		.cfi_def_cfa 2, 16
+ 221 0144 13010101 		addi	sp,sp,16
+ 222              		.cfi_def_cfa_offset 0
+ 223 0148 67800000 		jr	ra
+ 224              		.cfi_endproc
+ 225              	.LFE3:
+ 227              		.align	2
+ 228              		.globl	thread_dispatch
+ 230              	thread_dispatch:
+ 231              	.LFB4:
+  37:src/syscall_c.c **** void thread_dispatch(){
+ 232              		.loc 1 37 23 is_stmt 1
+ 233              		.cfi_startproc
+ 234 014c 130101FF 		addi	sp,sp,-16
+ 235              		.cfi_def_cfa_offset 16
+ 236 0150 23341100 		sd	ra,8(sp)
+ 237 0154 23308100 		sd	s0,0(sp)
+ 238              		.cfi_offset 1, -8
+ 239              		.cfi_offset 8, -16
+ 240 0158 13040101 		addi	s0,sp,16
+ 241              		.cfi_def_cfa 8, 0
+  38:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+ 242              		.loc 1 38 5
+ 243              		.loc 1 38 24 is_stmt 0
+ 244 015c 97000000 		call	getRunningThreadContext
+ 244      E7800000 
+GAS LISTING /tmp/ccnrE35E.s 			page 6
+
+
+ 245              	.LVL25:
+  39:src/syscall_c.c ****     abi_thread_dispatch(t);
+ 246              		.loc 1 39 5 is_stmt 1
+ 247 0164 97000000 		call	abi_thread_dispatch
+ 247      E7800000 
+ 248              	.LVL26:
+  40:src/syscall_c.c **** }
+ 249              		.loc 1 40 1 is_stmt 0
+ 250 016c 83308100 		ld	ra,8(sp)
+ 251              		.cfi_restore 1
+ 252 0170 03340100 		ld	s0,0(sp)
+ 253              		.cfi_restore 8
+ 254              		.cfi_def_cfa 2, 16
+ 255 0174 13010101 		addi	sp,sp,16
+ 256              		.cfi_def_cfa_offset 0
+ 257 0178 67800000 		jr	ra
+ 258              		.cfi_endproc
+ 259              	.LFE4:
+ 261              		.align	2
+ 262              		.globl	mem_get_free_space
+ 264              	mem_get_free_space:
+ 265              	.LFB5:
+  41:src/syscall_c.c **** size_t mem_get_free_space(){
+ 266              		.loc 1 41 28 is_stmt 1
+ 267              		.cfi_startproc
+ 268 017c 130101FF 		addi	sp,sp,-16
+ 269              		.cfi_def_cfa_offset 16
+ 270 0180 23341100 		sd	ra,8(sp)
+ 271 0184 23308100 		sd	s0,0(sp)
+ 272              		.cfi_offset 1, -8
+ 273              		.cfi_offset 8, -16
+ 274 0188 13040101 		addi	s0,sp,16
+ 275              		.cfi_def_cfa 8, 0
+  42:src/syscall_c.c ****     return abi_mem_get_free_space();
+ 276              		.loc 1 42 5
+ 277              		.loc 1 42 12 is_stmt 0
+ 278 018c 97000000 		call	abi_mem_get_free_space
+ 278      E7800000 
+ 279              	.LVL27:
+  43:src/syscall_c.c **** }
+ 280              		.loc 1 43 1
+ 281 0194 83308100 		ld	ra,8(sp)
+ 282              		.cfi_restore 1
+ 283 0198 03340100 		ld	s0,0(sp)
+ 284              		.cfi_restore 8
+ 285              		.cfi_def_cfa 2, 16
+ 286 019c 13010101 		addi	sp,sp,16
+ 287              		.cfi_def_cfa_offset 0
+ 288 01a0 67800000 		jr	ra
+ 289              		.cfi_endproc
+ 290              	.LFE5:
+ 292              		.align	2
+ 293              		.globl	mem_get_largest_free_block
+ 295              	mem_get_largest_free_block:
+ 296              	.LFB6:
+  44:src/syscall_c.c **** size_t mem_get_largest_free_block(){
+ 297              		.loc 1 44 36 is_stmt 1
+GAS LISTING /tmp/ccnrE35E.s 			page 7
+
+
+ 298              		.cfi_startproc
+ 299 01a4 130101FF 		addi	sp,sp,-16
+ 300              		.cfi_def_cfa_offset 16
+ 301 01a8 23341100 		sd	ra,8(sp)
+ 302 01ac 23308100 		sd	s0,0(sp)
+ 303              		.cfi_offset 1, -8
+ 304              		.cfi_offset 8, -16
+ 305 01b0 13040101 		addi	s0,sp,16
+ 306              		.cfi_def_cfa 8, 0
+  45:src/syscall_c.c ****     return abi_mem_get_largest_free_block();
+ 307              		.loc 1 45 5
+ 308              		.loc 1 45 12 is_stmt 0
+ 309 01b4 97000000 		call	abi_mem_get_largest_free_block
+ 309      E7800000 
+ 310              	.LVL28:
+  46:src/syscall_c.c **** }
+ 311              		.loc 1 46 1
+ 312 01bc 83308100 		ld	ra,8(sp)
+ 313              		.cfi_restore 1
+ 314 01c0 03340100 		ld	s0,0(sp)
+ 315              		.cfi_restore 8
+ 316              		.cfi_def_cfa 2, 16
+ 317 01c4 13010101 		addi	sp,sp,16
+ 318              		.cfi_def_cfa_offset 0
+ 319 01c8 67800000 		jr	ra
+ 320              		.cfi_endproc
+ 321              	.LFE6:
+ 323              		.align	2
+ 324              		.globl	sem_open
+ 326              	sem_open:
+ 327              	.LFB7:
+  47:src/syscall_c.c **** 
+  48:src/syscall_c.c **** int sem_open(sem_t* handle, unsigned init){
+ 328              		.loc 1 48 43 is_stmt 1
+ 329              		.cfi_startproc
+ 330              	.LVL29:
+ 331 01cc 130101FE 		addi	sp,sp,-32
+ 332              		.cfi_def_cfa_offset 32
+ 333 01d0 233C1100 		sd	ra,24(sp)
+ 334 01d4 23388100 		sd	s0,16(sp)
+ 335 01d8 23349100 		sd	s1,8(sp)
+ 336 01dc 23302101 		sd	s2,0(sp)
+ 337              		.cfi_offset 1, -8
+ 338              		.cfi_offset 8, -16
+ 339              		.cfi_offset 9, -24
+ 340              		.cfi_offset 18, -32
+ 341 01e0 13040102 		addi	s0,sp,32
+ 342              		.cfi_def_cfa 8, 0
+ 343 01e4 93040500 		mv	s1,a0
+ 344 01e8 13890500 		mv	s2,a1
+  49:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+ 345              		.loc 1 49 5
+ 346              		.loc 1 49 24 is_stmt 0
+ 347 01ec 97000000 		call	getRunningThreadContext
+ 347      E7800000 
+ 348              	.LVL30:
+  50:src/syscall_c.c ****     return abi_sem_open(t, handle, init);
+GAS LISTING /tmp/ccnrE35E.s 			page 8
+
+
+ 349              		.loc 1 50 5 is_stmt 1
+ 350              		.loc 1 50 12 is_stmt 0
+ 351 01f4 13060900 		mv	a2,s2
+ 352 01f8 93850400 		mv	a1,s1
+ 353 01fc 97000000 		call	abi_sem_open
+ 353      E7800000 
+ 354              	.LVL31:
+  51:src/syscall_c.c **** }
+ 355              		.loc 1 51 1
+ 356 0204 83308101 		ld	ra,24(sp)
+ 357              		.cfi_restore 1
+ 358 0208 03340101 		ld	s0,16(sp)
+ 359              		.cfi_restore 8
+ 360              		.cfi_def_cfa 2, 32
+ 361 020c 83348100 		ld	s1,8(sp)
+ 362              		.cfi_restore 9
+ 363              	.LVL32:
+ 364 0210 03390100 		ld	s2,0(sp)
+ 365              		.cfi_restore 18
+ 366 0214 13010102 		addi	sp,sp,32
+ 367              		.cfi_def_cfa_offset 0
+ 368 0218 67800000 		jr	ra
+ 369              		.cfi_endproc
+ 370              	.LFE7:
+ 372              		.align	2
+ 373              		.globl	sem_wait
+ 375              	sem_wait:
+ 376              	.LFB8:
+  52:src/syscall_c.c **** 
+  53:src/syscall_c.c **** int sem_wait(sem_t id){
+ 377              		.loc 1 53 23 is_stmt 1
+ 378              		.cfi_startproc
+ 379              	.LVL33:
+ 380 021c 130101FE 		addi	sp,sp,-32
+ 381              		.cfi_def_cfa_offset 32
+ 382 0220 233C1100 		sd	ra,24(sp)
+ 383 0224 23388100 		sd	s0,16(sp)
+ 384 0228 23349100 		sd	s1,8(sp)
+ 385              		.cfi_offset 1, -8
+ 386              		.cfi_offset 8, -16
+ 387              		.cfi_offset 9, -24
+ 388 022c 13040102 		addi	s0,sp,32
+ 389              		.cfi_def_cfa 8, 0
+ 390 0230 93040500 		mv	s1,a0
+  54:src/syscall_c.c ****     ThreadContext *t = getRunningThreadContext();
+ 391              		.loc 1 54 5
+ 392              		.loc 1 54 24 is_stmt 0
+ 393 0234 97000000 		call	getRunningThreadContext
+ 393      E7800000 
+ 394              	.LVL34:
+  55:src/syscall_c.c ****     abi_sem_wait(t, id);
+ 395              		.loc 1 55 5 is_stmt 1
+ 396 023c 93850400 		mv	a1,s1
+ 397 0240 97000000 		call	abi_sem_wait
+ 397      E7800000 
+ 398              	.LVL35:
+  56:src/syscall_c.c ****     int status = getWaitStatusForRunning();
+GAS LISTING /tmp/ccnrE35E.s 			page 9
+
+
+ 399              		.loc 1 56 5
+ 400              		.loc 1 56 18 is_stmt 0
+ 401 0248 97000000 		call	getWaitStatusForRunning
+ 401      E7800000 
+ 402              	.LVL36:
+  57:src/syscall_c.c ****     return status;
+ 403              		.loc 1 57 5 is_stmt 1
+  58:src/syscall_c.c **** }
+ 404              		.loc 1 58 1 is_stmt 0
+ 405 0250 83308101 		ld	ra,24(sp)
+ 406              		.cfi_restore 1
+ 407 0254 03340101 		ld	s0,16(sp)
+ 408              		.cfi_restore 8
+ 409              		.cfi_def_cfa 2, 32
+ 410 0258 83348100 		ld	s1,8(sp)
+ 411              		.cfi_restore 9
+ 412 025c 13010102 		addi	sp,sp,32
+ 413              		.cfi_def_cfa_offset 0
+ 414 0260 67800000 		jr	ra
+ 415              		.cfi_endproc
+ 416              	.LFE8:
+ 418              		.align	2
+ 419              		.globl	sem_signal
+ 421              	sem_signal:
+ 422              	.LFB9:
+  59:src/syscall_c.c **** 
+  60:src/syscall_c.c **** int sem_signal(sem_t id){
+ 423              		.loc 1 60 25 is_stmt 1
+ 424              		.cfi_startproc
+ 425              	.LVL37:
+ 426 0264 130101FE 		addi	sp,sp,-32
+ 427              		.cfi_def_cfa_offset 32
+ 428 0268 233C1100 		sd	ra,24(sp)
+ 429 026c 23388100 		sd	s0,16(sp)
+ 430 0270 23349100 		sd	s1,8(sp)
+ 431              		.cfi_offset 1, -8
+ 432              		.cfi_offset 8, -16
+ 433              		.cfi_offset 9, -24
+ 434 0274 13040102 		addi	s0,sp,32
+ 435              		.cfi_def_cfa 8, 0
+ 436 0278 93040500 		mv	s1,a0
+  61:src/syscall_c.c ****     ThreadContext* t = getRunningThreadContext();
+ 437              		.loc 1 61 5
+ 438              		.loc 1 61 24 is_stmt 0
+ 439 027c 97000000 		call	getRunningThreadContext
+ 439      E7800000 
+ 440              	.LVL38:
+  62:src/syscall_c.c ****     return abi_sem_signal(t, id);
+ 441              		.loc 1 62 5 is_stmt 1
+ 442              		.loc 1 62 12 is_stmt 0
+ 443 0284 93850400 		mv	a1,s1
+ 444 0288 97000000 		call	abi_sem_signal
+ 444      E7800000 
+ 445              	.LVL39:
+  63:src/syscall_c.c **** }
+ 446              		.loc 1 63 1
+ 447 0290 83308101 		ld	ra,24(sp)
+GAS LISTING /tmp/ccnrE35E.s 			page 10
+
+
+ 448              		.cfi_restore 1
+ 449 0294 03340101 		ld	s0,16(sp)
+ 450              		.cfi_restore 8
+ 451              		.cfi_def_cfa 2, 32
+ 452 0298 83348100 		ld	s1,8(sp)
+ 453              		.cfi_restore 9
+ 454 029c 13010102 		addi	sp,sp,32
+ 455              		.cfi_def_cfa_offset 0
+ 456 02a0 67800000 		jr	ra
+ 457              		.cfi_endproc
+ 458              	.LFE9:
+ 460              		.align	2
+ 461              		.globl	sem_close
+ 463              	sem_close:
+ 464              	.LFB10:
+  64:src/syscall_c.c **** 
+  65:src/syscall_c.c **** int sem_close(sem_t id){
+ 465              		.loc 1 65 24 is_stmt 1
+ 466              		.cfi_startproc
+ 467              	.LVL40:
+ 468 02a4 130101FE 		addi	sp,sp,-32
+ 469              		.cfi_def_cfa_offset 32
+ 470 02a8 233C1100 		sd	ra,24(sp)
+ 471 02ac 23388100 		sd	s0,16(sp)
+ 472 02b0 23349100 		sd	s1,8(sp)
+ 473              		.cfi_offset 1, -8
+ 474              		.cfi_offset 8, -16
+ 475              		.cfi_offset 9, -24
+ 476 02b4 13040102 		addi	s0,sp,32
+ 477              		.cfi_def_cfa 8, 0
+ 478 02b8 93040500 		mv	s1,a0
+  66:src/syscall_c.c ****     ThreadContext* t = getRunningThreadContext();
+ 479              		.loc 1 66 5
+ 480              		.loc 1 66 24 is_stmt 0
+ 481 02bc 97000000 		call	getRunningThreadContext
+ 481      E7800000 
+ 482              	.LVL41:
+  67:src/syscall_c.c ****     return abi_sem_close(t, id);
+ 483              		.loc 1 67 5 is_stmt 1
+ 484              		.loc 1 67 12 is_stmt 0
+ 485 02c4 93850400 		mv	a1,s1
+ 486 02c8 97000000 		call	abi_sem_close
+ 486      E7800000 
+ 487              	.LVL42:
+  68:src/syscall_c.c **** }
+ 488              		.loc 1 68 1
+ 489 02d0 83308101 		ld	ra,24(sp)
+ 490              		.cfi_restore 1
+ 491 02d4 03340101 		ld	s0,16(sp)
+ 492              		.cfi_restore 8
+ 493              		.cfi_def_cfa 2, 32
+ 494 02d8 83348100 		ld	s1,8(sp)
+ 495              		.cfi_restore 9
+ 496 02dc 13010102 		addi	sp,sp,32
+ 497              		.cfi_def_cfa_offset 0
+ 498 02e0 67800000 		jr	ra
+ 499              		.cfi_endproc
+GAS LISTING /tmp/ccnrE35E.s 			page 11
+
+
+ 500              	.LFE10:
+ 502              		.align	2
+ 503              		.globl	putc
+ 505              	putc:
+ 506              	.LFB11:
+  69:src/syscall_c.c **** 
+  70:src/syscall_c.c **** void putc(char x) {
+ 507              		.loc 1 70 19 is_stmt 1
+ 508              		.cfi_startproc
+ 509              	.LVL43:
+ 510 02e4 130101FE 		addi	sp,sp,-32
+ 511              		.cfi_def_cfa_offset 32
+ 512 02e8 233C1100 		sd	ra,24(sp)
+ 513 02ec 23388100 		sd	s0,16(sp)
+ 514 02f0 23349100 		sd	s1,8(sp)
+ 515              		.cfi_offset 1, -8
+ 516              		.cfi_offset 8, -16
+ 517              		.cfi_offset 9, -24
+ 518 02f4 13040102 		addi	s0,sp,32
+ 519              		.cfi_def_cfa 8, 0
+  71:src/syscall_c.c ****     unsigned long sstatus_old, sstatus_new;
+ 520              		.loc 1 71 5
+  72:src/syscall_c.c **** 
+  73:src/syscall_c.c ****     // Učitaj trenutni sstatus
+  74:src/syscall_c.c ****     asm volatile("csrr %0, sstatus" : "=r"(sstatus_old));
+ 521              		.loc 1 74 5
+ 522              	#APP
+ 523              	# 74 "src/syscall_c.c" 1
+  75              	
+ 524              		csrr s1, sstatus
+ 525              	# 0 "" 2
+ 526              	.LVL44:
+  76:src/syscall_c.c ****     // Maskiraj spoljne prekide (SIE = 0)
+  77:src/syscall_c.c ****     sstatus_new = sstatus_old & ~(1UL << 1);
+ 527              		.loc 1 77 5
+ 528              		.loc 1 77 17 is_stmt 0
+ 529              	#NO_APP
+ 530 02fc 93F7D4FF 		andi	a5,s1,-3
+ 531              	.LVL45:
+  78:src/syscall_c.c ****     asm volatile("csrw sstatus, %0" :: "r"(sstatus_new));
+ 532              		.loc 1 78 5 is_stmt 1
+ 533              	#APP
+ 534              	# 78 "src/syscall_c.c" 1
+  79              	
+  80:src/syscall_c.c ****     // Poziv niskonivojske funkcije
+  81:src/syscall_c.c ****     __putc(x);
+ 535              		csrw sstatus, a5
+ 536              	# 0 "" 2
+ 537              		.loc 1 81 5
+ 538              	#NO_APP
+ 539 0304 97000000 		call	__putc
+ 539      E7800000 
+ 540              	.LVL46:
+  82:src/syscall_c.c **** 
+  83:src/syscall_c.c ****     // Vrati sstatus na staru vrednost
+  84:src/syscall_c.c ****     asm volatile("csrw sstatus, %0" :: "r"(sstatus_old));
+ 541              		.loc 1 84 5
+GAS LISTING /tmp/ccnrE35E.s 			page 12
+
+
+ 542              	#APP
+ 543              	# 84 "src/syscall_c.c" 1
+  85              	}
+ 544              		csrw sstatus, s1
+ 545              	# 0 "" 2
+ 546              		.loc 1 85 1 is_stmt 0
+ 547              	#NO_APP
+ 548 0310 83308101 		ld	ra,24(sp)
+ 549              		.cfi_restore 1
+ 550 0314 03340101 		ld	s0,16(sp)
+ 551              		.cfi_restore 8
+ 552              		.cfi_def_cfa 2, 32
+ 553 0318 83348100 		ld	s1,8(sp)
+ 554              		.cfi_restore 9
+ 555              	.LVL47:
+ 556 031c 13010102 		addi	sp,sp,32
+ 557              		.cfi_def_cfa_offset 0
+ 558 0320 67800000 		jr	ra
+ 559              		.cfi_endproc
+ 560              	.LFE11:
+ 562              		.align	2
+ 563              		.globl	getc
+ 565              	getc:
+ 566              	.LFB12:
+  86:src/syscall_c.c **** 
+  87:src/syscall_c.c **** char getc() {
+ 567              		.loc 1 87 13 is_stmt 1
+ 568              		.cfi_startproc
+ 569 0324 130101FF 		addi	sp,sp,-16
+ 570              		.cfi_def_cfa_offset 16
+ 571 0328 23341100 		sd	ra,8(sp)
+ 572 032c 23308100 		sd	s0,0(sp)
+ 573              		.cfi_offset 1, -8
+ 574              		.cfi_offset 8, -16
+ 575 0330 13040101 		addi	s0,sp,16
+ 576              		.cfi_def_cfa 8, 0
+  88:src/syscall_c.c ****     return __getc();
+ 577              		.loc 1 88 5
+ 578              		.loc 1 88 12 is_stmt 0
+ 579 0334 97000000 		call	__getc
+ 579      E7800000 
+ 580              	.LVL48:
+  89:src/syscall_c.c **** }
+ 581              		.loc 1 89 1
+ 582 033c 83308100 		ld	ra,8(sp)
+ 583              		.cfi_restore 1
+ 584 0340 03340100 		ld	s0,0(sp)
+ 585              		.cfi_restore 8
+ 586              		.cfi_def_cfa 2, 16
+ 587 0344 13010101 		addi	sp,sp,16
+ 588              		.cfi_def_cfa_offset 0
+ 589 0348 67800000 		jr	ra
+ 590              		.cfi_endproc
+ 591              	.LFE12:
+ 593              	.Letext0:
+ 594              		.file 2 "/usr/lib/gcc-cross/riscv64-linux-gnu/9/include/stddef.h"
+ 595              		.file 3 "src/../h/../lib/hw.h"
+GAS LISTING /tmp/ccnrE35E.s 			page 13
+
+
+ 596              		.file 4 "src/../h/memory_structs.h"
+ 597              		.file 5 "src/../lib/console.h"
+ 598              		.file 6 "src/../h/abi.h"
+GAS LISTING /tmp/ccnrE35E.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 syscall_c.c
+     /tmp/ccnrE35E.s:10     .text:0000000000000000 mem_alloc
+     /tmp/ccnrE35E.s:14     .text:0000000000000000 .L0 
+     /tmp/ccnrE35E.s:16     .text:0000000000000000 .L0 
+     /tmp/ccnrE35E.s:17     .text:0000000000000004 .L0 
+     /tmp/ccnrE35E.s:21     .text:0000000000000010 .L0 
+     /tmp/ccnrE35E.s:22     .text:0000000000000010 .L0 
+     /tmp/ccnrE35E.s:23     .text:0000000000000010 .L0 
+     /tmp/ccnrE35E.s:25     .text:0000000000000014 .L0 
+     /tmp/ccnrE35E.s:27     .text:0000000000000014 .L0 
+     /tmp/ccnrE35E.s:28     .text:0000000000000014 .L0 
+     /tmp/ccnrE35E.s:30     .text:0000000000000018 .L0 
+     /tmp/ccnrE35E.s:33     .text:000000000000001c .L0 
+     /tmp/ccnrE35E.s:34     .text:000000000000001c .L0 
+     /tmp/ccnrE35E.s:37     .text:0000000000000024 .L0 
+     /tmp/ccnrE35E.s:38     .text:0000000000000024 .L0 
+     /tmp/ccnrE35E.s:42     .text:0000000000000030 .L0 
+     /tmp/ccnrE35E.s:44     .text:0000000000000038 .L0 
+     /tmp/ccnrE35E.s:46     .text:000000000000003c .L0 
+     /tmp/ccnrE35E.s:47     .text:000000000000003c .L0 
+     /tmp/ccnrE35E.s:49     .text:0000000000000040 .L0 
+     /tmp/ccnrE35E.s:52     .text:0000000000000044 .L0 
+     /tmp/ccnrE35E.s:54     .text:0000000000000048 .L0 
+     /tmp/ccnrE35E.s:60     .text:0000000000000048 mem_free
+     /tmp/ccnrE35E.s:63     .text:0000000000000048 .L0 
+     /tmp/ccnrE35E.s:65     .text:0000000000000048 .L0 
+     /tmp/ccnrE35E.s:66     .text:0000000000000048 .L0 
+     /tmp/ccnrE35E.s:67     .text:0000000000000048 .L0 
+     /tmp/ccnrE35E.s:69     .text:000000000000004c .L0 
+     /tmp/ccnrE35E.s:70     .text:0000000000000050 .L0 
+     /tmp/ccnrE35E.s:74     .text:000000000000005c .L0 
+     /tmp/ccnrE35E.s:75     .text:000000000000005c .L0 
+     /tmp/ccnrE35E.s:76     .text:000000000000005c .L0 
+     /tmp/ccnrE35E.s:78     .text:0000000000000060 .L0 
+     /tmp/ccnrE35E.s:80     .text:0000000000000060 .L0 
+     /tmp/ccnrE35E.s:81     .text:0000000000000060 .L0 
+     /tmp/ccnrE35E.s:84     .text:0000000000000064 .L0 
+     /tmp/ccnrE35E.s:85     .text:0000000000000064 .L0 
+     /tmp/ccnrE35E.s:88     .text:000000000000006c .L0 
+     /tmp/ccnrE35E.s:89     .text:000000000000006c .L0 
+     /tmp/ccnrE35E.s:93     .text:0000000000000078 .L0 
+     /tmp/ccnrE35E.s:94     .text:000000000000007c .L0 
+     /tmp/ccnrE35E.s:96     .text:0000000000000080 .L0 
+     /tmp/ccnrE35E.s:97     .text:0000000000000080 .L0 
+     /tmp/ccnrE35E.s:99     .text:0000000000000084 .L0 
+     /tmp/ccnrE35E.s:102    .text:0000000000000088 .L0 
+     /tmp/ccnrE35E.s:107    .text:000000000000008c .L0 
+     /tmp/ccnrE35E.s:110    .text:0000000000000090 .L0 
+     /tmp/ccnrE35E.s:111    .text:0000000000000094 .L0 
+     /tmp/ccnrE35E.s:117    .text:0000000000000094 thread_create
+     /tmp/ccnrE35E.s:120    .text:0000000000000094 .L0 
+     /tmp/ccnrE35E.s:122    .text:0000000000000094 .L0 
+     /tmp/ccnrE35E.s:123    .text:0000000000000098 .L0 
+     /tmp/ccnrE35E.s:130    .text:00000000000000b0 .L0 
+     /tmp/ccnrE35E.s:131    .text:00000000000000b0 .L0 
+     /tmp/ccnrE35E.s:132    .text:00000000000000b0 .L0 
+GAS LISTING /tmp/ccnrE35E.s 			page 15
+
+
+     /tmp/ccnrE35E.s:133    .text:00000000000000b0 .L0 
+     /tmp/ccnrE35E.s:134    .text:00000000000000b0 .L0 
+     /tmp/ccnrE35E.s:135    .text:00000000000000b0 .L0 
+     /tmp/ccnrE35E.s:137    .text:00000000000000b4 .L0 
+     /tmp/ccnrE35E.s:143    .text:00000000000000c0 .L0 
+     /tmp/ccnrE35E.s:144    .text:00000000000000c0 .L0 
+     /tmp/ccnrE35E.s:145    .text:00000000000000c0 .L0 
+     /tmp/ccnrE35E.s:150    .text:00000000000000cc .L0 
+     /tmp/ccnrE35E.s:151    .text:00000000000000cc .L0 
+     /tmp/ccnrE35E.s:155    .text:00000000000000d8 .L0 
+     /tmp/ccnrE35E.s:156    .text:00000000000000d8 .L0 
+     /tmp/ccnrE35E.s:157    .text:00000000000000d8 .L0 
+     /tmp/ccnrE35E.s:158    .text:00000000000000d8 .L0 
+     /tmp/ccnrE35E.s:169    .text:00000000000000fc .L0 
+     /tmp/ccnrE35E.s:170    .text:0000000000000100 .L0 
+     /tmp/ccnrE35E.s:172    .text:0000000000000104 .L0 
+     /tmp/ccnrE35E.s:173    .text:0000000000000104 .L0 
+     /tmp/ccnrE35E.s:175    .text:0000000000000108 .L0 
+     /tmp/ccnrE35E.s:178    .text:000000000000010c .L0 
+     /tmp/ccnrE35E.s:181    .text:0000000000000110 .L0 
+     /tmp/ccnrE35E.s:184    .text:0000000000000114 .L0 
+     /tmp/ccnrE35E.s:187    .text:0000000000000118 .L0 
+     /tmp/ccnrE35E.s:189    .text:000000000000011c .L0 
+     /tmp/ccnrE35E.s:195    .text:000000000000011c thread_exit
+     /tmp/ccnrE35E.s:198    .text:000000000000011c .L0 
+     /tmp/ccnrE35E.s:199    .text:000000000000011c .L0 
+     /tmp/ccnrE35E.s:200    .text:0000000000000120 .L0 
+     /tmp/ccnrE35E.s:203    .text:0000000000000128 .L0 
+     /tmp/ccnrE35E.s:204    .text:0000000000000128 .L0 
+     /tmp/ccnrE35E.s:206    .text:000000000000012c .L0 
+     /tmp/ccnrE35E.s:208    .text:000000000000012c .L0 
+     /tmp/ccnrE35E.s:209    .text:000000000000012c .L0 
+     /tmp/ccnrE35E.s:212    .text:0000000000000134 .L0 
+     /tmp/ccnrE35E.s:213    .text:0000000000000134 .L0 
+     /tmp/ccnrE35E.s:216    .text:000000000000013c .L0 
+     /tmp/ccnrE35E.s:217    .text:0000000000000140 .L0 
+     /tmp/ccnrE35E.s:219    .text:0000000000000144 .L0 
+     /tmp/ccnrE35E.s:220    .text:0000000000000144 .L0 
+     /tmp/ccnrE35E.s:222    .text:0000000000000148 .L0 
+     /tmp/ccnrE35E.s:224    .text:000000000000014c .L0 
+     /tmp/ccnrE35E.s:230    .text:000000000000014c thread_dispatch
+     /tmp/ccnrE35E.s:233    .text:000000000000014c .L0 
+     /tmp/ccnrE35E.s:234    .text:000000000000014c .L0 
+     /tmp/ccnrE35E.s:235    .text:0000000000000150 .L0 
+     /tmp/ccnrE35E.s:238    .text:0000000000000158 .L0 
+     /tmp/ccnrE35E.s:239    .text:0000000000000158 .L0 
+     /tmp/ccnrE35E.s:241    .text:000000000000015c .L0 
+     /tmp/ccnrE35E.s:243    .text:000000000000015c .L0 
+     /tmp/ccnrE35E.s:244    .text:000000000000015c .L0 
+     /tmp/ccnrE35E.s:247    .text:0000000000000164 .L0 
+     /tmp/ccnrE35E.s:250    .text:000000000000016c .L0 
+     /tmp/ccnrE35E.s:251    .text:0000000000000170 .L0 
+     /tmp/ccnrE35E.s:253    .text:0000000000000174 .L0 
+     /tmp/ccnrE35E.s:254    .text:0000000000000174 .L0 
+     /tmp/ccnrE35E.s:256    .text:0000000000000178 .L0 
+     /tmp/ccnrE35E.s:258    .text:000000000000017c .L0 
+     /tmp/ccnrE35E.s:264    .text:000000000000017c mem_get_free_space
+GAS LISTING /tmp/ccnrE35E.s 			page 16
+
+
+     /tmp/ccnrE35E.s:267    .text:000000000000017c .L0 
+     /tmp/ccnrE35E.s:268    .text:000000000000017c .L0 
+     /tmp/ccnrE35E.s:269    .text:0000000000000180 .L0 
+     /tmp/ccnrE35E.s:272    .text:0000000000000188 .L0 
+     /tmp/ccnrE35E.s:273    .text:0000000000000188 .L0 
+     /tmp/ccnrE35E.s:275    .text:000000000000018c .L0 
+     /tmp/ccnrE35E.s:277    .text:000000000000018c .L0 
+     /tmp/ccnrE35E.s:278    .text:000000000000018c .L0 
+     /tmp/ccnrE35E.s:281    .text:0000000000000194 .L0 
+     /tmp/ccnrE35E.s:282    .text:0000000000000198 .L0 
+     /tmp/ccnrE35E.s:284    .text:000000000000019c .L0 
+     /tmp/ccnrE35E.s:285    .text:000000000000019c .L0 
+     /tmp/ccnrE35E.s:287    .text:00000000000001a0 .L0 
+     /tmp/ccnrE35E.s:289    .text:00000000000001a4 .L0 
+     /tmp/ccnrE35E.s:295    .text:00000000000001a4 mem_get_largest_free_block
+     /tmp/ccnrE35E.s:298    .text:00000000000001a4 .L0 
+     /tmp/ccnrE35E.s:299    .text:00000000000001a4 .L0 
+     /tmp/ccnrE35E.s:300    .text:00000000000001a8 .L0 
+     /tmp/ccnrE35E.s:303    .text:00000000000001b0 .L0 
+     /tmp/ccnrE35E.s:304    .text:00000000000001b0 .L0 
+     /tmp/ccnrE35E.s:306    .text:00000000000001b4 .L0 
+     /tmp/ccnrE35E.s:308    .text:00000000000001b4 .L0 
+     /tmp/ccnrE35E.s:309    .text:00000000000001b4 .L0 
+     /tmp/ccnrE35E.s:312    .text:00000000000001bc .L0 
+     /tmp/ccnrE35E.s:313    .text:00000000000001c0 .L0 
+     /tmp/ccnrE35E.s:315    .text:00000000000001c4 .L0 
+     /tmp/ccnrE35E.s:316    .text:00000000000001c4 .L0 
+     /tmp/ccnrE35E.s:318    .text:00000000000001c8 .L0 
+     /tmp/ccnrE35E.s:320    .text:00000000000001cc .L0 
+     /tmp/ccnrE35E.s:326    .text:00000000000001cc sem_open
+     /tmp/ccnrE35E.s:329    .text:00000000000001cc .L0 
+     /tmp/ccnrE35E.s:331    .text:00000000000001cc .L0 
+     /tmp/ccnrE35E.s:332    .text:00000000000001d0 .L0 
+     /tmp/ccnrE35E.s:337    .text:00000000000001e0 .L0 
+     /tmp/ccnrE35E.s:338    .text:00000000000001e0 .L0 
+     /tmp/ccnrE35E.s:339    .text:00000000000001e0 .L0 
+     /tmp/ccnrE35E.s:340    .text:00000000000001e0 .L0 
+     /tmp/ccnrE35E.s:342    .text:00000000000001e4 .L0 
+     /tmp/ccnrE35E.s:346    .text:00000000000001ec .L0 
+     /tmp/ccnrE35E.s:347    .text:00000000000001ec .L0 
+     /tmp/ccnrE35E.s:350    .text:00000000000001f4 .L0 
+     /tmp/ccnrE35E.s:351    .text:00000000000001f4 .L0 
+     /tmp/ccnrE35E.s:356    .text:0000000000000204 .L0 
+     /tmp/ccnrE35E.s:357    .text:0000000000000208 .L0 
+     /tmp/ccnrE35E.s:359    .text:000000000000020c .L0 
+     /tmp/ccnrE35E.s:360    .text:000000000000020c .L0 
+     /tmp/ccnrE35E.s:362    .text:0000000000000210 .L0 
+     /tmp/ccnrE35E.s:365    .text:0000000000000214 .L0 
+     /tmp/ccnrE35E.s:367    .text:0000000000000218 .L0 
+     /tmp/ccnrE35E.s:369    .text:000000000000021c .L0 
+     /tmp/ccnrE35E.s:375    .text:000000000000021c sem_wait
+     /tmp/ccnrE35E.s:378    .text:000000000000021c .L0 
+     /tmp/ccnrE35E.s:380    .text:000000000000021c .L0 
+     /tmp/ccnrE35E.s:381    .text:0000000000000220 .L0 
+     /tmp/ccnrE35E.s:385    .text:000000000000022c .L0 
+     /tmp/ccnrE35E.s:386    .text:000000000000022c .L0 
+     /tmp/ccnrE35E.s:387    .text:000000000000022c .L0 
+GAS LISTING /tmp/ccnrE35E.s 			page 17
+
+
+     /tmp/ccnrE35E.s:389    .text:0000000000000230 .L0 
+     /tmp/ccnrE35E.s:392    .text:0000000000000234 .L0 
+     /tmp/ccnrE35E.s:393    .text:0000000000000234 .L0 
+     /tmp/ccnrE35E.s:396    .text:000000000000023c .L0 
+     /tmp/ccnrE35E.s:400    .text:0000000000000248 .L0 
+     /tmp/ccnrE35E.s:401    .text:0000000000000248 .L0 
+     /tmp/ccnrE35E.s:404    .text:0000000000000250 .L0 
+     /tmp/ccnrE35E.s:405    .text:0000000000000250 .L0 
+     /tmp/ccnrE35E.s:406    .text:0000000000000254 .L0 
+     /tmp/ccnrE35E.s:408    .text:0000000000000258 .L0 
+     /tmp/ccnrE35E.s:409    .text:0000000000000258 .L0 
+     /tmp/ccnrE35E.s:411    .text:000000000000025c .L0 
+     /tmp/ccnrE35E.s:413    .text:0000000000000260 .L0 
+     /tmp/ccnrE35E.s:415    .text:0000000000000264 .L0 
+     /tmp/ccnrE35E.s:421    .text:0000000000000264 sem_signal
+     /tmp/ccnrE35E.s:424    .text:0000000000000264 .L0 
+     /tmp/ccnrE35E.s:426    .text:0000000000000264 .L0 
+     /tmp/ccnrE35E.s:427    .text:0000000000000268 .L0 
+     /tmp/ccnrE35E.s:431    .text:0000000000000274 .L0 
+     /tmp/ccnrE35E.s:432    .text:0000000000000274 .L0 
+     /tmp/ccnrE35E.s:433    .text:0000000000000274 .L0 
+     /tmp/ccnrE35E.s:435    .text:0000000000000278 .L0 
+     /tmp/ccnrE35E.s:438    .text:000000000000027c .L0 
+     /tmp/ccnrE35E.s:439    .text:000000000000027c .L0 
+     /tmp/ccnrE35E.s:442    .text:0000000000000284 .L0 
+     /tmp/ccnrE35E.s:443    .text:0000000000000284 .L0 
+     /tmp/ccnrE35E.s:447    .text:0000000000000290 .L0 
+     /tmp/ccnrE35E.s:448    .text:0000000000000294 .L0 
+     /tmp/ccnrE35E.s:450    .text:0000000000000298 .L0 
+     /tmp/ccnrE35E.s:451    .text:0000000000000298 .L0 
+     /tmp/ccnrE35E.s:453    .text:000000000000029c .L0 
+     /tmp/ccnrE35E.s:455    .text:00000000000002a0 .L0 
+     /tmp/ccnrE35E.s:457    .text:00000000000002a4 .L0 
+     /tmp/ccnrE35E.s:463    .text:00000000000002a4 sem_close
+     /tmp/ccnrE35E.s:466    .text:00000000000002a4 .L0 
+     /tmp/ccnrE35E.s:468    .text:00000000000002a4 .L0 
+     /tmp/ccnrE35E.s:469    .text:00000000000002a8 .L0 
+     /tmp/ccnrE35E.s:473    .text:00000000000002b4 .L0 
+     /tmp/ccnrE35E.s:474    .text:00000000000002b4 .L0 
+     /tmp/ccnrE35E.s:475    .text:00000000000002b4 .L0 
+     /tmp/ccnrE35E.s:477    .text:00000000000002b8 .L0 
+     /tmp/ccnrE35E.s:480    .text:00000000000002bc .L0 
+     /tmp/ccnrE35E.s:481    .text:00000000000002bc .L0 
+     /tmp/ccnrE35E.s:484    .text:00000000000002c4 .L0 
+     /tmp/ccnrE35E.s:485    .text:00000000000002c4 .L0 
+     /tmp/ccnrE35E.s:489    .text:00000000000002d0 .L0 
+     /tmp/ccnrE35E.s:490    .text:00000000000002d4 .L0 
+     /tmp/ccnrE35E.s:492    .text:00000000000002d8 .L0 
+     /tmp/ccnrE35E.s:493    .text:00000000000002d8 .L0 
+     /tmp/ccnrE35E.s:495    .text:00000000000002dc .L0 
+     /tmp/ccnrE35E.s:497    .text:00000000000002e0 .L0 
+     /tmp/ccnrE35E.s:499    .text:00000000000002e4 .L0 
+     /tmp/ccnrE35E.s:505    .text:00000000000002e4 putc
+     /tmp/ccnrE35E.s:508    .text:00000000000002e4 .L0 
+     /tmp/ccnrE35E.s:510    .text:00000000000002e4 .L0 
+     /tmp/ccnrE35E.s:511    .text:00000000000002e8 .L0 
+     /tmp/ccnrE35E.s:515    .text:00000000000002f4 .L0 
+GAS LISTING /tmp/ccnrE35E.s 			page 18
+
+
+     /tmp/ccnrE35E.s:516    .text:00000000000002f4 .L0 
+     /tmp/ccnrE35E.s:517    .text:00000000000002f4 .L0 
+     /tmp/ccnrE35E.s:519    .text:00000000000002f8 .L0 
+     /tmp/ccnrE35E.s:521    .text:00000000000002f8 .L0 
+     src/syscall_c.c:74     .text:00000000000002f8 .L0 
+     /tmp/ccnrE35E.s:528    .text:00000000000002fc .L0 
+     /tmp/ccnrE35E.s:530    .text:00000000000002fc .L0 
+     src/syscall_c.c:78     .text:0000000000000300 .L0 
+     /tmp/ccnrE35E.s:539    .text:0000000000000304 .L0 
+     src/syscall_c.c:84     .text:000000000000030c .L0 
+     /tmp/ccnrE35E.s:548    .text:0000000000000310 .L0 
+     /tmp/ccnrE35E.s:549    .text:0000000000000314 .L0 
+     /tmp/ccnrE35E.s:551    .text:0000000000000318 .L0 
+     /tmp/ccnrE35E.s:552    .text:0000000000000318 .L0 
+     /tmp/ccnrE35E.s:554    .text:000000000000031c .L0 
+     /tmp/ccnrE35E.s:557    .text:0000000000000320 .L0 
+     /tmp/ccnrE35E.s:559    .text:0000000000000324 .L0 
+     /tmp/ccnrE35E.s:565    .text:0000000000000324 getc
+     /tmp/ccnrE35E.s:568    .text:0000000000000324 .L0 
+     /tmp/ccnrE35E.s:569    .text:0000000000000324 .L0 
+     /tmp/ccnrE35E.s:570    .text:0000000000000328 .L0 
+     /tmp/ccnrE35E.s:573    .text:0000000000000330 .L0 
+     /tmp/ccnrE35E.s:574    .text:0000000000000330 .L0 
+     /tmp/ccnrE35E.s:576    .text:0000000000000334 .L0 
+     /tmp/ccnrE35E.s:578    .text:0000000000000334 .L0 
+     /tmp/ccnrE35E.s:579    .text:0000000000000334 .L0 
+     /tmp/ccnrE35E.s:582    .text:000000000000033c .L0 
+     /tmp/ccnrE35E.s:583    .text:0000000000000340 .L0 
+     /tmp/ccnrE35E.s:585    .text:0000000000000344 .L0 
+     /tmp/ccnrE35E.s:586    .text:0000000000000344 .L0 
+     /tmp/ccnrE35E.s:588    .text:0000000000000348 .L0 
+     /tmp/ccnrE35E.s:590    .text:000000000000034c .L0 
+     /tmp/ccnrE35E.s:599    .text:000000000000034c .L0 
+                     .debug_frame:0000000000000000 .L0 
+     /tmp/ccnrE35E.s:105    .text:000000000000008c .L5
+     /tmp/ccnrE35E.s:1493   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccnrE35E.s:2413   .debug_str:0000000000000206 .LASF72
+     /tmp/ccnrE35E.s:2369   .debug_str:00000000000000d4 .LASF73
+     /tmp/ccnrE35E.s:2439   .debug_str:000000000000034b .LASF74
+     /tmp/ccnrE35E.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccnrE35E.s:593    .text:000000000000034c .Letext0
+     /tmp/ccnrE35E.s:2329   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccnrE35E.s:2463   .debug_str:00000000000003ef .LASF0
+     /tmp/ccnrE35E.s:2335   .debug_str:000000000000001d .LASF7
+     /tmp/ccnrE35E.s:2389   .debug_str:0000000000000165 .LASF1
+     /tmp/ccnrE35E.s:2443   .debug_str:0000000000000372 .LASF2
+     /tmp/ccnrE35E.s:2469   .debug_str:0000000000000412 .LASF3
+     /tmp/ccnrE35E.s:2415   .debug_str:00000000000002a4 .LASF4
+     /tmp/ccnrE35E.s:2391   .debug_str:0000000000000177 .LASF5
+     /tmp/ccnrE35E.s:2379   .debug_str:0000000000000131 .LASF6
+     /tmp/ccnrE35E.s:2347   .debug_str:0000000000000059 .LASF8
+     /tmp/ccnrE35E.s:2435   .debug_str:000000000000033d .LASF9
+     /tmp/ccnrE35E.s:2339   .debug_str:000000000000002b .LASF10
+     /tmp/ccnrE35E.s:2331   .debug_str:0000000000000000 .LASF11
+     /tmp/ccnrE35E.s:2451   .debug_str:00000000000003a3 .LASF12
+     /tmp/ccnrE35E.s:2345   .debug_str:000000000000004b .LASF13
+     /tmp/ccnrE35E.s:2429   .debug_str:0000000000000305 .LASF14
+GAS LISTING /tmp/ccnrE35E.s 			page 19
+
+
+     /tmp/ccnrE35E.s:2343   .debug_str:000000000000003d .LASF15
+     /tmp/ccnrE35E.s:2481   .debug_str:0000000000000461 .LASF16
+     /tmp/ccnrE35E.s:2373   .debug_str:00000000000000ff .LASF17
+     /tmp/ccnrE35E.s:2467   .debug_str:0000000000000402 .LASF18
+     /tmp/ccnrE35E.s:2425   .debug_str:00000000000002ee .LASF19
+     /tmp/ccnrE35E.s:2395   .debug_str:0000000000000198 .LASF20
+     /tmp/ccnrE35E.s:2355   .debug_str:0000000000000078 .LASF21
+     /tmp/ccnrE35E.s:2433   .debug_str:0000000000000327 .LASF22
+     /tmp/ccnrE35E.s:2479   .debug_str:000000000000045a .LASF23
+     /tmp/ccnrE35E.s:2459   .debug_str:00000000000003dc .LASF25
+     /tmp/ccnrE35E.s:2385   .debug_str:000000000000014d .LASF24
+     /tmp/ccnrE35E.s:2465   .debug_str:00000000000003f8 .LASF26
+     /tmp/ccnrE35E.s:2365   .debug_str:00000000000000ba .LASF27
+     /tmp/ccnrE35E.s:2407   .debug_str:00000000000001da .LASF28
+     /tmp/ccnrE35E.s:2363   .debug_str:00000000000000ae .LASF29
+     /tmp/ccnrE35E.s:2397   .debug_str:00000000000001a4 .LASF30
+     /tmp/ccnrE35E.s:2333   .debug_str:0000000000000013 .LASF31
+     /tmp/ccnrE35E.s:2381   .debug_str:000000000000013f .LASF33
+     /tmp/ccnrE35E.s:566    .text:0000000000000324 .LFB12
+     /tmp/ccnrE35E.s:591    .text:000000000000034c .LFE12
+     /tmp/ccnrE35E.s:580    .text:000000000000033c .LVL48
+     /tmp/ccnrE35E.s:2421   .debug_str:00000000000002da .LASF32
+     /tmp/ccnrE35E.s:2449   .debug_str:000000000000039e .LASF34
+     /tmp/ccnrE35E.s:506    .text:00000000000002e4 .LFB11
+     /tmp/ccnrE35E.s:560    .text:0000000000000324 .LFE11
+     /tmp/ccnrE35E.s:1968   .debug_loc:0000000000000000 .LLST24
+     /tmp/ccnrE35E.s:2349   .debug_str:0000000000000060 .LASF35
+     /tmp/ccnrE35E.s:1982   .debug_loc:0000000000000039 .LLST25
+     /tmp/ccnrE35E.s:2361   .debug_str:00000000000000a2 .LASF36
+     /tmp/ccnrE35E.s:1989   .debug_loc:000000000000005c .LLST26
+     /tmp/ccnrE35E.s:540    .text:000000000000030c .LVL46
+     /tmp/ccnrE35E.s:2387   .debug_str:000000000000015b .LASF37
+     /tmp/ccnrE35E.s:464    .text:00000000000002a4 .LFB10
+     /tmp/ccnrE35E.s:500    .text:00000000000002e4 .LFE10
+     /tmp/ccnrE35E.s:2005   .debug_loc:0000000000000097 .LLST22
+     /tmp/ccnrE35E.s:2019   .debug_loc:00000000000000d0 .LLST23
+     /tmp/ccnrE35E.s:482    .text:00000000000002c4 .LVL41
+     /tmp/ccnrE35E.s:487    .text:00000000000002d0 .LVL42
+     /tmp/ccnrE35E.s:2403   .debug_str:00000000000001c9 .LASF38
+     /tmp/ccnrE35E.s:422    .text:0000000000000264 .LFB9
+     /tmp/ccnrE35E.s:458    .text:00000000000002a4 .LFE9
+     /tmp/ccnrE35E.s:2026   .debug_loc:00000000000000f3 .LLST20
+     /tmp/ccnrE35E.s:2040   .debug_loc:000000000000012c .LLST21
+     /tmp/ccnrE35E.s:440    .text:0000000000000284 .LVL38
+     /tmp/ccnrE35E.s:445    .text:0000000000000290 .LVL39
+     /tmp/ccnrE35E.s:2383   .debug_str:0000000000000144 .LASF39
+     /tmp/ccnrE35E.s:376    .text:000000000000021c .LFB8
+     /tmp/ccnrE35E.s:416    .text:0000000000000264 .LFE8
+     /tmp/ccnrE35E.s:2047   .debug_loc:000000000000014f .LLST18
+     /tmp/ccnrE35E.s:2061   .debug_loc:0000000000000188 .LLST19
+     /tmp/ccnrE35E.s:2357   .debug_str:000000000000008e .LASF40
+     /tmp/ccnrE35E.s:394    .text:000000000000023c .LVL34
+     /tmp/ccnrE35E.s:398    .text:0000000000000248 .LVL35
+     /tmp/ccnrE35E.s:402    .text:0000000000000250 .LVL36
+     /tmp/ccnrE35E.s:2457   .debug_str:00000000000003d3 .LASF41
+     /tmp/ccnrE35E.s:327    .text:00000000000001cc .LFB7
+     /tmp/ccnrE35E.s:370    .text:000000000000021c .LFE7
+GAS LISTING /tmp/ccnrE35E.s 			page 20
+
+
+     /tmp/ccnrE35E.s:2399   .debug_str:00000000000001ae .LASF42
+     /tmp/ccnrE35E.s:2068   .debug_loc:00000000000001ab .LLST15
+     /tmp/ccnrE35E.s:2353   .debug_str:0000000000000073 .LASF43
+     /tmp/ccnrE35E.s:2086   .debug_loc:00000000000001f7 .LLST16
+     /tmp/ccnrE35E.s:2100   .debug_loc:0000000000000230 .LLST17
+     /tmp/ccnrE35E.s:348    .text:00000000000001f4 .LVL30
+     /tmp/ccnrE35E.s:354    .text:0000000000000204 .LVL31
+     /tmp/ccnrE35E.s:2371   .debug_str:00000000000000e4 .LASF44
+     /tmp/ccnrE35E.s:296    .text:00000000000001a4 .LFB6
+     /tmp/ccnrE35E.s:321    .text:00000000000001cc .LFE6
+     /tmp/ccnrE35E.s:310    .text:00000000000001bc .LVL28
+     /tmp/ccnrE35E.s:2375   .debug_str:000000000000010e .LASF45
+     /tmp/ccnrE35E.s:265    .text:000000000000017c .LFB5
+     /tmp/ccnrE35E.s:290    .text:00000000000001a4 .LFE5
+     /tmp/ccnrE35E.s:279    .text:0000000000000194 .LVL27
+     /tmp/ccnrE35E.s:2445   .debug_str:0000000000000380 .LASF75
+     /tmp/ccnrE35E.s:231    .text:000000000000014c .LFB4
+     /tmp/ccnrE35E.s:259    .text:000000000000017c .LFE4
+     /tmp/ccnrE35E.s:2107   .debug_loc:0000000000000253 .LLST14
+     /tmp/ccnrE35E.s:245    .text:0000000000000164 .LVL25
+     /tmp/ccnrE35E.s:248    .text:000000000000016c .LVL26
+     /tmp/ccnrE35E.s:2341   .debug_str:0000000000000031 .LASF46
+     /tmp/ccnrE35E.s:196    .text:000000000000011c .LFB3
+     /tmp/ccnrE35E.s:225    .text:000000000000014c .LFE3
+     /tmp/ccnrE35E.s:2114   .debug_loc:0000000000000276 .LLST13
+     /tmp/ccnrE35E.s:210    .text:0000000000000134 .LVL23
+     /tmp/ccnrE35E.s:214    .text:000000000000013c .LVL24
+     /tmp/ccnrE35E.s:2393   .debug_str:000000000000018a .LASF47
+     /tmp/ccnrE35E.s:118    .text:0000000000000094 .LFB2
+     /tmp/ccnrE35E.s:190    .text:000000000000011c .LFE2
+     /tmp/ccnrE35E.s:2121   .debug_loc:0000000000000299 .LLST6
+     /tmp/ccnrE35E.s:2477   .debug_str:000000000000044d .LASF48
+     /tmp/ccnrE35E.s:2139   .debug_loc:00000000000002e5 .LLST7
+     /tmp/ccnrE35E.s:2453   .debug_str:00000000000003b6 .LASF49
+     /tmp/ccnrE35E.s:2157   .debug_loc:0000000000000331 .LLST8
+     /tmp/ccnrE35E.s:2175   .debug_loc:000000000000037d .LLST9
+     /tmp/ccnrE35E.s:2337   .debug_str:0000000000000024 .LASF50
+     /tmp/ccnrE35E.s:2182   .debug_loc:00000000000003a0 .LLST10
+     /tmp/ccnrE35E.s:2405   .debug_str:00000000000001d4 .LASF51
+     /tmp/ccnrE35E.s:2195   .debug_loc:00000000000003da .LLST11
+     /tmp/ccnrE35E.s:2417   .debug_str:00000000000002b1 .LASF52
+     /tmp/ccnrE35E.s:2210   .debug_loc:0000000000000415 .LLST12
+     /tmp/ccnrE35E.s:146    .text:00000000000000c8 .LVL14
+     /tmp/ccnrE35E.s:153    .text:00000000000000d8 .LVL16
+     /tmp/ccnrE35E.s:167    .text:00000000000000fc .LVL18
+     /tmp/ccnrE35E.s:2441   .debug_str:0000000000000369 .LASF53
+     /tmp/ccnrE35E.s:61     .text:0000000000000048 .LFB1
+     /tmp/ccnrE35E.s:112    .text:0000000000000094 .LFE1
+     /tmp/ccnrE35E.s:2223   .debug_loc:000000000000044f .LLST3
+     /tmp/ccnrE35E.s:2461   .debug_str:00000000000003e8 .LASF54
+     /tmp/ccnrE35E.s:2254   .debug_loc:00000000000004c6 .LLST4
+     /tmp/ccnrE35E.s:2270   .debug_loc:0000000000000501 .LLST5
+     /tmp/ccnrE35E.s:86     .text:000000000000006c .LVL7
+     /tmp/ccnrE35E.s:91     .text:0000000000000078 .LVL8
+     /tmp/ccnrE35E.s:2473   .debug_str:000000000000042b .LASF55
+     /tmp/ccnrE35E.s:11     .text:0000000000000000 .LFB0
+     /tmp/ccnrE35E.s:55     .text:0000000000000048 .LFE0
+GAS LISTING /tmp/ccnrE35E.s 			page 21
+
+
+     /tmp/ccnrE35E.s:2437   .debug_str:0000000000000346 .LASF56
+     /tmp/ccnrE35E.s:2277   .debug_loc:0000000000000524 .LLST0
+     /tmp/ccnrE35E.s:2291   .debug_loc:000000000000055d .LLST1
+     /tmp/ccnrE35E.s:2309   .debug_loc:000000000000059a .LLST2
+     /tmp/ccnrE35E.s:35     .text:0000000000000024 .LVL2
+     /tmp/ccnrE35E.s:40     .text:0000000000000030 .LVL3
+     /tmp/ccnrE35E.s:2351   .debug_str:000000000000006c .LASF57
+     /tmp/ccnrE35E.s:2427   .debug_str:00000000000002fe .LASF58
+     /tmp/ccnrE35E.s:2455   .debug_str:00000000000003bb .LASF59
+     /tmp/ccnrE35E.s:2367   .debug_str:00000000000000c6 .LASF60
+     /tmp/ccnrE35E.s:2423   .debug_str:00000000000002df .LASF61
+     /tmp/ccnrE35E.s:2359   .debug_str:0000000000000095 .LASF62
+     /tmp/ccnrE35E.s:2475   .debug_str:0000000000000435 .LASF63
+     /tmp/ccnrE35E.s:2411   .debug_str:00000000000001f9 .LASF64
+     /tmp/ccnrE35E.s:2419   .debug_str:00000000000002bb .LASF65
+     /tmp/ccnrE35E.s:2409   .debug_str:00000000000001e2 .LASF66
+     /tmp/ccnrE35E.s:2401   .debug_str:00000000000001b5 .LASF67
+     /tmp/ccnrE35E.s:2377   .debug_str:0000000000000121 .LASF68
+     /tmp/ccnrE35E.s:2447   .debug_str:0000000000000390 .LASF69
+     /tmp/ccnrE35E.s:2431   .debug_str:0000000000000315 .LASF70
+     /tmp/ccnrE35E.s:2471   .debug_str:000000000000041e .LASF71
+     /tmp/ccnrE35E.s:509    .text:00000000000002e4 .LVL43
+     /tmp/ccnrE35E.s:526    .text:00000000000002fc .LVL44
+     /tmp/ccnrE35E.s:555    .text:000000000000031c .LVL47
+     /tmp/ccnrE35E.s:531    .text:0000000000000300 .LVL45
+     /tmp/ccnrE35E.s:467    .text:00000000000002a4 .LVL40
+     /tmp/ccnrE35E.s:425    .text:0000000000000264 .LVL37
+     /tmp/ccnrE35E.s:379    .text:000000000000021c .LVL33
+     /tmp/ccnrE35E.s:330    .text:00000000000001cc .LVL29
+     /tmp/ccnrE35E.s:363    .text:0000000000000210 .LVL32
+     /tmp/ccnrE35E.s:121    .text:0000000000000094 .LVL12
+     /tmp/ccnrE35E.s:179    .text:000000000000010c .LVL20
+     /tmp/ccnrE35E.s:182    .text:0000000000000110 .LVL21
+     /tmp/ccnrE35E.s:185    .text:0000000000000114 .LVL22
+     /tmp/ccnrE35E.s:148    .text:00000000000000cc .LVL15
+     /tmp/ccnrE35E.s:176    .text:0000000000000108 .LVL19
+     /tmp/ccnrE35E.s:165    .text:00000000000000f4 .LVL17
+     /tmp/ccnrE35E.s:64     .text:0000000000000048 .LVL5
+     /tmp/ccnrE35E.s:100    .text:0000000000000084 .LVL9
+     /tmp/ccnrE35E.s:104    .text:000000000000008c .LVL10
+     /tmp/ccnrE35E.s:108    .text:0000000000000090 .LVL11
+     /tmp/ccnrE35E.s:82     .text:0000000000000064 .LVL6
+     /tmp/ccnrE35E.s:15     .text:0000000000000000 .LVL0
+     /tmp/ccnrE35E.s:31     .text:000000000000001c .LVL1
+     /tmp/ccnrE35E.s:50     .text:0000000000000040 .LVL4
+     /tmp/ccnrE35E.s:600    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+getRunningThreadContext
+abi_mem_alloc
+abi_mem_free
+abi_thread_create
+abi_thread_exit
+abi_thread_dispatch
+abi_mem_get_free_space
+abi_mem_get_largest_free_block
+abi_sem_open
+GAS LISTING /tmp/ccnrE35E.s 			page 22
+
+
+abi_sem_wait
+getWaitStatusForRunning
+abi_sem_signal
+abi_sem_close
+__putc
+__getc

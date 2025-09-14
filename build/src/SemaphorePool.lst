@@ -1,0 +1,564 @@
+GAS LISTING /tmp/cc2d1CRc.s 			page 1
+
+
+   1              		.file	"SemaphorePool.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_ZN13SemaphorePoolC2Ev
+   9              	_ZN13SemaphorePoolC2Ev:
+  10              	.LFB1:
+  11              		.file 1 "src/SemaphorePool.cpp"
+   1:src/SemaphorePool.cpp **** 
+   2:src/SemaphorePool.cpp **** #include "../h/SemaphorePool.hpp"
+   3:src/SemaphorePool.cpp **** 
+   4:src/SemaphorePool.cpp **** SemaphorePool::SemaphorePool() : pool(nullptr), used(nullptr) {}
+  12              		.loc 1 4 1
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FF 		addi	sp,sp,-16
+  16              		.cfi_def_cfa_offset 16
+  17 0004 23348100 		sd	s0,8(sp)
+  18              		.cfi_offset 8, -8
+  19 0008 13040101 		addi	s0,sp,16
+  20              		.cfi_def_cfa 8, 0
+  21              	.LBB2:
+  22              		.loc 1 4 61 is_stmt 0
+  23 000c 23300500 		sd	zero,0(a0)
+  24 0010 23340500 		sd	zero,8(a0)
+  25              	.LBE2:
+  26              		.loc 1 4 64
+  27 0014 03348100 		ld	s0,8(sp)
+  28              		.cfi_restore 8
+  29              		.cfi_def_cfa 2, 16
+  30 0018 13010101 		addi	sp,sp,16
+  31              		.cfi_def_cfa_offset 0
+  32 001c 67800000 		jr	ra
+  33              		.cfi_endproc
+  34              	.LFE1:
+  36              		.globl	_ZN13SemaphorePoolC1Ev
+  37              		.set	_ZN13SemaphorePoolC1Ev,_ZN13SemaphorePoolC2Ev
+  38              		.align	2
+  39              		.globl	_ZN13SemaphorePool4initEPvS0_
+  41              	_ZN13SemaphorePool4initEPvS0_:
+  42              	.LFB3:
+   5:src/SemaphorePool.cpp **** 
+   6:src/SemaphorePool.cpp **** void SemaphorePool::init(void* poolStartAddress, void* usedStartAddress) {
+  43              		.loc 1 6 74 is_stmt 1
+  44              		.cfi_startproc
+  45              	.LVL1:
+  46 0020 130101FF 		addi	sp,sp,-16
+  47              		.cfi_def_cfa_offset 16
+  48 0024 23348100 		sd	s0,8(sp)
+  49              		.cfi_offset 8, -8
+  50 0028 13040101 		addi	s0,sp,16
+  51              		.cfi_def_cfa 8, 0
+   7:src/SemaphorePool.cpp ****     pool = (Semaphore*)poolStartAddress;
+  52              		.loc 1 7 5
+  53              		.loc 1 7 10 is_stmt 0
+GAS LISTING /tmp/cc2d1CRc.s 			page 2
+
+
+  54 002c 2330B500 		sd	a1,0(a0)
+   8:src/SemaphorePool.cpp ****     used = (bool*)usedStartAddress;
+  55              		.loc 1 8 5 is_stmt 1
+  56              		.loc 1 8 10 is_stmt 0
+  57 0030 2334C500 		sd	a2,8(a0)
+   9:src/SemaphorePool.cpp ****     for (int i = 0; i < MAX_SEMAPHORES; i++) used[i] = false;
+  58              		.loc 1 9 5 is_stmt 1
+  59              	.LVL2:
+  60              	.LBB3:
+  61              		.loc 1 9 14 is_stmt 0
+  62 0034 93070000 		li	a5,0
+  63              	.LVL3:
+  64              	.L5:
+  65              		.loc 1 9 23 is_stmt 1 discriminator 3
+  66 0038 13079000 		li	a4,9
+  67 003c 634CF700 		bgt	a5,a4,.L3
+  68              		.loc 1 9 46 discriminator 2
+  69 0040 03378500 		ld	a4,8(a0)
+  70              		.loc 1 9 52 is_stmt 0 discriminator 2
+  71 0044 3307F700 		add	a4,a4,a5
+  72              		.loc 1 9 54 discriminator 2
+  73 0048 23000700 		sb	zero,0(a4)
+  74              		.loc 1 9 5 is_stmt 1 discriminator 2
+  75 004c 9B871700 		addiw	a5,a5,1
+  76              	.LVL4:
+  77 0050 6FF09FFE 		j	.L5
+  78              	.LVL5:
+  79              	.L3:
+  80              	.LBE3:
+  10:src/SemaphorePool.cpp **** }
+  81              		.loc 1 10 1 is_stmt 0
+  82 0054 03348100 		ld	s0,8(sp)
+  83              		.cfi_restore 8
+  84              		.cfi_def_cfa 2, 16
+  85 0058 13010101 		addi	sp,sp,16
+  86              		.cfi_def_cfa_offset 0
+  87 005c 67800000 		jr	ra
+  88              		.cfi_endproc
+  89              	.LFE3:
+  91              		.align	2
+  92              		.globl	_ZN13SemaphorePool16getSemaphoreByIdEj
+  94              	_ZN13SemaphorePool16getSemaphoreByIdEj:
+  95              	.LFB4:
+  11:src/SemaphorePool.cpp **** 
+  12:src/SemaphorePool.cpp **** Semaphore* SemaphorePool::getSemaphoreById(sem_t id){
+  96              		.loc 1 12 53 is_stmt 1
+  97              		.cfi_startproc
+  98              	.LVL6:
+  99 0060 130101FF 		addi	sp,sp,-16
+ 100              		.cfi_def_cfa_offset 16
+ 101 0064 23348100 		sd	s0,8(sp)
+ 102              		.cfi_offset 8, -8
+ 103 0068 13040101 		addi	s0,sp,16
+ 104              		.cfi_def_cfa 8, 0
+ 105 006c 93060500 		mv	a3,a0
+  13:src/SemaphorePool.cpp ****     for(int i = 0; i < MAX_SEMAPHORES; i++){
+ 106              		.loc 1 13 5
+GAS LISTING /tmp/cc2d1CRc.s 			page 3
+
+
+ 107              	.LVL7:
+ 108              	.LBB4:
+ 109              		.loc 1 13 13 is_stmt 0
+ 110 0070 93070000 		li	a5,0
+ 111 0074 6F008000 		j	.L10
+ 112              	.LVL8:
+ 113              	.L9:
+ 114              		.loc 1 13 5 is_stmt 1 discriminator 2
+ 115 0078 9B871700 		addiw	a5,a5,1
+ 116              	.LVL9:
+ 117              	.L10:
+ 118              		.loc 1 13 22 discriminator 1
+ 119 007c 13079000 		li	a4,9
+ 120 0080 6346F702 		bgt	a5,a4,.L11
+  14:src/SemaphorePool.cpp ****         if(used[i] == true && pool[i].myHandle == id){
+ 121              		.loc 1 14 9
+ 122              		.loc 1 14 12 is_stmt 0
+ 123 0084 03B78600 		ld	a4,8(a3)
+ 124              		.loc 1 14 18
+ 125 0088 3307F700 		add	a4,a4,a5
+ 126 008c 03470700 		lbu	a4,0(a4)
+ 127              		.loc 1 14 9
+ 128 0090 E30407FE 		beqz	a4,.L9
+ 129              		.loc 1 14 31 discriminator 1
+ 130 0094 03B50600 		ld	a0,0(a3)
+ 131              		.loc 1 14 37 discriminator 1
+ 132 0098 13975700 		slli	a4,a5,5
+ 133 009c 3305E500 		add	a0,a0,a4
+ 134              		.loc 1 14 39 discriminator 1
+ 135 00a0 03278500 		lw	a4,8(a0)
+ 136              		.loc 1 14 28 discriminator 1
+ 137 00a4 E31AB7FC 		bne	a4,a1,.L9
+ 138 00a8 6F008000 		j	.L7
+ 139              	.L11:
+ 140              	.LBE4:
+  15:src/SemaphorePool.cpp ****             return &pool[i];
+  16:src/SemaphorePool.cpp ****         }
+  17:src/SemaphorePool.cpp ****     }
+  18:src/SemaphorePool.cpp ****     return nullptr;
+ 141              		.loc 1 18 12
+ 142 00ac 13050000 		li	a0,0
+ 143              	.L7:
+  19:src/SemaphorePool.cpp **** }
+ 144              		.loc 1 19 1
+ 145 00b0 03348100 		ld	s0,8(sp)
+ 146              		.cfi_restore 8
+ 147              		.cfi_def_cfa 2, 16
+ 148 00b4 13010101 		addi	sp,sp,16
+ 149              		.cfi_def_cfa_offset 0
+ 150 00b8 67800000 		jr	ra
+ 151              		.cfi_endproc
+ 152              	.LFE4:
+ 154              		.align	2
+ 155              		.globl	_ZN13SemaphorePool8allocateEv
+ 157              	_ZN13SemaphorePool8allocateEv:
+ 158              	.LFB5:
+  20:src/SemaphorePool.cpp **** Semaphore* SemaphorePool::allocate() {
+GAS LISTING /tmp/cc2d1CRc.s 			page 4
+
+
+ 159              		.loc 1 20 38 is_stmt 1
+ 160              		.cfi_startproc
+ 161              	.LVL10:
+ 162 00bc 130101FF 		addi	sp,sp,-16
+ 163              		.cfi_def_cfa_offset 16
+ 164 00c0 23348100 		sd	s0,8(sp)
+ 165              		.cfi_offset 8, -8
+ 166 00c4 13040101 		addi	s0,sp,16
+ 167              		.cfi_def_cfa 8, 0
+  21:src/SemaphorePool.cpp ****     for (int i = 0; i < MAX_SEMAPHORES; i++) {
+ 168              		.loc 1 21 5
+ 169              	.LVL11:
+ 170              	.LBB5:
+ 171              		.loc 1 21 14 is_stmt 0
+ 172 00c8 93070000 		li	a5,0
+ 173              	.LVL12:
+ 174              	.L16:
+ 175              		.loc 1 21 23 is_stmt 1 discriminator 1
+ 176 00cc 13079000 		li	a4,9
+ 177 00d0 634CF702 		bgt	a5,a4,.L17
+  22:src/SemaphorePool.cpp ****         if (!used[i]) {
+ 178              		.loc 1 22 9
+ 179              		.loc 1 22 14 is_stmt 0
+ 180 00d4 03378500 		ld	a4,8(a0)
+ 181              		.loc 1 22 19
+ 182 00d8 13860700 		mv	a2,a5
+ 183              		.loc 1 22 20
+ 184 00dc 3307F700 		add	a4,a4,a5
+ 185 00e0 83460700 		lbu	a3,0(a4)
+ 186              		.loc 1 22 9
+ 187 00e4 63860600 		beqz	a3,.L19
+  21:src/SemaphorePool.cpp ****     for (int i = 0; i < MAX_SEMAPHORES; i++) {
+ 188              		.loc 1 21 5 is_stmt 1 discriminator 2
+ 189 00e8 9B871700 		addiw	a5,a5,1
+ 190              	.LVL13:
+ 191 00ec 6FF01FFE 		j	.L16
+ 192              	.LVL14:
+ 193              	.L19:
+  23:src/SemaphorePool.cpp ****             used[i] = true;
+ 194              		.loc 1 23 13
+ 195              		.loc 1 23 21 is_stmt 0
+ 196 00f0 93071000 		li	a5,1
+ 197              	.LVL15:
+ 198 00f4 2300F700 		sb	a5,0(a4)
+  24:src/SemaphorePool.cpp ****             return &pool[i];
+ 199              		.loc 1 24 13 is_stmt 1
+ 200              		.loc 1 24 21 is_stmt 0
+ 201 00f8 03350500 		ld	a0,0(a0)
+ 202              	.LVL16:
+ 203              		.loc 1 24 27
+ 204 00fc 13165600 		slli	a2,a2,5
+ 205 0100 3305C500 		add	a0,a0,a2
+ 206 0104 6F008000 		j	.L13
+ 207              	.LVL17:
+ 208              	.L17:
+ 209              	.LBE5:
+  25:src/SemaphorePool.cpp ****         }
+GAS LISTING /tmp/cc2d1CRc.s 			page 5
+
+
+  26:src/SemaphorePool.cpp ****     }
+  27:src/SemaphorePool.cpp ****     return nullptr;
+ 210              		.loc 1 27 12
+ 211 0108 13050000 		li	a0,0
+ 212              	.LVL18:
+ 213              	.L13:
+  28:src/SemaphorePool.cpp **** }
+ 214              		.loc 1 28 1
+ 215 010c 03348100 		ld	s0,8(sp)
+ 216              		.cfi_restore 8
+ 217              		.cfi_def_cfa 2, 16
+ 218 0110 13010101 		addi	sp,sp,16
+ 219              		.cfi_def_cfa_offset 0
+ 220 0114 67800000 		jr	ra
+ 221              		.cfi_endproc
+ 222              	.LFE5:
+ 224              		.align	2
+ 225              		.globl	_ZN13SemaphorePool10deallocateEP9Semaphore
+ 227              	_ZN13SemaphorePool10deallocateEP9Semaphore:
+ 228              	.LFB6:
+  29:src/SemaphorePool.cpp **** 
+  30:src/SemaphorePool.cpp **** void SemaphorePool::deallocate(Semaphore* obj) {
+ 229              		.loc 1 30 48 is_stmt 1
+ 230              		.cfi_startproc
+ 231              	.LVL19:
+ 232 0118 130101FF 		addi	sp,sp,-16
+ 233              		.cfi_def_cfa_offset 16
+ 234 011c 23348100 		sd	s0,8(sp)
+ 235              		.cfi_offset 8, -8
+ 236 0120 13040101 		addi	s0,sp,16
+ 237              		.cfi_def_cfa 8, 0
+  31:src/SemaphorePool.cpp ****     for (int i = 0; i < MAX_SEMAPHORES; i++) {
+ 238              		.loc 1 31 5
+ 239              	.LVL20:
+ 240              	.LBB6:
+ 241              		.loc 1 31 14 is_stmt 0
+ 242 0124 93070000 		li	a5,0
+ 243              	.LVL21:
+ 244              	.L23:
+ 245              		.loc 1 31 23 is_stmt 1 discriminator 1
+ 246 0128 13079000 		li	a4,9
+ 247 012c 6346F702 		bgt	a5,a4,.L20
+  32:src/SemaphorePool.cpp ****         if (&pool[i] == obj) {
+ 248              		.loc 1 32 9
+ 249              		.loc 1 32 14 is_stmt 0
+ 250 0130 03370500 		ld	a4,0(a0)
+ 251              		.loc 1 32 19
+ 252 0134 13860700 		mv	a2,a5
+ 253              		.loc 1 32 20
+ 254 0138 93965700 		slli	a3,a5,5
+ 255              		.loc 1 32 13
+ 256 013c 3307D700 		add	a4,a4,a3
+ 257              		.loc 1 32 9
+ 258 0140 6306B700 		beq	a4,a1,.L25
+  31:src/SemaphorePool.cpp ****     for (int i = 0; i < MAX_SEMAPHORES; i++) {
+ 259              		.loc 1 31 5 is_stmt 1 discriminator 2
+ 260 0144 9B871700 		addiw	a5,a5,1
+GAS LISTING /tmp/cc2d1CRc.s 			page 6
+
+
+ 261              	.LVL22:
+ 262 0148 6FF01FFE 		j	.L23
+ 263              	.LVL23:
+ 264              	.L25:
+  33:src/SemaphorePool.cpp ****             used[i] = false;
+ 265              		.loc 1 33 13
+ 266 014c 83378500 		ld	a5,8(a0)
+ 267              	.LVL24:
+ 268              		.loc 1 33 19 is_stmt 0
+ 269 0150 3386C700 		add	a2,a5,a2
+ 270              		.loc 1 33 21
+ 271 0154 23000600 		sb	zero,0(a2)
+  34:src/SemaphorePool.cpp ****             return;
+ 272              		.loc 1 34 13 is_stmt 1
+ 273              	.L20:
+ 274              	.LBE6:
+  35:src/SemaphorePool.cpp ****         }
+  36:src/SemaphorePool.cpp ****     }
+  37:src/SemaphorePool.cpp **** }
+ 275              		.loc 1 37 1 is_stmt 0
+ 276 0158 03348100 		ld	s0,8(sp)
+ 277              		.cfi_restore 8
+ 278              		.cfi_def_cfa 2, 16
+ 279 015c 13010101 		addi	sp,sp,16
+ 280              		.cfi_def_cfa_offset 0
+ 281 0160 67800000 		jr	ra
+ 282              		.cfi_endproc
+ 283              	.LFE6:
+ 285              	.Letext0:
+ 286              		.file 2 "src/../h/../lib/hw.h"
+ 287              		.file 3 "src/../h/SemaphorePool.hpp"
+GAS LISTING /tmp/cc2d1CRc.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 SemaphorePool.cpp
+     /tmp/cc2d1CRc.s:9      .text:0000000000000000 _ZN13SemaphorePoolC2Ev
+     /tmp/cc2d1CRc.s:13     .text:0000000000000000 .L0 
+     /tmp/cc2d1CRc.s:15     .text:0000000000000000 .L0 
+     /tmp/cc2d1CRc.s:16     .text:0000000000000004 .L0 
+     /tmp/cc2d1CRc.s:18     .text:0000000000000008 .L0 
+     /tmp/cc2d1CRc.s:20     .text:000000000000000c .L0 
+     /tmp/cc2d1CRc.s:23     .text:000000000000000c .L0 
+     /tmp/cc2d1CRc.s:27     .text:0000000000000014 .L0 
+     /tmp/cc2d1CRc.s:28     .text:0000000000000018 .L0 
+     /tmp/cc2d1CRc.s:29     .text:0000000000000018 .L0 
+     /tmp/cc2d1CRc.s:31     .text:000000000000001c .L0 
+     /tmp/cc2d1CRc.s:33     .text:0000000000000020 .L0 
+     /tmp/cc2d1CRc.s:9      .text:0000000000000000 _ZN13SemaphorePoolC1Ev
+     /tmp/cc2d1CRc.s:41     .text:0000000000000020 _ZN13SemaphorePool4initEPvS0_
+     /tmp/cc2d1CRc.s:44     .text:0000000000000020 .L0 
+     /tmp/cc2d1CRc.s:46     .text:0000000000000020 .L0 
+     /tmp/cc2d1CRc.s:47     .text:0000000000000024 .L0 
+     /tmp/cc2d1CRc.s:49     .text:0000000000000028 .L0 
+     /tmp/cc2d1CRc.s:51     .text:000000000000002c .L0 
+     /tmp/cc2d1CRc.s:53     .text:000000000000002c .L0 
+     /tmp/cc2d1CRc.s:54     .text:000000000000002c .L0 
+     /tmp/cc2d1CRc.s:56     .text:0000000000000030 .L0 
+     /tmp/cc2d1CRc.s:57     .text:0000000000000030 .L0 
+     /tmp/cc2d1CRc.s:61     .text:0000000000000034 .L0 
+     /tmp/cc2d1CRc.s:62     .text:0000000000000034 .L0 
+     /tmp/cc2d1CRc.s:66     .text:0000000000000038 .L0 
+     /tmp/cc2d1CRc.s:69     .text:0000000000000040 .L0 
+     /tmp/cc2d1CRc.s:71     .text:0000000000000044 .L0 
+     /tmp/cc2d1CRc.s:73     .text:0000000000000048 .L0 
+     /tmp/cc2d1CRc.s:75     .text:000000000000004c .L0 
+     /tmp/cc2d1CRc.s:82     .text:0000000000000054 .L0 
+     /tmp/cc2d1CRc.s:83     .text:0000000000000058 .L0 
+     /tmp/cc2d1CRc.s:84     .text:0000000000000058 .L0 
+     /tmp/cc2d1CRc.s:86     .text:000000000000005c .L0 
+     /tmp/cc2d1CRc.s:88     .text:0000000000000060 .L0 
+     /tmp/cc2d1CRc.s:94     .text:0000000000000060 _ZN13SemaphorePool16getSemaphoreByIdEj
+     /tmp/cc2d1CRc.s:97     .text:0000000000000060 .L0 
+     /tmp/cc2d1CRc.s:99     .text:0000000000000060 .L0 
+     /tmp/cc2d1CRc.s:100    .text:0000000000000064 .L0 
+     /tmp/cc2d1CRc.s:102    .text:0000000000000068 .L0 
+     /tmp/cc2d1CRc.s:104    .text:000000000000006c .L0 
+     /tmp/cc2d1CRc.s:109    .text:0000000000000070 .L0 
+     /tmp/cc2d1CRc.s:110    .text:0000000000000070 .L0 
+     /tmp/cc2d1CRc.s:115    .text:0000000000000078 .L0 
+     /tmp/cc2d1CRc.s:119    .text:000000000000007c .L0 
+     /tmp/cc2d1CRc.s:122    .text:0000000000000084 .L0 
+     /tmp/cc2d1CRc.s:123    .text:0000000000000084 .L0 
+     /tmp/cc2d1CRc.s:125    .text:0000000000000088 .L0 
+     /tmp/cc2d1CRc.s:128    .text:0000000000000090 .L0 
+     /tmp/cc2d1CRc.s:130    .text:0000000000000094 .L0 
+     /tmp/cc2d1CRc.s:132    .text:0000000000000098 .L0 
+     /tmp/cc2d1CRc.s:135    .text:00000000000000a0 .L0 
+     /tmp/cc2d1CRc.s:137    .text:00000000000000a4 .L0 
+     /tmp/cc2d1CRc.s:142    .text:00000000000000ac .L0 
+     /tmp/cc2d1CRc.s:145    .text:00000000000000b0 .L0 
+GAS LISTING /tmp/cc2d1CRc.s 			page 8
+
+
+     /tmp/cc2d1CRc.s:146    .text:00000000000000b4 .L0 
+     /tmp/cc2d1CRc.s:147    .text:00000000000000b4 .L0 
+     /tmp/cc2d1CRc.s:149    .text:00000000000000b8 .L0 
+     /tmp/cc2d1CRc.s:151    .text:00000000000000bc .L0 
+     /tmp/cc2d1CRc.s:157    .text:00000000000000bc _ZN13SemaphorePool8allocateEv
+     /tmp/cc2d1CRc.s:160    .text:00000000000000bc .L0 
+     /tmp/cc2d1CRc.s:162    .text:00000000000000bc .L0 
+     /tmp/cc2d1CRc.s:163    .text:00000000000000c0 .L0 
+     /tmp/cc2d1CRc.s:165    .text:00000000000000c4 .L0 
+     /tmp/cc2d1CRc.s:167    .text:00000000000000c8 .L0 
+     /tmp/cc2d1CRc.s:171    .text:00000000000000c8 .L0 
+     /tmp/cc2d1CRc.s:172    .text:00000000000000c8 .L0 
+     /tmp/cc2d1CRc.s:176    .text:00000000000000cc .L0 
+     /tmp/cc2d1CRc.s:179    .text:00000000000000d4 .L0 
+     /tmp/cc2d1CRc.s:180    .text:00000000000000d4 .L0 
+     /tmp/cc2d1CRc.s:182    .text:00000000000000d8 .L0 
+     /tmp/cc2d1CRc.s:184    .text:00000000000000dc .L0 
+     /tmp/cc2d1CRc.s:187    .text:00000000000000e4 .L0 
+     /tmp/cc2d1CRc.s:189    .text:00000000000000e8 .L0 
+     /tmp/cc2d1CRc.s:195    .text:00000000000000f0 .L0 
+     /tmp/cc2d1CRc.s:196    .text:00000000000000f0 .L0 
+     /tmp/cc2d1CRc.s:200    .text:00000000000000f8 .L0 
+     /tmp/cc2d1CRc.s:201    .text:00000000000000f8 .L0 
+     /tmp/cc2d1CRc.s:204    .text:00000000000000fc .L0 
+     /tmp/cc2d1CRc.s:211    .text:0000000000000108 .L0 
+     /tmp/cc2d1CRc.s:215    .text:000000000000010c .L0 
+     /tmp/cc2d1CRc.s:216    .text:0000000000000110 .L0 
+     /tmp/cc2d1CRc.s:217    .text:0000000000000110 .L0 
+     /tmp/cc2d1CRc.s:219    .text:0000000000000114 .L0 
+     /tmp/cc2d1CRc.s:221    .text:0000000000000118 .L0 
+     /tmp/cc2d1CRc.s:227    .text:0000000000000118 _ZN13SemaphorePool10deallocateEP9Semaphore
+     /tmp/cc2d1CRc.s:230    .text:0000000000000118 .L0 
+     /tmp/cc2d1CRc.s:232    .text:0000000000000118 .L0 
+     /tmp/cc2d1CRc.s:233    .text:000000000000011c .L0 
+     /tmp/cc2d1CRc.s:235    .text:0000000000000120 .L0 
+     /tmp/cc2d1CRc.s:237    .text:0000000000000124 .L0 
+     /tmp/cc2d1CRc.s:241    .text:0000000000000124 .L0 
+     /tmp/cc2d1CRc.s:242    .text:0000000000000124 .L0 
+     /tmp/cc2d1CRc.s:246    .text:0000000000000128 .L0 
+     /tmp/cc2d1CRc.s:249    .text:0000000000000130 .L0 
+     /tmp/cc2d1CRc.s:250    .text:0000000000000130 .L0 
+     /tmp/cc2d1CRc.s:252    .text:0000000000000134 .L0 
+     /tmp/cc2d1CRc.s:254    .text:0000000000000138 .L0 
+     /tmp/cc2d1CRc.s:256    .text:000000000000013c .L0 
+     /tmp/cc2d1CRc.s:258    .text:0000000000000140 .L0 
+     /tmp/cc2d1CRc.s:260    .text:0000000000000144 .L0 
+     /tmp/cc2d1CRc.s:266    .text:000000000000014c .L0 
+     /tmp/cc2d1CRc.s:269    .text:0000000000000150 .L0 
+     /tmp/cc2d1CRc.s:271    .text:0000000000000154 .L0 
+     /tmp/cc2d1CRc.s:275    .text:0000000000000158 .L0 
+     /tmp/cc2d1CRc.s:276    .text:0000000000000158 .L0 
+     /tmp/cc2d1CRc.s:277    .text:000000000000015c .L0 
+     /tmp/cc2d1CRc.s:278    .text:000000000000015c .L0 
+     /tmp/cc2d1CRc.s:280    .text:0000000000000160 .L0 
+     /tmp/cc2d1CRc.s:282    .text:0000000000000164 .L0 
+     /tmp/cc2d1CRc.s:288    .text:0000000000000164 .L0 
+     /tmp/cc2d1CRc.s:79     .text:0000000000000054 .L3
+GAS LISTING /tmp/cc2d1CRc.s 			page 9
+
+
+     /tmp/cc2d1CRc.s:64     .text:0000000000000038 .L5
+     /tmp/cc2d1CRc.s:117    .text:000000000000007c .L10
+     /tmp/cc2d1CRc.s:139    .text:00000000000000ac .L11
+     /tmp/cc2d1CRc.s:113    .text:0000000000000078 .L9
+     /tmp/cc2d1CRc.s:143    .text:00000000000000b0 .L7
+     /tmp/cc2d1CRc.s:208    .text:0000000000000108 .L17
+     /tmp/cc2d1CRc.s:193    .text:00000000000000f0 .L19
+     /tmp/cc2d1CRc.s:174    .text:00000000000000cc .L16
+     /tmp/cc2d1CRc.s:213    .text:000000000000010c .L13
+     /tmp/cc2d1CRc.s:273    .text:0000000000000158 .L20
+     /tmp/cc2d1CRc.s:264    .text:000000000000014c .L25
+     /tmp/cc2d1CRc.s:244    .text:0000000000000128 .L23
+     /tmp/cc2d1CRc.s:706    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/cc2d1CRc.s:1328   .debug_str:0000000000000157 .LASF35
+     /tmp/cc2d1CRc.s:1296   .debug_str:000000000000003f .LASF36
+     /tmp/cc2d1CRc.s:1344   .debug_str:0000000000000293 .LASF37
+     /tmp/cc2d1CRc.s:5      .text:0000000000000000 .Ltext0
+     /tmp/cc2d1CRc.s:285    .text:0000000000000164 .Letext0
+     /tmp/cc2d1CRc.s:1280   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/cc2d1CRc.s:1334   .debug_str:0000000000000242 .LASF0
+     /tmp/cc2d1CRc.s:1322   .debug_str:0000000000000121 .LASF1
+     /tmp/cc2d1CRc.s:1312   .debug_str:00000000000000c6 .LASF2
+     /tmp/cc2d1CRc.s:1294   .debug_str:0000000000000038 .LASF4
+     /tmp/cc2d1CRc.s:1318   .debug_str:00000000000000e4 .LASF3
+     /tmp/cc2d1CRc.s:1284   .debug_str:0000000000000013 .LASF5
+     /tmp/cc2d1CRc.s:1286   .debug_str:000000000000001a .LASF6
+     /tmp/cc2d1CRc.s:1282   .debug_str:0000000000000000 .LASF7
+     /tmp/cc2d1CRc.s:1308   .debug_str:00000000000000a4 .LASF8
+     /tmp/cc2d1CRc.s:1354   .debug_str:0000000000000310 .LASF9
+     /tmp/cc2d1CRc.s:1340   .debug_str:000000000000026d .LASF10
+     /tmp/cc2d1CRc.s:1290   .debug_str:0000000000000025 .LASF11
+     /tmp/cc2d1CRc.s:1360   .debug_str:0000000000000339 .LASF12
+     /tmp/cc2d1CRc.s:1310   .debug_str:00000000000000b7 .LASF13
+     /tmp/cc2d1CRc.s:1352   .debug_str:0000000000000300 .LASF14
+     /tmp/cc2d1CRc.s:1338   .debug_str:000000000000025d .LASF15
+     /tmp/cc2d1CRc.s:1324   .debug_str:0000000000000134 .LASF16
+     /tmp/cc2d1CRc.s:1302   .debug_str:000000000000005f .LASF17
+     /tmp/cc2d1CRc.s:1342   .debug_str:000000000000027d .LASF18
+     /tmp/cc2d1CRc.s:1298   .debug_str:0000000000000055 .LASF19
+     /tmp/cc2d1CRc.s:1336   .debug_str:000000000000024f .LASF20
+     /tmp/cc2d1CRc.s:1326   .debug_str:0000000000000140 .LASF22
+     /tmp/cc2d1CRc.s:1300   .debug_str:000000000000005a .LASF21
+     /tmp/cc2d1CRc.s:1332   .debug_str:0000000000000224 .LASF23
+     /tmp/cc2d1CRc.s:1348   .debug_str:00000000000002c8 .LASF24
+     /tmp/cc2d1CRc.s:1350   .debug_str:00000000000002d9 .LASF26
+     /tmp/cc2d1CRc.s:1330   .debug_str:000000000000021b .LASF25
+     /tmp/cc2d1CRc.s:1306   .debug_str:0000000000000086 .LASF27
+     /tmp/cc2d1CRc.s:1316   .debug_str:00000000000000d9 .LASF28
+     /tmp/cc2d1CRc.s:1320   .debug_str:00000000000000f6 .LASF29
+     /tmp/cc2d1CRc.s:1292   .debug_str:0000000000000033 .LASF30
+     /tmp/cc2d1CRc.s:1288   .debug_str:0000000000000020 .LASF31
+     /tmp/cc2d1CRc.s:1356   .debug_str:000000000000031e .LASF38
+     /tmp/cc2d1CRc.s:228    .text:0000000000000118 .LFB6
+     /tmp/cc2d1CRc.s:283    .text:0000000000000164 .LFE6
+     /tmp/cc2d1CRc.s:1314   .debug_str:00000000000000d4 .LASF32
+     /tmp/cc2d1CRc.s:240    .text:0000000000000124 .LBB6
+     /tmp/cc2d1CRc.s:274    .text:0000000000000158 .LBE6
+GAS LISTING /tmp/cc2d1CRc.s 			page 10
+
+
+     /tmp/cc2d1CRc.s:1167   .debug_loc:0000000000000000 .LLST5
+     /tmp/cc2d1CRc.s:158    .text:00000000000000bc .LFB5
+     /tmp/cc2d1CRc.s:222    .text:0000000000000118 .LFE5
+     /tmp/cc2d1CRc.s:1183   .debug_loc:000000000000004a .LLST3
+     /tmp/cc2d1CRc.s:170    .text:00000000000000c8 .LBB5
+     /tmp/cc2d1CRc.s:209    .text:0000000000000108 .LBE5
+     /tmp/cc2d1CRc.s:1208   .debug_loc:00000000000000ac .LLST4
+     /tmp/cc2d1CRc.s:95     .text:0000000000000060 .LFB4
+     /tmp/cc2d1CRc.s:152    .text:00000000000000bc .LFE4
+     /tmp/cc2d1CRc.s:1228   .debug_loc:0000000000000109 .LLST1
+     /tmp/cc2d1CRc.s:108    .text:0000000000000070 .LBB4
+     /tmp/cc2d1CRc.s:140    .text:00000000000000ac .LBE4
+     /tmp/cc2d1CRc.s:1239   .debug_loc:000000000000013f .LLST2
+     /tmp/cc2d1CRc.s:42     .text:0000000000000020 .LFB3
+     /tmp/cc2d1CRc.s:89     .text:0000000000000060 .LFE3
+     /tmp/cc2d1CRc.s:1358   .debug_str:0000000000000328 .LASF33
+     /tmp/cc2d1CRc.s:1304   .debug_str:0000000000000075 .LASF34
+     /tmp/cc2d1CRc.s:60     .text:0000000000000034 .LBB3
+     /tmp/cc2d1CRc.s:80     .text:0000000000000054 .LBE3
+     /tmp/cc2d1CRc.s:1251   .debug_loc:0000000000000176 .LLST0
+     /tmp/cc2d1CRc.s:1346   .debug_str:00000000000002b1 .LASF39
+     /tmp/cc2d1CRc.s:10     .text:0000000000000000 .LFB1
+     /tmp/cc2d1CRc.s:34     .text:0000000000000020 .LFE1
+     /tmp/cc2d1CRc.s:239    .text:0000000000000124 .LVL20
+     /tmp/cc2d1CRc.s:243    .text:0000000000000128 .LVL21
+     /tmp/cc2d1CRc.s:261    .text:0000000000000148 .LVL22
+     /tmp/cc2d1CRc.s:263    .text:000000000000014c .LVL23
+     /tmp/cc2d1CRc.s:267    .text:0000000000000150 .LVL24
+     /tmp/cc2d1CRc.s:161    .text:00000000000000bc .LVL10
+     /tmp/cc2d1CRc.s:202    .text:00000000000000fc .LVL16
+     /tmp/cc2d1CRc.s:207    .text:0000000000000108 .LVL17
+     /tmp/cc2d1CRc.s:212    .text:000000000000010c .LVL18
+     /tmp/cc2d1CRc.s:169    .text:00000000000000c8 .LVL11
+     /tmp/cc2d1CRc.s:173    .text:00000000000000cc .LVL12
+     /tmp/cc2d1CRc.s:190    .text:00000000000000ec .LVL13
+     /tmp/cc2d1CRc.s:192    .text:00000000000000f0 .LVL14
+     /tmp/cc2d1CRc.s:197    .text:00000000000000f4 .LVL15
+     /tmp/cc2d1CRc.s:98     .text:0000000000000060 .LVL6
+     /tmp/cc2d1CRc.s:112    .text:0000000000000078 .LVL8
+     /tmp/cc2d1CRc.s:107    .text:0000000000000070 .LVL7
+     /tmp/cc2d1CRc.s:59     .text:0000000000000034 .LVL2
+     /tmp/cc2d1CRc.s:63     .text:0000000000000038 .LVL3
+     /tmp/cc2d1CRc.s:76     .text:0000000000000050 .LVL4
+     /tmp/cc2d1CRc.s:78     .text:0000000000000054 .LVL5
+     /tmp/cc2d1CRc.s:289    .debug_info:0000000000000000 .Ldebug_info0
+
+NO UNDEFINED SYMBOLS

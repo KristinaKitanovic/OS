@@ -1,0 +1,606 @@
+GAS LISTING /tmp/ccFC4ifu.s 			page 1
+
+
+   1              		.file	"Scheduler.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_ZN9SchedulerC2Ev
+   9              	_ZN9SchedulerC2Ev:
+  10              	.LFB2:
+  11              		.file 1 "src/Scheduler.cpp"
+   1:src/Scheduler.cpp **** #include "../h/Scheduler.hpp"
+   2:src/Scheduler.cpp **** 
+   3:src/Scheduler.cpp **** Scheduler scheduler;
+   4:src/Scheduler.cpp **** 
+   5:src/Scheduler.cpp **** Scheduler::Scheduler() {
+  12              		.loc 1 5 1
+  13              		.cfi_startproc
+  14              	.LVL0:
+  15 0000 130101FF 		addi	sp,sp,-16
+  16              		.cfi_def_cfa_offset 16
+  17 0004 23348100 		sd	s0,8(sp)
+  18              		.cfi_offset 8, -8
+  19 0008 13040101 		addi	s0,sp,16
+  20              		.cfi_def_cfa 8, 0
+  21              	.LBB2:
+   6:src/Scheduler.cpp ****     head = nullptr;
+  22              		.loc 1 6 5
+  23              		.loc 1 6 10 is_stmt 0
+  24 000c 23300500 		sd	zero,0(a0)
+   7:src/Scheduler.cpp ****     tail = nullptr;
+  25              		.loc 1 7 5 is_stmt 1
+  26              		.loc 1 7 10 is_stmt 0
+  27 0010 23340500 		sd	zero,8(a0)
+  28              	.LBE2:
+   8:src/Scheduler.cpp **** }
+  29              		.loc 1 8 1
+  30 0014 03348100 		ld	s0,8(sp)
+  31              		.cfi_restore 8
+  32              		.cfi_def_cfa 2, 16
+  33 0018 13010101 		addi	sp,sp,16
+  34              		.cfi_def_cfa_offset 0
+  35 001c 67800000 		jr	ra
+  36              		.cfi_endproc
+  37              	.LFE2:
+  39              		.globl	_ZN9SchedulerC1Ev
+  40              		.set	_ZN9SchedulerC1Ev,_ZN9SchedulerC2Ev
+  41              		.align	2
+  43              	_Z41__static_initialization_and_destruction_0ii:
+  44              	.LFB6:
+   9:src/Scheduler.cpp **** 
+  10:src/Scheduler.cpp **** void Scheduler::put(Thread* t){
+  11:src/Scheduler.cpp ****     t->next = nullptr;
+  12:src/Scheduler.cpp ****     if(!head){
+  13:src/Scheduler.cpp ****         head = t;
+  14:src/Scheduler.cpp ****     }
+  15:src/Scheduler.cpp ****     else
+  16:src/Scheduler.cpp ****     {
+GAS LISTING /tmp/ccFC4ifu.s 			page 2
+
+
+  17:src/Scheduler.cpp ****         tail->next = t;
+  18:src/Scheduler.cpp ****     }
+  19:src/Scheduler.cpp ****     tail = t;
+  20:src/Scheduler.cpp **** }
+  21:src/Scheduler.cpp **** 
+  22:src/Scheduler.cpp **** Thread* Scheduler::get(){
+  23:src/Scheduler.cpp ****     if(head == nullptr) return nullptr;
+  24:src/Scheduler.cpp ****     Thread* thread = head;
+  25:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce)
+  26:src/Scheduler.cpp ****     {
+  27:src/Scheduler.cpp ****         thread->getContext()->wasActive = 1;
+  28:src/Scheduler.cpp ****     }
+  29:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce == 0)
+  30:src/Scheduler.cpp ****     {
+  31:src/Scheduler.cpp ****         thread->getContext()->startedOnce = 1;
+  32:src/Scheduler.cpp ****     }
+  33:src/Scheduler.cpp ****     head = head->next;
+  34:src/Scheduler.cpp ****     thread->next = nullptr;
+  35:src/Scheduler.cpp ****     if(!head) tail = nullptr;
+  36:src/Scheduler.cpp ****     return thread;
+  37:src/Scheduler.cpp **** }...
+  45              		.loc 1 37 1 is_stmt 1
+  46              		.cfi_startproc
+  47              	.LVL1:
+  48 0020 93071000 		li	a5,1
+  49 0024 6304F500 		beq	a0,a5,.L9
+  50              	.L6:
+  51 0028 67800000 		ret
+  52              	.L9:
+  53              		.loc 1 37 1 is_stmt 0 discriminator 1
+  54 002c B7070100 		li	a5,65536
+  55 0030 9387F7FF 		addi	a5,a5,-1
+  56 0034 E39AF5FE 		bne	a1,a5,.L6
+  57              		.loc 1 37 1
+  58 0038 130101FF 		addi	sp,sp,-16
+  59              		.cfi_def_cfa_offset 16
+  60 003c 23341100 		sd	ra,8(sp)
+  61 0040 23308100 		sd	s0,0(sp)
+  62              		.cfi_offset 1, -8
+  63              		.cfi_offset 8, -16
+  64 0044 13040101 		addi	s0,sp,16
+  65              		.cfi_def_cfa 8, 0
+   3:src/Scheduler.cpp **** 
+  66              		.loc 1 3 11
+  67 0048 17050000 		lla	a0,.LANCHOR0
+  67      13050500 
+  68              	.LVL2:
+  69 0050 97000000 		call	_ZN9SchedulerC1Ev
+  69      E7800000 
+  70              	.LVL3:
+  71              		.loc 1 37 1
+  72 0058 83308100 		ld	ra,8(sp)
+  73              		.cfi_restore 1
+  74 005c 03340100 		ld	s0,0(sp)
+  75              		.cfi_restore 8
+  76              		.cfi_def_cfa 2, 16
+  77 0060 13010101 		addi	sp,sp,16
+GAS LISTING /tmp/ccFC4ifu.s 			page 3
+
+
+  78              		.cfi_def_cfa_offset 0
+  79 0064 67800000 		jr	ra
+  80              		.cfi_endproc
+  81              	.LFE6:
+  83              		.align	2
+  84              		.globl	_ZN9Scheduler3putEP6Thread
+  86              	_ZN9Scheduler3putEP6Thread:
+  87              	.LFB4:
+  10:src/Scheduler.cpp **** void Scheduler::put(Thread* t){
+  88              		.loc 1 10 31 is_stmt 1
+  89              		.cfi_startproc
+  90              	.LVL4:
+  91 0068 130101FF 		addi	sp,sp,-16
+  92              		.cfi_def_cfa_offset 16
+  93 006c 23348100 		sd	s0,8(sp)
+  94              		.cfi_offset 8, -8
+  95 0070 13040101 		addi	s0,sp,16
+  96              		.cfi_def_cfa 8, 0
+  11:src/Scheduler.cpp ****     t->next = nullptr;
+  97              		.loc 1 11 5
+  11:src/Scheduler.cpp ****     t->next = nullptr;
+  98              		.loc 1 11 13 is_stmt 0
+  99 0074 23B40500 		sd	zero,8(a1)
+  12:src/Scheduler.cpp ****     if(!head){
+ 100              		.loc 1 12 5 is_stmt 1
+  12:src/Scheduler.cpp ****     if(!head){
+ 101              		.loc 1 12 9 is_stmt 0
+ 102 0078 83370500 		ld	a5,0(a0)
+  12:src/Scheduler.cpp ****     if(!head){
+ 103              		.loc 1 12 5
+ 104 007c 638E0700 		beqz	a5,.L14
+  17:src/Scheduler.cpp ****         tail->next = t;
+ 105              		.loc 1 17 9 is_stmt 1
+ 106 0080 83378500 		ld	a5,8(a0)
+  17:src/Scheduler.cpp ****         tail->next = t;
+ 107              		.loc 1 17 20 is_stmt 0
+ 108 0084 23B4B700 		sd	a1,8(a5)
+ 109              	.L12:
+  19:src/Scheduler.cpp ****     tail = t;
+ 110              		.loc 1 19 5 is_stmt 1
+  19:src/Scheduler.cpp ****     tail = t;
+ 111              		.loc 1 19 10 is_stmt 0
+ 112 0088 2334B500 		sd	a1,8(a0)
+  20:src/Scheduler.cpp **** }
+ 113              		.loc 1 20 1
+ 114 008c 03348100 		ld	s0,8(sp)
+ 115              		.cfi_remember_state
+ 116              		.cfi_restore 8
+ 117              		.cfi_def_cfa 2, 16
+ 118 0090 13010101 		addi	sp,sp,16
+ 119              		.cfi_def_cfa_offset 0
+ 120 0094 67800000 		jr	ra
+ 121              	.L14:
+ 122              		.cfi_restore_state
+  13:src/Scheduler.cpp ****         head = t;
+ 123              		.loc 1 13 9 is_stmt 1
+  13:src/Scheduler.cpp ****         head = t;
+GAS LISTING /tmp/ccFC4ifu.s 			page 4
+
+
+ 124              		.loc 1 13 14 is_stmt 0
+ 125 0098 2330B500 		sd	a1,0(a0)
+ 126 009c 6FF0DFFE 		j	.L12
+ 127              		.cfi_endproc
+ 128              	.LFE4:
+ 130              		.align	2
+ 131              		.globl	_ZN9Scheduler3getEv
+ 133              	_ZN9Scheduler3getEv:
+ 134              	.LFB5:
+  22:src/Scheduler.cpp **** Thread* Scheduler::get(){
+ 135              		.loc 1 22 25 is_stmt 1
+ 136              		.cfi_startproc
+ 137              	.LVL5:
+ 138 00a0 130101FE 		addi	sp,sp,-32
+ 139              		.cfi_def_cfa_offset 32
+ 140 00a4 233C1100 		sd	ra,24(sp)
+ 141 00a8 23388100 		sd	s0,16(sp)
+ 142 00ac 23349100 		sd	s1,8(sp)
+ 143 00b0 23302101 		sd	s2,0(sp)
+ 144              		.cfi_offset 1, -8
+ 145              		.cfi_offset 8, -16
+ 146              		.cfi_offset 9, -24
+ 147              		.cfi_offset 18, -32
+ 148 00b4 13040102 		addi	s0,sp,32
+ 149              		.cfi_def_cfa 8, 0
+  23:src/Scheduler.cpp ****     if(head == nullptr) return nullptr;
+ 150              		.loc 1 23 5
+  23:src/Scheduler.cpp ****     if(head == nullptr) return nullptr;
+ 151              		.loc 1 23 8 is_stmt 0
+ 152 00b8 03390500 		ld	s2,0(a0)
+  23:src/Scheduler.cpp ****     if(head == nullptr) return nullptr;
+ 153              		.loc 1 23 5
+ 154 00bc 63040904 		beqz	s2,.L15
+ 155 00c0 93040500 		mv	s1,a0
+  24:src/Scheduler.cpp ****     Thread* thread = head;
+ 156              		.loc 1 24 5 is_stmt 1
+ 157              	.LVL6:
+  25:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce)
+ 158              		.loc 1 25 5
+  25:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce)
+ 159              		.loc 1 25 26 is_stmt 0
+ 160 00c4 13050900 		mv	a0,s2
+ 161              	.LVL7:
+ 162 00c8 97000000 		call	_ZN6Thread10getContextEv@plt
+ 162      E7800000 
+ 163              	.LVL8:
+  25:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce)
+ 164              		.loc 1 25 30
+ 165 00d0 83370503 		ld	a5,48(a0)
+  25:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce)
+ 166              		.loc 1 25 5
+ 167 00d4 63960704 		bnez	a5,.L20
+ 168              	.L17:
+  29:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce == 0)
+ 169              		.loc 1 29 5 is_stmt 1
+  29:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce == 0)
+ 170              		.loc 1 29 26 is_stmt 0
+GAS LISTING /tmp/ccFC4ifu.s 			page 5
+
+
+ 171 00d8 13050900 		mv	a0,s2
+ 172 00dc 97000000 		call	_ZN6Thread10getContextEv@plt
+ 172      E7800000 
+ 173              	.LVL9:
+  29:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce == 0)
+ 174              		.loc 1 29 30
+ 175 00e4 83370503 		ld	a5,48(a0)
+  29:src/Scheduler.cpp ****     if(thread->getContext()->startedOnce == 0)
+ 176              		.loc 1 29 5
+ 177 00e8 63880704 		beqz	a5,.L21
+ 178              	.L18:
+  33:src/Scheduler.cpp ****     head = head->next;
+ 179              		.loc 1 33 5 is_stmt 1
+  33:src/Scheduler.cpp ****     head = head->next;
+ 180              		.loc 1 33 12 is_stmt 0
+ 181 00ec 83B70400 		ld	a5,0(s1)
+  33:src/Scheduler.cpp ****     head = head->next;
+ 182              		.loc 1 33 18
+ 183 00f0 83B78700 		ld	a5,8(a5)
+  33:src/Scheduler.cpp ****     head = head->next;
+ 184              		.loc 1 33 10
+ 185 00f4 23B0F400 		sd	a5,0(s1)
+  34:src/Scheduler.cpp ****     thread->next = nullptr;
+ 186              		.loc 1 34 5 is_stmt 1
+  34:src/Scheduler.cpp ****     thread->next = nullptr;
+ 187              		.loc 1 34 18 is_stmt 0
+ 188 00f8 23340900 		sd	zero,8(s2)
+  35:src/Scheduler.cpp ****     if(!head) tail = nullptr;
+ 189              		.loc 1 35 5 is_stmt 1
+  35:src/Scheduler.cpp ****     if(!head) tail = nullptr;
+ 190              		.loc 1 35 9 is_stmt 0
+ 191 00fc 83B70400 		ld	a5,0(s1)
+  35:src/Scheduler.cpp ****     if(!head) tail = nullptr;
+ 192              		.loc 1 35 5
+ 193 0100 63880704 		beqz	a5,.L22
+ 194              	.LVL10:
+ 195              	.L15:
+ 196              		.loc 1 37 1
+ 197 0104 13050900 		mv	a0,s2
+ 198 0108 83308101 		ld	ra,24(sp)
+ 199              		.cfi_remember_state
+ 200              		.cfi_restore 1
+ 201 010c 03340101 		ld	s0,16(sp)
+ 202              		.cfi_restore 8
+ 203              		.cfi_def_cfa 2, 32
+ 204 0110 83348100 		ld	s1,8(sp)
+ 205              		.cfi_restore 9
+ 206 0114 03390100 		ld	s2,0(sp)
+ 207              		.cfi_restore 18
+ 208 0118 13010102 		addi	sp,sp,32
+ 209              		.cfi_def_cfa_offset 0
+ 210 011c 67800000 		jr	ra
+ 211              	.LVL11:
+ 212              	.L20:
+ 213              		.cfi_restore_state
+  27:src/Scheduler.cpp ****         thread->getContext()->wasActive = 1;
+ 214              		.loc 1 27 9 is_stmt 1
+GAS LISTING /tmp/ccFC4ifu.s 			page 6
+
+
+  27:src/Scheduler.cpp ****         thread->getContext()->wasActive = 1;
+ 215              		.loc 1 27 27 is_stmt 0
+ 216 0120 13050900 		mv	a0,s2
+ 217 0124 97000000 		call	_ZN6Thread10getContextEv@plt
+ 217      E7800000 
+ 218              	.LVL12:
+  27:src/Scheduler.cpp ****         thread->getContext()->wasActive = 1;
+ 219              		.loc 1 27 41
+ 220 012c 93071000 		li	a5,1
+ 221 0130 233CF502 		sd	a5,56(a0)
+ 222 0134 6FF05FFA 		j	.L17
+ 223              	.L21:
+  31:src/Scheduler.cpp ****         thread->getContext()->startedOnce = 1;
+ 224              		.loc 1 31 9 is_stmt 1
+  31:src/Scheduler.cpp ****         thread->getContext()->startedOnce = 1;
+ 225              		.loc 1 31 27 is_stmt 0
+ 226 0138 13050900 		mv	a0,s2
+ 227 013c 97000000 		call	_ZN6Thread10getContextEv@plt
+ 227      E7800000 
+ 228              	.LVL13:
+  31:src/Scheduler.cpp ****         thread->getContext()->startedOnce = 1;
+ 229              		.loc 1 31 43
+ 230 0144 93071000 		li	a5,1
+ 231 0148 2338F502 		sd	a5,48(a0)
+ 232 014c 6FF01FFA 		j	.L18
+ 233              	.L22:
+  35:src/Scheduler.cpp ****     if(!head) tail = nullptr;
+ 234              		.loc 1 35 15 is_stmt 1 discriminator 1
+  35:src/Scheduler.cpp ****     if(!head) tail = nullptr;
+ 235              		.loc 1 35 20 is_stmt 0 discriminator 1
+ 236 0150 23B40400 		sd	zero,8(s1)
+ 237 0154 6FF01FFB 		j	.L15
+ 238              		.cfi_endproc
+ 239              	.LFE5:
+ 241              		.align	2
+ 243              	_GLOBAL__sub_I_scheduler:
+ 244              	.LFB7:
+ 245              		.loc 1 37 1 is_stmt 1
+ 246              		.cfi_startproc
+ 247 0158 130101FF 		addi	sp,sp,-16
+ 248              		.cfi_def_cfa_offset 16
+ 249 015c 23341100 		sd	ra,8(sp)
+ 250 0160 23308100 		sd	s0,0(sp)
+ 251              		.cfi_offset 1, -8
+ 252              		.cfi_offset 8, -16
+ 253 0164 13040101 		addi	s0,sp,16
+ 254              		.cfi_def_cfa 8, 0
+ 255              		.loc 1 37 1 is_stmt 0
+ 256 0168 B7050100 		li	a1,65536
+ 257 016c 9385F5FF 		addi	a1,a1,-1
+ 258 0170 13051000 		li	a0,1
+ 259 0174 97000000 		call	_Z41__static_initialization_and_destruction_0ii
+ 259      E7800000 
+ 260              	.LVL14:
+ 261 017c 83308100 		ld	ra,8(sp)
+ 262              		.cfi_restore 1
+ 263 0180 03340100 		ld	s0,0(sp)
+GAS LISTING /tmp/ccFC4ifu.s 			page 7
+
+
+ 264              		.cfi_restore 8
+ 265              		.cfi_def_cfa 2, 16
+ 266 0184 13010101 		addi	sp,sp,16
+ 267              		.cfi_def_cfa_offset 0
+ 268 0188 67800000 		jr	ra
+ 269              		.cfi_endproc
+ 270              	.LFE7:
+ 272              		.section	.init_array,"aw"
+ 273              		.align	3
+ 274 0000 00000000 		.dword	_GLOBAL__sub_I_scheduler
+ 274      00000000 
+ 275              		.globl	scheduler
+ 276              		.bss
+ 277              		.align	3
+ 278              		.set	.LANCHOR0,. + 0
+ 281              	scheduler:
+ 282 0000 00000000 		.zero	16
+ 282      00000000 
+ 282      00000000 
+ 282      00000000 
+ 283              		.text
+ 284              	.Letext0:
+ 285              		.file 2 "src/../h/../lib/hw.h"
+ 286              		.file 3 "src/../h/Scheduler.hpp"
+ 287              		.file 4 "src/../h/Thread.hpp"
+GAS LISTING /tmp/ccFC4ifu.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Scheduler.cpp
+     /tmp/ccFC4ifu.s:9      .text:0000000000000000 _ZN9SchedulerC2Ev
+     /tmp/ccFC4ifu.s:13     .text:0000000000000000 .L0 
+     /tmp/ccFC4ifu.s:15     .text:0000000000000000 .L0 
+     /tmp/ccFC4ifu.s:16     .text:0000000000000004 .L0 
+     /tmp/ccFC4ifu.s:18     .text:0000000000000008 .L0 
+     /tmp/ccFC4ifu.s:20     .text:000000000000000c .L0 
+     /tmp/ccFC4ifu.s:23     .text:000000000000000c .L0 
+     /tmp/ccFC4ifu.s:24     .text:000000000000000c .L0 
+     /tmp/ccFC4ifu.s:26     .text:0000000000000010 .L0 
+     /tmp/ccFC4ifu.s:27     .text:0000000000000010 .L0 
+     /tmp/ccFC4ifu.s:30     .text:0000000000000014 .L0 
+     /tmp/ccFC4ifu.s:31     .text:0000000000000018 .L0 
+     /tmp/ccFC4ifu.s:32     .text:0000000000000018 .L0 
+     /tmp/ccFC4ifu.s:34     .text:000000000000001c .L0 
+     /tmp/ccFC4ifu.s:36     .text:0000000000000020 .L0 
+     /tmp/ccFC4ifu.s:9      .text:0000000000000000 _ZN9SchedulerC1Ev
+     /tmp/ccFC4ifu.s:43     .text:0000000000000020 _Z41__static_initialization_and_destruction_0ii
+     /tmp/ccFC4ifu.s:46     .text:0000000000000020 .L0 
+     /tmp/ccFC4ifu.s:48     .text:0000000000000020 .L0 
+     /tmp/ccFC4ifu.s:54     .text:000000000000002c .L0 
+     /tmp/ccFC4ifu.s:58     .text:0000000000000038 .L0 
+     /tmp/ccFC4ifu.s:59     .text:000000000000003c .L0 
+     /tmp/ccFC4ifu.s:62     .text:0000000000000044 .L0 
+     /tmp/ccFC4ifu.s:63     .text:0000000000000044 .L0 
+     /tmp/ccFC4ifu.s:65     .text:0000000000000048 .L0 
+     /tmp/ccFC4ifu.s:67     .text:0000000000000048 .L0 
+     /tmp/ccFC4ifu.s:72     .text:0000000000000058 .L0 
+     /tmp/ccFC4ifu.s:73     .text:000000000000005c .L0 
+     /tmp/ccFC4ifu.s:75     .text:0000000000000060 .L0 
+     /tmp/ccFC4ifu.s:76     .text:0000000000000060 .L0 
+     /tmp/ccFC4ifu.s:78     .text:0000000000000064 .L0 
+     /tmp/ccFC4ifu.s:80     .text:0000000000000068 .L0 
+     /tmp/ccFC4ifu.s:86     .text:0000000000000068 _ZN9Scheduler3putEP6Thread
+     /tmp/ccFC4ifu.s:89     .text:0000000000000068 .L0 
+     /tmp/ccFC4ifu.s:91     .text:0000000000000068 .L0 
+     /tmp/ccFC4ifu.s:92     .text:000000000000006c .L0 
+     /tmp/ccFC4ifu.s:94     .text:0000000000000070 .L0 
+     /tmp/ccFC4ifu.s:96     .text:0000000000000074 .L0 
+     /tmp/ccFC4ifu.s:98     .text:0000000000000074 .L0 
+     /tmp/ccFC4ifu.s:99     .text:0000000000000074 .L0 
+     /tmp/ccFC4ifu.s:101    .text:0000000000000078 .L0 
+     /tmp/ccFC4ifu.s:102    .text:0000000000000078 .L0 
+     /tmp/ccFC4ifu.s:104    .text:000000000000007c .L0 
+     /tmp/ccFC4ifu.s:106    .text:0000000000000080 .L0 
+     /tmp/ccFC4ifu.s:108    .text:0000000000000084 .L0 
+     /tmp/ccFC4ifu.s:111    .text:0000000000000088 .L0 
+     /tmp/ccFC4ifu.s:112    .text:0000000000000088 .L0 
+     /tmp/ccFC4ifu.s:114    .text:000000000000008c .L0 
+     /tmp/ccFC4ifu.s:115    .text:0000000000000090 .L0 
+     /tmp/ccFC4ifu.s:116    .text:0000000000000090 .L0 
+     /tmp/ccFC4ifu.s:117    .text:0000000000000090 .L0 
+     /tmp/ccFC4ifu.s:119    .text:0000000000000094 .L0 
+     /tmp/ccFC4ifu.s:122    .text:0000000000000098 .L0 
+     /tmp/ccFC4ifu.s:124    .text:0000000000000098 .L0 
+     /tmp/ccFC4ifu.s:125    .text:0000000000000098 .L0 
+GAS LISTING /tmp/ccFC4ifu.s 			page 9
+
+
+     /tmp/ccFC4ifu.s:127    .text:00000000000000a0 .L0 
+     /tmp/ccFC4ifu.s:133    .text:00000000000000a0 _ZN9Scheduler3getEv
+     /tmp/ccFC4ifu.s:136    .text:00000000000000a0 .L0 
+     /tmp/ccFC4ifu.s:138    .text:00000000000000a0 .L0 
+     /tmp/ccFC4ifu.s:139    .text:00000000000000a4 .L0 
+     /tmp/ccFC4ifu.s:144    .text:00000000000000b4 .L0 
+     /tmp/ccFC4ifu.s:145    .text:00000000000000b4 .L0 
+     /tmp/ccFC4ifu.s:146    .text:00000000000000b4 .L0 
+     /tmp/ccFC4ifu.s:147    .text:00000000000000b4 .L0 
+     /tmp/ccFC4ifu.s:149    .text:00000000000000b8 .L0 
+     /tmp/ccFC4ifu.s:151    .text:00000000000000b8 .L0 
+     /tmp/ccFC4ifu.s:152    .text:00000000000000b8 .L0 
+     /tmp/ccFC4ifu.s:154    .text:00000000000000bc .L0 
+     /tmp/ccFC4ifu.s:158    .text:00000000000000c4 .L0 
+     /tmp/ccFC4ifu.s:159    .text:00000000000000c4 .L0 
+     /tmp/ccFC4ifu.s:160    .text:00000000000000c4 .L0 
+     /tmp/ccFC4ifu.s:165    .text:00000000000000d0 .L0 
+     /tmp/ccFC4ifu.s:167    .text:00000000000000d4 .L0 
+     /tmp/ccFC4ifu.s:170    .text:00000000000000d8 .L0 
+     /tmp/ccFC4ifu.s:171    .text:00000000000000d8 .L0 
+     /tmp/ccFC4ifu.s:175    .text:00000000000000e4 .L0 
+     /tmp/ccFC4ifu.s:177    .text:00000000000000e8 .L0 
+     /tmp/ccFC4ifu.s:180    .text:00000000000000ec .L0 
+     /tmp/ccFC4ifu.s:181    .text:00000000000000ec .L0 
+     /tmp/ccFC4ifu.s:183    .text:00000000000000f0 .L0 
+     /tmp/ccFC4ifu.s:185    .text:00000000000000f4 .L0 
+     /tmp/ccFC4ifu.s:187    .text:00000000000000f8 .L0 
+     /tmp/ccFC4ifu.s:188    .text:00000000000000f8 .L0 
+     /tmp/ccFC4ifu.s:190    .text:00000000000000fc .L0 
+     /tmp/ccFC4ifu.s:191    .text:00000000000000fc .L0 
+     /tmp/ccFC4ifu.s:193    .text:0000000000000100 .L0 
+     /tmp/ccFC4ifu.s:197    .text:0000000000000104 .L0 
+     /tmp/ccFC4ifu.s:199    .text:000000000000010c .L0 
+     /tmp/ccFC4ifu.s:200    .text:000000000000010c .L0 
+     /tmp/ccFC4ifu.s:202    .text:0000000000000110 .L0 
+     /tmp/ccFC4ifu.s:203    .text:0000000000000110 .L0 
+     /tmp/ccFC4ifu.s:205    .text:0000000000000114 .L0 
+     /tmp/ccFC4ifu.s:207    .text:0000000000000118 .L0 
+     /tmp/ccFC4ifu.s:209    .text:000000000000011c .L0 
+     /tmp/ccFC4ifu.s:213    .text:0000000000000120 .L0 
+     /tmp/ccFC4ifu.s:215    .text:0000000000000120 .L0 
+     /tmp/ccFC4ifu.s:216    .text:0000000000000120 .L0 
+     /tmp/ccFC4ifu.s:220    .text:000000000000012c .L0 
+     /tmp/ccFC4ifu.s:225    .text:0000000000000138 .L0 
+     /tmp/ccFC4ifu.s:226    .text:0000000000000138 .L0 
+     /tmp/ccFC4ifu.s:230    .text:0000000000000144 .L0 
+     /tmp/ccFC4ifu.s:235    .text:0000000000000150 .L0 
+     /tmp/ccFC4ifu.s:236    .text:0000000000000150 .L0 
+     /tmp/ccFC4ifu.s:238    .text:0000000000000158 .L0 
+     /tmp/ccFC4ifu.s:243    .text:0000000000000158 _GLOBAL__sub_I_scheduler
+     /tmp/ccFC4ifu.s:246    .text:0000000000000158 .L0 
+     /tmp/ccFC4ifu.s:247    .text:0000000000000158 .L0 
+     /tmp/ccFC4ifu.s:248    .text:000000000000015c .L0 
+     /tmp/ccFC4ifu.s:251    .text:0000000000000164 .L0 
+     /tmp/ccFC4ifu.s:252    .text:0000000000000164 .L0 
+     /tmp/ccFC4ifu.s:254    .text:0000000000000168 .L0 
+     /tmp/ccFC4ifu.s:256    .text:0000000000000168 .L0 
+GAS LISTING /tmp/ccFC4ifu.s 			page 10
+
+
+     /tmp/ccFC4ifu.s:262    .text:0000000000000180 .L0 
+     /tmp/ccFC4ifu.s:264    .text:0000000000000184 .L0 
+     /tmp/ccFC4ifu.s:265    .text:0000000000000184 .L0 
+     /tmp/ccFC4ifu.s:267    .text:0000000000000188 .L0 
+     /tmp/ccFC4ifu.s:269    .text:000000000000018c .L0 
+     /tmp/ccFC4ifu.s:281    .bss:0000000000000000 scheduler
+     /tmp/ccFC4ifu.s:278    .bss:0000000000000000 .LANCHOR0
+     /tmp/ccFC4ifu.s:288    .text:000000000000018c .L0 
+     /tmp/ccFC4ifu.s:67     .text:0000000000000048 .L0 
+     /tmp/ccFC4ifu.s:52     .text:000000000000002c .L9
+     /tmp/ccFC4ifu.s:50     .text:0000000000000028 .L6
+     /tmp/ccFC4ifu.s:121    .text:0000000000000098 .L14
+     /tmp/ccFC4ifu.s:109    .text:0000000000000088 .L12
+     /tmp/ccFC4ifu.s:195    .text:0000000000000104 .L15
+     /tmp/ccFC4ifu.s:212    .text:0000000000000120 .L20
+     /tmp/ccFC4ifu.s:223    .text:0000000000000138 .L21
+     /tmp/ccFC4ifu.s:233    .text:0000000000000150 .L22
+     /tmp/ccFC4ifu.s:168    .text:00000000000000d8 .L17
+     /tmp/ccFC4ifu.s:178    .text:00000000000000ec .L18
+     /tmp/ccFC4ifu.s:685    .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccFC4ifu.s:1386   .debug_str:00000000000001fa .LASF28
+     /tmp/ccFC4ifu.s:1396   .debug_str:00000000000002fd .LASF29
+     /tmp/ccFC4ifu.s:1338   .debug_str:0000000000000072 .LASF30
+     /tmp/ccFC4ifu.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccFC4ifu.s:284    .text:000000000000018c .Letext0
+     /tmp/ccFC4ifu.s:1320   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccFC4ifu.s:1360   .debug_str:0000000000000126 .LASF0
+     /tmp/ccFC4ifu.s:1362   .debug_str:0000000000000133 .LASF1
+     /tmp/ccFC4ifu.s:1352   .debug_str:00000000000000e5 .LASF2
+     /tmp/ccFC4ifu.s:1344   .debug_str:00000000000000b2 .LASF4
+     /tmp/ccFC4ifu.s:1382   .debug_str:00000000000001de .LASF3
+     /tmp/ccFC4ifu.s:1326   .debug_str:0000000000000029 .LASF5
+     /tmp/ccFC4ifu.s:1364   .debug_str:0000000000000146 .LASF6
+     /tmp/ccFC4ifu.s:1358   .debug_str:0000000000000113 .LASF7
+     /tmp/ccFC4ifu.s:1380   .debug_str:00000000000001d0 .LASF8
+     /tmp/ccFC4ifu.s:1394   .debug_str:00000000000002ed .LASF9
+     /tmp/ccFC4ifu.s:1340   .debug_str:0000000000000090 .LASF10
+     /tmp/ccFC4ifu.s:1370   .debug_str:000000000000016a .LASF11
+     /tmp/ccFC4ifu.s:1388   .debug_str:00000000000002be .LASF12
+     /tmp/ccFC4ifu.s:1328   .debug_str:0000000000000030 .LASF13
+     /tmp/ccFC4ifu.s:1322   .debug_str:0000000000000000 .LASF14
+     /tmp/ccFC4ifu.s:1332   .debug_str:000000000000004b .LASF15
+     /tmp/ccFC4ifu.s:1378   .debug_str:00000000000001ba .LASF16
+     /tmp/ccFC4ifu.s:1334   .debug_str:0000000000000057 .LASF17
+     /tmp/ccFC4ifu.s:1368   .debug_str:0000000000000160 .LASF18
+     /tmp/ccFC4ifu.s:1350   .debug_str:00000000000000d3 .LASF31
+     /tmp/ccFC4ifu.s:1356   .debug_str:00000000000000f8 .LASF32
+     /tmp/ccFC4ifu.s:1342   .debug_str:000000000000009e .LASF33
+     /tmp/ccFC4ifu.s:1336   .debug_str:000000000000006d .LASF19
+     /tmp/ccFC4ifu.s:1354   .debug_str:00000000000000f3 .LASF20
+     /tmp/ccFC4ifu.s:1390   .debug_str:00000000000002cd .LASF34
+     /tmp/ccFC4ifu.s:1392   .debug_str:00000000000002d4 .LASF35
+     /tmp/ccFC4ifu.s:1330   .debug_str:0000000000000040 .LASF36
+     /tmp/ccFC4ifu.s:1384   .debug_str:00000000000001f0 .LASF21
+     /tmp/ccFC4ifu.s:1324   .debug_str:0000000000000010 .LASF22
+     /tmp/ccFC4ifu.s:244    .text:0000000000000158 .LFB7
+     /tmp/ccFC4ifu.s:270    .text:000000000000018c .LFE7
+GAS LISTING /tmp/ccFC4ifu.s 			page 11
+
+
+     /tmp/ccFC4ifu.s:260    .text:000000000000017c .LVL14
+     /tmp/ccFC4ifu.s:1372   .debug_str:0000000000000179 .LASF23
+     /tmp/ccFC4ifu.s:44     .text:0000000000000020 .LFB6
+     /tmp/ccFC4ifu.s:81     .text:0000000000000068 .LFE6
+     /tmp/ccFC4ifu.s:1348   .debug_str:00000000000000c4 .LASF24
+     /tmp/ccFC4ifu.s:1246   .debug_loc:0000000000000000 .LLST0
+     /tmp/ccFC4ifu.s:1346   .debug_str:00000000000000b9 .LASF25
+     /tmp/ccFC4ifu.s:1260   .debug_loc:0000000000000039 .LLST1
+     /tmp/ccFC4ifu.s:70     .text:0000000000000058 .LVL3
+     /tmp/ccFC4ifu.s:134    .text:00000000000000a0 .LFB5
+     /tmp/ccFC4ifu.s:239    .text:0000000000000158 .LFE5
+     /tmp/ccFC4ifu.s:1374   .debug_str:00000000000001a3 .LASF27
+     /tmp/ccFC4ifu.s:1274   .debug_loc:0000000000000072 .LLST2
+     /tmp/ccFC4ifu.s:1366   .debug_str:0000000000000159 .LASF26
+     /tmp/ccFC4ifu.s:1296   .debug_loc:00000000000000d1 .LLST3
+     /tmp/ccFC4ifu.s:163    .text:00000000000000d0 .LVL8
+     /tmp/ccFC4ifu.s:173    .text:00000000000000e4 .LVL9
+     /tmp/ccFC4ifu.s:218    .text:000000000000012c .LVL12
+     /tmp/ccFC4ifu.s:228    .text:0000000000000144 .LVL13
+     /tmp/ccFC4ifu.s:87     .text:0000000000000068 .LFB4
+     /tmp/ccFC4ifu.s:128    .text:00000000000000a0 .LFE4
+     /tmp/ccFC4ifu.s:1376   .debug_str:00000000000001a8 .LASF37
+     /tmp/ccFC4ifu.s:10     .text:0000000000000000 .LFB2
+     /tmp/ccFC4ifu.s:37     .text:0000000000000020 .LFE2
+     /tmp/ccFC4ifu.s:47     .text:0000000000000020 .LVL1
+     /tmp/ccFC4ifu.s:68     .text:0000000000000050 .LVL2
+     /tmp/ccFC4ifu.s:137    .text:00000000000000a0 .LVL5
+     /tmp/ccFC4ifu.s:161    .text:00000000000000c8 .LVL7
+     /tmp/ccFC4ifu.s:194    .text:0000000000000104 .LVL10
+     /tmp/ccFC4ifu.s:211    .text:0000000000000120 .LVL11
+     /tmp/ccFC4ifu.s:157    .text:00000000000000c4 .LVL6
+     /tmp/ccFC4ifu.s:289    .debug_info:0000000000000000 .Ldebug_info0
+
+UNDEFINED SYMBOLS
+_ZN6Thread10getContextEv

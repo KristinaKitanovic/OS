@@ -1,0 +1,2986 @@
+GAS LISTING /tmp/ccRDNlkW.s 			page 1
+
+
+   1              		.file	"syscall_cpp.cpp"
+   2              		.option pic
+   3              		.option norelax
+   4              		.text
+   5              	.Ltext0:
+   6              		.align	2
+   7              		.globl	_Z23getWaitStatusForRunningv
+   9              	_Z23getWaitStatusForRunningv:
+  10              	.LFB7:
+  11              		.file 1 "src/syscall_cpp.cpp"
+   1:src/syscall_cpp.cpp **** #include "../h/syscall_cpp.hpp"
+   2:src/syscall_cpp.cpp **** #include "../h/syscall_c.h"
+   3:src/syscall_cpp.cpp **** #include "../lib/hw.h"
+   4:src/syscall_cpp.cpp **** #include "../h/Thread.hpp"
+   5:src/syscall_cpp.cpp **** 
+   6:src/syscall_cpp.cpp **** // Povratak statusa čekanja za tekuću nit
+   7:src/syscall_cpp.cpp **** int getWaitStatusForRunning() {
+  12              		.loc 1 7 31
+  13              		.cfi_startproc
+  14 0000 130101FF 		addi	sp,sp,-16
+  15              		.cfi_def_cfa_offset 16
+  16 0004 23348100 		sd	s0,8(sp)
+  17              		.cfi_offset 8, -8
+  18 0008 13040101 		addi	s0,sp,16
+  19              		.cfi_def_cfa 8, 0
+   8:src/syscall_cpp.cpp ****     return Thread::running->semWaitStatus;
+  20              		.loc 1 8 5
+  21              		.loc 1 8 29 is_stmt 0
+  22 000c 97070000 		la	a5,_ZN6Thread7runningE
+  22      83B70700 
+  23 0014 83B70700 		ld	a5,0(a5)
+   9:src/syscall_cpp.cpp **** }
+  24              		.loc 1 9 1
+  25 0018 03A50701 		lw	a0,16(a5)
+  26 001c 03348100 		ld	s0,8(sp)
+  27              		.cfi_restore 8
+  28              		.cfi_def_cfa 2, 16
+  29 0020 13010101 		addi	sp,sp,16
+  30              		.cfi_def_cfa_offset 0
+  31 0024 67800000 		jr	ra
+  32              		.cfi_endproc
+  33              	.LFE7:
+  35              		.align	2
+  36              		.globl	_ZN15MemoryAllocator5alignEm
+  38              	_ZN15MemoryAllocator5alignEm:
+  39              	.LFB9:
+  10:src/syscall_cpp.cpp **** 
+  11:src/syscall_cpp.cpp **** // Singleton MemoryAllocator
+  12:src/syscall_cpp.cpp **** MemoryAllocator* MemoryAllocator::Instance() {
+  13:src/syscall_cpp.cpp ****     static MemoryAllocator instance;
+  14:src/syscall_cpp.cpp ****     return &instance;
+  15:src/syscall_cpp.cpp **** }
+  16:src/syscall_cpp.cpp **** 
+  17:src/syscall_cpp.cpp **** // Poravnanje adrese
+  18:src/syscall_cpp.cpp **** uint64 MemoryAllocator::align(uint64 addr) {
+  40              		.loc 1 18 44 is_stmt 1
+  41              		.cfi_startproc
+GAS LISTING /tmp/ccRDNlkW.s 			page 2
+
+
+  42              	.LVL0:
+  43 0028 130101FF 		addi	sp,sp,-16
+  44              		.cfi_def_cfa_offset 16
+  45 002c 23348100 		sd	s0,8(sp)
+  46              		.cfi_offset 8, -8
+  47 0030 13040101 		addi	s0,sp,16
+  48              		.cfi_def_cfa 8, 0
+  19:src/syscall_cpp.cpp ****     if (addr % MEM_BLOCK_SIZE == 0) return addr;
+  49              		.loc 1 19 5
+  50              		.loc 1 19 14 is_stmt 0
+  51 0034 93F7F503 		andi	a5,a1,63
+  52              		.loc 1 19 5
+  53 0038 638C0700 		beqz	a5,.L5
+  20:src/syscall_cpp.cpp ****     return addr + (MEM_BLOCK_SIZE - addr % MEM_BLOCK_SIZE);
+  54              		.loc 1 20 5 is_stmt 1
+  55              		.loc 1 20 17 is_stmt 0
+  56 003c 93F505FC 		andi	a1,a1,-64
+  57              	.LVL1:
+  58              		.loc 1 20 58
+  59 0040 13850504 		addi	a0,a1,64
+  60              	.LVL2:
+  61              	.L3:
+  21:src/syscall_cpp.cpp **** }
+  62              		.loc 1 21 1
+  63 0044 03348100 		ld	s0,8(sp)
+  64              		.cfi_remember_state
+  65              		.cfi_restore 8
+  66              		.cfi_def_cfa 2, 16
+  67 0048 13010101 		addi	sp,sp,16
+  68              		.cfi_def_cfa_offset 0
+  69 004c 67800000 		jr	ra
+  70              	.LVL3:
+  71              	.L5:
+  72              		.cfi_restore_state
+  19:src/syscall_cpp.cpp ****     if (addr % MEM_BLOCK_SIZE == 0) return addr;
+  73              		.loc 1 19 44
+  74 0050 13850500 		mv	a0,a1
+  75              	.LVL4:
+  76 0054 6FF01FFF 		j	.L3
+  77              		.cfi_endproc
+  78              	.LFE9:
+  80              		.align	2
+  81              		.globl	_ZN15MemoryAllocator13getThreadPoolEv
+  83              	_ZN15MemoryAllocator13getThreadPoolEv:
+  84              	.LFB13:
+  22:src/syscall_cpp.cpp **** 
+  23:src/syscall_cpp.cpp **** // Konstruktor MemoryAllocator-a
+  24:src/syscall_cpp.cpp **** MemoryAllocator::MemoryAllocator() {
+  25:src/syscall_cpp.cpp ****     fmem_head = (FreeMem*)(align((uint64)HEAP_START_ADDR) + (uint64)DEFAULT_STACK_SIZE);
+  26:src/syscall_cpp.cpp ****     fmem_head->next = nullptr;
+  27:src/syscall_cpp.cpp ****     fmem_head->prev = nullptr;
+  28:src/syscall_cpp.cpp **** 
+  29:src/syscall_cpp.cpp ****     uint64 totalBlocks = (((uint64)HEAP_END_ADDR - (uint64)fmem_head) -
+  30:src/syscall_cpp.cpp ****                           (((uint64)HEAP_END_ADDR - (uint64)fmem_head) % MEM_BLOCK_SIZE)) / MEM_BLO
+  31:src/syscall_cpp.cpp ****     fmem_head->size = totalBlocks;
+  32:src/syscall_cpp.cpp **** 
+  33:src/syscall_cpp.cpp ****     void* threadManagerPoolAddress = mem_alloc_for_managers(MAX_THREADS, sizeof(Thread));
+GAS LISTING /tmp/ccRDNlkW.s 			page 3
+
+
+  34:src/syscall_cpp.cpp ****     void* threadManagerUsedArrayAddress = mem_alloc_for_managers(MAX_THREADS, sizeof(bool));
+  35:src/syscall_cpp.cpp ****     threadPool.init(threadManagerPoolAddress, threadManagerUsedArrayAddress);
+  36:src/syscall_cpp.cpp **** 
+  37:src/syscall_cpp.cpp ****     void* semaphoreManagerPoolAddress = mem_alloc_for_managers(MAX_SEMAPHORES, sizeof(Semaphore));
+  38:src/syscall_cpp.cpp ****     void* semaphoreManagerUsedArrayAddress = mem_alloc_for_managers(MAX_SEMAPHORES, sizeof(bool));
+  39:src/syscall_cpp.cpp ****     semaphorePool.init(semaphoreManagerPoolAddress, semaphoreManagerUsedArrayAddress);
+  40:src/syscall_cpp.cpp **** }
+  41:src/syscall_cpp.cpp **** 
+  42:src/syscall_cpp.cpp **** ThreadPool& MemoryAllocator::getThreadPool() {
+  85              		.loc 1 42 46 is_stmt 1
+  86              		.cfi_startproc
+  87              	.LVL5:
+  88 0058 130101FF 		addi	sp,sp,-16
+  89              		.cfi_def_cfa_offset 16
+  90 005c 23348100 		sd	s0,8(sp)
+  91              		.cfi_offset 8, -8
+  92 0060 13040101 		addi	s0,sp,16
+  93              		.cfi_def_cfa 8, 0
+  43:src/syscall_cpp.cpp ****     return threadPool;
+  94              		.loc 1 43 5
+  44:src/syscall_cpp.cpp **** }
+  95              		.loc 1 44 1 is_stmt 0
+  96 0064 13058500 		addi	a0,a0,8
+  97              	.LVL6:
+  98 0068 03348100 		ld	s0,8(sp)
+  99              		.cfi_restore 8
+ 100              		.cfi_def_cfa 2, 16
+ 101 006c 13010101 		addi	sp,sp,16
+ 102              		.cfi_def_cfa_offset 0
+ 103 0070 67800000 		jr	ra
+ 104              		.cfi_endproc
+ 105              	.LFE13:
+ 107              		.align	2
+ 108              		.globl	_ZN15MemoryAllocator16getSemaphorePoolEv
+ 110              	_ZN15MemoryAllocator16getSemaphorePoolEv:
+ 111              	.LFB14:
+  45:src/syscall_cpp.cpp **** 
+  46:src/syscall_cpp.cpp **** SemaphorePool& MemoryAllocator::getSemaphorePool() {
+ 112              		.loc 1 46 52 is_stmt 1
+ 113              		.cfi_startproc
+ 114              	.LVL7:
+ 115 0074 130101FF 		addi	sp,sp,-16
+ 116              		.cfi_def_cfa_offset 16
+ 117 0078 23348100 		sd	s0,8(sp)
+ 118              		.cfi_offset 8, -8
+ 119 007c 13040101 		addi	s0,sp,16
+ 120              		.cfi_def_cfa 8, 0
+  47:src/syscall_cpp.cpp ****     return semaphorePool;
+ 121              		.loc 1 47 5
+  48:src/syscall_cpp.cpp **** }
+ 122              		.loc 1 48 1 is_stmt 0
+ 123 0080 13058501 		addi	a0,a0,24
+ 124              	.LVL8:
+ 125 0084 03348100 		ld	s0,8(sp)
+ 126              		.cfi_restore 8
+ 127              		.cfi_def_cfa 2, 16
+ 128 0088 13010101 		addi	sp,sp,16
+GAS LISTING /tmp/ccRDNlkW.s 			page 4
+
+
+ 129              		.cfi_def_cfa_offset 0
+ 130 008c 67800000 		jr	ra
+ 131              		.cfi_endproc
+ 132              	.LFE14:
+ 134              		.align	2
+ 135              		.globl	_Znwm
+ 137              	_Znwm:
+ 138              	.LFB15:
+  49:src/syscall_cpp.cpp **** 
+  50:src/syscall_cpp.cpp **** // Definicije C++ operatora new/delete
+  51:src/syscall_cpp.cpp **** void* operator new(size_t size) {
+ 139              		.loc 1 51 33 is_stmt 1
+ 140              		.cfi_startproc
+ 141              	.LVL9:
+ 142 0090 130101FF 		addi	sp,sp,-16
+ 143              		.cfi_def_cfa_offset 16
+ 144 0094 23341100 		sd	ra,8(sp)
+ 145 0098 23308100 		sd	s0,0(sp)
+ 146              		.cfi_offset 1, -8
+ 147              		.cfi_offset 8, -16
+ 148 009c 13040101 		addi	s0,sp,16
+ 149              		.cfi_def_cfa 8, 0
+  52:src/syscall_cpp.cpp ****     return mem_alloc(size);
+ 150              		.loc 1 52 5
+ 151              		.loc 1 52 21 is_stmt 0
+ 152 00a0 97000000 		call	mem_alloc@plt
+ 152      E7800000 
+ 153              	.LVL10:
+  53:src/syscall_cpp.cpp **** }
+ 154              		.loc 1 53 1
+ 155 00a8 83308100 		ld	ra,8(sp)
+ 156              		.cfi_restore 1
+ 157 00ac 03340100 		ld	s0,0(sp)
+ 158              		.cfi_restore 8
+ 159              		.cfi_def_cfa 2, 16
+ 160 00b0 13010101 		addi	sp,sp,16
+ 161              		.cfi_def_cfa_offset 0
+ 162 00b4 67800000 		jr	ra
+ 163              		.cfi_endproc
+ 164              	.LFE15:
+ 166              		.align	2
+ 167              		.globl	_Znam
+ 169              	_Znam:
+ 170              	.LFB16:
+  54:src/syscall_cpp.cpp **** 
+  55:src/syscall_cpp.cpp **** void* operator new[](size_t size) {
+ 171              		.loc 1 55 35 is_stmt 1
+ 172              		.cfi_startproc
+ 173              	.LVL11:
+ 174 00b8 130101FF 		addi	sp,sp,-16
+ 175              		.cfi_def_cfa_offset 16
+ 176 00bc 23341100 		sd	ra,8(sp)
+ 177 00c0 23308100 		sd	s0,0(sp)
+ 178              		.cfi_offset 1, -8
+ 179              		.cfi_offset 8, -16
+ 180 00c4 13040101 		addi	s0,sp,16
+ 181              		.cfi_def_cfa 8, 0
+GAS LISTING /tmp/ccRDNlkW.s 			page 5
+
+
+  56:src/syscall_cpp.cpp ****     return mem_alloc(size);
+ 182              		.loc 1 56 5
+ 183              		.loc 1 56 21 is_stmt 0
+ 184 00c8 97000000 		call	mem_alloc@plt
+ 184      E7800000 
+ 185              	.LVL12:
+  57:src/syscall_cpp.cpp **** }
+ 186              		.loc 1 57 1
+ 187 00d0 83308100 		ld	ra,8(sp)
+ 188              		.cfi_restore 1
+ 189 00d4 03340100 		ld	s0,0(sp)
+ 190              		.cfi_restore 8
+ 191              		.cfi_def_cfa 2, 16
+ 192 00d8 13010101 		addi	sp,sp,16
+ 193              		.cfi_def_cfa_offset 0
+ 194 00dc 67800000 		jr	ra
+ 195              		.cfi_endproc
+ 196              	.LFE16:
+ 198              		.align	2
+ 199              		.globl	_ZdlPv
+ 201              	_ZdlPv:
+ 202              	.LFB17:
+  58:src/syscall_cpp.cpp **** 
+  59:src/syscall_cpp.cpp **** void operator delete(void* ptr) noexcept {
+ 203              		.loc 1 59 42 is_stmt 1
+ 204              		.cfi_startproc
+ 205              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+ 206              		.cfi_lsda 0x1b,.LLSDA17
+ 207              	.LVL13:
+ 208 00e0 130101FF 		addi	sp,sp,-16
+ 209              		.cfi_def_cfa_offset 16
+ 210 00e4 23341100 		sd	ra,8(sp)
+ 211 00e8 23308100 		sd	s0,0(sp)
+ 212              		.cfi_offset 1, -8
+ 213              		.cfi_offset 8, -16
+ 214 00ec 13040101 		addi	s0,sp,16
+ 215              		.cfi_def_cfa 8, 0
+  60:src/syscall_cpp.cpp **** mem_free(ptr);
+ 216              		.loc 1 60 1
+ 217              		.loc 1 60 9 is_stmt 0
+ 218 00f0 97000000 		call	mem_free@plt
+ 218      E7800000 
+ 219              	.LVL14:
+  61:src/syscall_cpp.cpp **** }
+ 220              		.loc 1 61 1
+ 221 00f8 83308100 		ld	ra,8(sp)
+ 222              		.cfi_restore 1
+ 223 00fc 03340100 		ld	s0,0(sp)
+ 224              		.cfi_restore 8
+ 225              		.cfi_def_cfa 2, 16
+ 226 0100 13010101 		addi	sp,sp,16
+ 227              		.cfi_def_cfa_offset 0
+ 228 0104 67800000 		jr	ra
+ 229              		.cfi_endproc
+ 230              	.LFE17:
+ 231              		.globl	__gxx_personality_v0
+ 232              		.section	.gcc_except_table,"a",@progbits
+GAS LISTING /tmp/ccRDNlkW.s 			page 6
+
+
+ 233              	.LLSDA17:
+ 234 0000 FF       		.byte	0xff
+ 235 0001 FF       		.byte	0xff
+ 236 0002 03       		.byte	0x3
+ 237 0003 00       		.byte	0
+ 238              		.text
+ 240              		.align	2
+ 241              		.globl	_ZdaPv
+ 243              	_ZdaPv:
+ 244              	.LFB18:
+  62:src/syscall_cpp.cpp **** 
+  63:src/syscall_cpp.cpp **** void operator delete[](void* ptr) noexcept {
+ 245              		.loc 1 63 44 is_stmt 1
+ 246              		.cfi_startproc
+ 247              		.cfi_personality 0x9b,DW.ref.__gxx_personality_v0
+ 248              		.cfi_lsda 0x1b,.LLSDA18
+ 249              	.LVL15:
+ 250 0108 130101FF 		addi	sp,sp,-16
+ 251              		.cfi_def_cfa_offset 16
+ 252 010c 23341100 		sd	ra,8(sp)
+ 253 0110 23308100 		sd	s0,0(sp)
+ 254              		.cfi_offset 1, -8
+ 255              		.cfi_offset 8, -16
+ 256 0114 13040101 		addi	s0,sp,16
+ 257              		.cfi_def_cfa 8, 0
+  64:src/syscall_cpp.cpp **** mem_free(ptr);
+ 258              		.loc 1 64 1
+ 259              		.loc 1 64 9 is_stmt 0
+ 260 0118 97000000 		call	mem_free@plt
+ 260      E7800000 
+ 261              	.LVL16:
+  65:src/syscall_cpp.cpp **** }
+ 262              		.loc 1 65 1
+ 263 0120 83308100 		ld	ra,8(sp)
+ 264              		.cfi_restore 1
+ 265 0124 03340100 		ld	s0,0(sp)
+ 266              		.cfi_restore 8
+ 267              		.cfi_def_cfa 2, 16
+ 268 0128 13010101 		addi	sp,sp,16
+ 269              		.cfi_def_cfa_offset 0
+ 270 012c 67800000 		jr	ra
+ 271              		.cfi_endproc
+ 272              	.LFE18:
+ 273              		.section	.gcc_except_table
+ 274              	.LLSDA18:
+ 275 0004 FF       		.byte	0xff
+ 276 0005 FF       		.byte	0xff
+ 277 0006 03       		.byte	0x3
+ 278 0007 00       		.byte	0
+ 279              		.text
+ 281              		.align	2
+ 282              		.globl	_ZN15MemoryAllocator9mem_allocEm
+ 284              	_ZN15MemoryAllocator9mem_allocEm:
+ 285              	.LFB19:
+  66:src/syscall_cpp.cpp **** 
+  67:src/syscall_cpp.cpp **** /*
+  68:src/syscall_cpp.cpp **** int thread_create(thread_t* handle, void(*startRoutine)(void*), void* args){
+GAS LISTING /tmp/ccRDNlkW.s 			page 7
+
+
+  69:src/syscall_cpp.cpp ****     return ::thread_create(handle, startRoutine, args);
+  70:src/syscall_cpp.cpp **** }
+  71:src/syscall_cpp.cpp **** int thread_exit(){
+  72:src/syscall_cpp.cpp ****     return ::thread_exit();
+  73:src/syscall_cpp.cpp **** }
+  74:src/syscall_cpp.cpp **** void thread_dispatch(){
+  75:src/syscall_cpp.cpp ****     ::thread_dispatch();
+  76:src/syscall_cpp.cpp **** }
+  77:src/syscall_cpp.cpp **** size_t mem_get_free_space(){
+  78:src/syscall_cpp.cpp ****     return ::mem_get_free_space();
+  79:src/syscall_cpp.cpp **** }
+  80:src/syscall_cpp.cpp **** size_t mem_get_largest_free_block(){
+  81:src/syscall_cpp.cpp ****     return ::mem_get_largest_free_block();
+  82:src/syscall_cpp.cpp **** }
+  83:src/syscall_cpp.cpp **** 
+  84:src/syscall_cpp.cpp **** int sem_open(sem_t* handle, unsigned init){
+  85:src/syscall_cpp.cpp ****     return ::sem_open(handle, init);
+  86:src/syscall_cpp.cpp **** }
+  87:src/syscall_cpp.cpp **** 
+  88:src/syscall_cpp.cpp **** int sem_wait(sem_t id){
+  89:src/syscall_cpp.cpp ****     ::sem_wait(id);
+  90:src/syscall_cpp.cpp ****     int status = getWaitStatusForRunning();
+  91:src/syscall_cpp.cpp ****     return status;
+  92:src/syscall_cpp.cpp **** }
+  93:src/syscall_cpp.cpp **** 
+  94:src/syscall_cpp.cpp **** int sem_signal(sem_t id){
+  95:src/syscall_cpp.cpp ****     return ::sem_signal(id);
+  96:src/syscall_cpp.cpp **** }
+  97:src/syscall_cpp.cpp **** 
+  98:src/syscall_cpp.cpp **** int sem_close(sem_t id){
+  99:src/syscall_cpp.cpp ****     return ::sem_close(id);
+ 100:src/syscall_cpp.cpp **** }
+ 101:src/syscall_cpp.cpp **** */
+ 102:src/syscall_cpp.cpp **** void* MemoryAllocator::mem_alloc(uint64 numOfBlocks) {
+ 286              		.loc 1 102 54 is_stmt 1
+ 287              		.cfi_startproc
+ 288              	.LVL17:
+ 289 0130 130101FF 		addi	sp,sp,-16
+ 290              		.cfi_def_cfa_offset 16
+ 291 0134 23348100 		sd	s0,8(sp)
+ 292              		.cfi_offset 8, -8
+ 293 0138 13040101 		addi	s0,sp,16
+ 294              		.cfi_def_cfa 8, 0
+ 295 013c 13070500 		mv	a4,a0
+ 103:src/syscall_cpp.cpp ****     FreeMem* temp = fmem_head;
+ 296              		.loc 1 103 5
+ 297              		.loc 1 103 14 is_stmt 0
+ 298 0140 03350500 		ld	a0,0(a0)
+ 299              	.LVL18:
+ 300              	.L28:
+ 104:src/syscall_cpp.cpp **** 
+ 105:src/syscall_cpp.cpp ****     while(temp)
+ 301              		.loc 1 105 5 is_stmt 1
+ 302              		.loc 1 105 11
+ 303 0144 63080504 		beqz	a0,.L19
+ 304              	.LBB2:
+ 106:src/syscall_cpp.cpp ****     {
+GAS LISTING /tmp/ccRDNlkW.s 			page 8
+
+
+ 107:src/syscall_cpp.cpp ****         if(temp->size >= numOfBlocks)
+ 305              		.loc 1 107 9
+ 306              	.LBB3:
+ 307              		.loc 1 107 18 is_stmt 0
+ 308 0148 83370501 		ld	a5,16(a0)
+ 309              		.loc 1 107 9
+ 310 014c 63F6B700 		bgeu	a5,a1,.L30
+ 311              	.LBE3:
+ 108:src/syscall_cpp.cpp ****         {
+ 109:src/syscall_cpp.cpp ****             char* addr = (char*)temp;
+ 110:src/syscall_cpp.cpp **** 
+ 111:src/syscall_cpp.cpp ****             if(temp->size == numOfBlocks){
+ 112:src/syscall_cpp.cpp ****                 // ceo blok se koristi - ukloni ga iz liste
+ 113:src/syscall_cpp.cpp ****                 if(temp->prev)
+ 114:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 115:src/syscall_cpp.cpp ****                 else
+ 116:src/syscall_cpp.cpp ****                 {
+ 117:src/syscall_cpp.cpp ****                     fmem_head = temp->next;
+ 118:src/syscall_cpp.cpp **** 
+ 119:src/syscall_cpp.cpp ****                 }
+ 120:src/syscall_cpp.cpp **** 
+ 121:src/syscall_cpp.cpp ****                 if(temp->next)
+ 122:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 123:src/syscall_cpp.cpp ****             }
+ 124:src/syscall_cpp.cpp ****             else
+ 125:src/syscall_cpp.cpp ****             {
+ 126:src/syscall_cpp.cpp **** 
+ 127:src/syscall_cpp.cpp ****                 FreeMem* newnode = (FreeMem*)((char*)temp + numOfBlocks * MEM_BLOCK_SIZE);
+ 128:src/syscall_cpp.cpp **** 
+ 129:src/syscall_cpp.cpp ****                 newnode->size = temp->size - numOfBlocks;
+ 130:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 131:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 132:src/syscall_cpp.cpp **** 
+ 133:src/syscall_cpp.cpp ****                 if(newnode->prev)
+ 134:src/syscall_cpp.cpp ****                     newnode->prev->next = newnode;
+ 135:src/syscall_cpp.cpp ****                 else
+ 136:src/syscall_cpp.cpp ****                 {
+ 137:src/syscall_cpp.cpp ****                     fmem_head = newnode;
+ 138:src/syscall_cpp.cpp **** 
+ 139:src/syscall_cpp.cpp ****                 }
+ 140:src/syscall_cpp.cpp **** 
+ 141:src/syscall_cpp.cpp **** 
+ 142:src/syscall_cpp.cpp ****                 if(newnode->next)
+ 143:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 144:src/syscall_cpp.cpp ****             }
+ 145:src/syscall_cpp.cpp ****             Header* header = (Header*)addr;
+ 146:src/syscall_cpp.cpp ****             header->numOfBlocks = numOfBlocks;
+ 147:src/syscall_cpp.cpp **** 
+ 148:src/syscall_cpp.cpp ****             return addr;
+ 149:src/syscall_cpp.cpp ****         }
+ 150:src/syscall_cpp.cpp **** 
+ 151:src/syscall_cpp.cpp ****         temp = temp->next;
+ 312              		.loc 1 151 9 is_stmt 1
+ 313              		.loc 1 151 14 is_stmt 0
+ 314 0150 03350500 		ld	a0,0(a0)
+ 315              	.LVL19:
+ 316              	.LBE2:
+GAS LISTING /tmp/ccRDNlkW.s 			page 9
+
+
+ 105:src/syscall_cpp.cpp ****     {
+ 317              		.loc 1 105 5
+ 318 0154 6FF01FFF 		j	.L28
+ 319              	.L30:
+ 320              	.LBB12:
+ 321              	.LBB10:
+ 322              	.LBB4:
+ 109:src/syscall_cpp.cpp **** 
+ 323              		.loc 1 109 13 is_stmt 1
+ 324              	.LVL20:
+ 111:src/syscall_cpp.cpp ****                 // ceo blok se koristi - ukloni ga iz liste
+ 325              		.loc 1 111 13
+ 326              	.LBB5:
+ 327 0158 6384B704 		beq	a5,a1,.L31
+ 328              	.LBB6:
+ 127:src/syscall_cpp.cpp **** 
+ 329              		.loc 1 127 17
+ 127:src/syscall_cpp.cpp **** 
+ 330              		.loc 1 127 73 is_stmt 0
+ 331 015c 93966500 		slli	a3,a1,6
+ 127:src/syscall_cpp.cpp **** 
+ 332              		.loc 1 127 26
+ 333 0160 B306D500 		add	a3,a0,a3
+ 334              	.LVL21:
+ 129:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 335              		.loc 1 129 17 is_stmt 1
+ 129:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 336              		.loc 1 129 44 is_stmt 0
+ 337 0164 B387B740 		sub	a5,a5,a1
+ 129:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 338              		.loc 1 129 31
+ 339 0168 23B8F600 		sd	a5,16(a3)
+ 130:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 340              		.loc 1 130 17 is_stmt 1
+ 130:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 341              		.loc 1 130 39 is_stmt 0
+ 342 016c 83370500 		ld	a5,0(a0)
+ 130:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 343              		.loc 1 130 31
+ 344 0170 23B0F600 		sd	a5,0(a3)
+ 131:src/syscall_cpp.cpp **** 
+ 345              		.loc 1 131 17 is_stmt 1
+ 131:src/syscall_cpp.cpp **** 
+ 346              		.loc 1 131 39 is_stmt 0
+ 347 0174 83378500 		ld	a5,8(a0)
+ 131:src/syscall_cpp.cpp **** 
+ 348              		.loc 1 131 31
+ 349 0178 23B4F600 		sd	a5,8(a3)
+ 133:src/syscall_cpp.cpp ****                     newnode->prev->next = newnode;
+ 350              		.loc 1 133 17 is_stmt 1
+ 351 017c 638A0704 		beqz	a5,.L26
+ 134:src/syscall_cpp.cpp ****                 else
+ 352              		.loc 1 134 21
+ 134:src/syscall_cpp.cpp ****                 else
+ 353              		.loc 1 134 41 is_stmt 0
+ 354 0180 23B0D700 		sd	a3,0(a5)
+ 355              	.L27:
+GAS LISTING /tmp/ccRDNlkW.s 			page 10
+
+
+ 142:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 356              		.loc 1 142 17 is_stmt 1
+ 142:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 357              		.loc 1 142 29 is_stmt 0
+ 358 0184 83B70600 		ld	a5,0(a3)
+ 142:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 359              		.loc 1 142 17
+ 360 0188 63840700 		beqz	a5,.L25
+ 143:src/syscall_cpp.cpp ****             }
+ 361              		.loc 1 143 21 is_stmt 1
+ 143:src/syscall_cpp.cpp ****             }
+ 362              		.loc 1 143 41 is_stmt 0
+ 363 018c 23B4D700 		sd	a3,8(a5)
+ 364              	.LVL22:
+ 365              	.L25:
+ 366              	.LBE6:
+ 367              	.LBE5:
+ 145:src/syscall_cpp.cpp ****             header->numOfBlocks = numOfBlocks;
+ 368              		.loc 1 145 13 is_stmt 1
+ 146:src/syscall_cpp.cpp **** 
+ 369              		.loc 1 146 13
+ 146:src/syscall_cpp.cpp **** 
+ 370              		.loc 1 146 33 is_stmt 0
+ 371 0190 2330B500 		sd	a1,0(a0)
+ 148:src/syscall_cpp.cpp ****         }
+ 372              		.loc 1 148 13 is_stmt 1
+ 373              	.LVL23:
+ 374              	.L19:
+ 375              	.LBE4:
+ 376              	.LBE10:
+ 377              	.LBE12:
+ 152:src/syscall_cpp.cpp ****     }
+ 153:src/syscall_cpp.cpp **** 
+ 154:src/syscall_cpp.cpp ****     return nullptr;
+ 155:src/syscall_cpp.cpp **** }
+ 378              		.loc 1 155 1 is_stmt 0
+ 379 0194 03348100 		ld	s0,8(sp)
+ 380              		.cfi_remember_state
+ 381              		.cfi_restore 8
+ 382              		.cfi_def_cfa 2, 16
+ 383 0198 13010101 		addi	sp,sp,16
+ 384              		.cfi_def_cfa_offset 0
+ 385 019c 67800000 		jr	ra
+ 386              	.LVL24:
+ 387              	.L31:
+ 388              		.cfi_restore_state
+ 389              	.LBB13:
+ 390              	.LBB11:
+ 391              	.LBB9:
+ 392              	.LBB8:
+ 113:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 393              		.loc 1 113 17 is_stmt 1
+ 113:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 394              		.loc 1 113 26 is_stmt 0
+ 395 01a0 83378500 		ld	a5,8(a0)
+ 113:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 396              		.loc 1 113 17
+GAS LISTING /tmp/ccRDNlkW.s 			page 11
+
+
+ 397 01a4 63800702 		beqz	a5,.L23
+ 114:src/syscall_cpp.cpp ****                 else
+ 398              		.loc 1 114 21 is_stmt 1
+ 114:src/syscall_cpp.cpp ****                 else
+ 399              		.loc 1 114 46 is_stmt 0
+ 400 01a8 03370500 		ld	a4,0(a0)
+ 401              	.LVL25:
+ 114:src/syscall_cpp.cpp ****                 else
+ 402              		.loc 1 114 38
+ 403 01ac 23B0E700 		sd	a4,0(a5)
+ 404              	.L24:
+ 121:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 405              		.loc 1 121 17 is_stmt 1
+ 121:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 406              		.loc 1 121 26 is_stmt 0
+ 407 01b0 83370500 		ld	a5,0(a0)
+ 121:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 408              		.loc 1 121 17
+ 409 01b4 E38E07FC 		beqz	a5,.L25
+ 122:src/syscall_cpp.cpp ****             }
+ 410              		.loc 1 122 21 is_stmt 1
+ 122:src/syscall_cpp.cpp ****             }
+ 411              		.loc 1 122 46 is_stmt 0
+ 412 01b8 03378500 		ld	a4,8(a0)
+ 122:src/syscall_cpp.cpp ****             }
+ 413              		.loc 1 122 38
+ 414 01bc 23B4E700 		sd	a4,8(a5)
+ 415 01c0 6FF01FFD 		j	.L25
+ 416              	.LVL26:
+ 417              	.L23:
+ 117:src/syscall_cpp.cpp **** 
+ 418              		.loc 1 117 21 is_stmt 1
+ 117:src/syscall_cpp.cpp **** 
+ 419              		.loc 1 117 39 is_stmt 0
+ 420 01c4 83370500 		ld	a5,0(a0)
+ 117:src/syscall_cpp.cpp **** 
+ 421              		.loc 1 117 31
+ 422 01c8 2330F700 		sd	a5,0(a4)
+ 423 01cc 6FF05FFE 		j	.L24
+ 424              	.LVL27:
+ 425              	.L26:
+ 426              	.LBB7:
+ 137:src/syscall_cpp.cpp **** 
+ 427              		.loc 1 137 21 is_stmt 1
+ 137:src/syscall_cpp.cpp **** 
+ 428              		.loc 1 137 31 is_stmt 0
+ 429 01d0 2330D700 		sd	a3,0(a4)
+ 430 01d4 6FF01FFB 		j	.L27
+ 431              	.LBE7:
+ 432              	.LBE8:
+ 433              	.LBE9:
+ 434              	.LBE11:
+ 435              	.LBE13:
+ 436              		.cfi_endproc
+ 437              	.LFE19:
+ 439              		.align	2
+ 440              		.globl	_ZN15MemoryAllocator22mem_alloc_for_managersEmm
+GAS LISTING /tmp/ccRDNlkW.s 			page 12
+
+
+ 442              	_ZN15MemoryAllocator22mem_alloc_for_managersEmm:
+ 443              	.LFB20:
+ 156:src/syscall_cpp.cpp **** void* MemoryAllocator::mem_alloc_for_managers(size_t N, size_t sizeOfElem){
+ 444              		.loc 1 156 75 is_stmt 1
+ 445              		.cfi_startproc
+ 446              	.LVL28:
+ 447 01d8 130101FF 		addi	sp,sp,-16
+ 448              		.cfi_def_cfa_offset 16
+ 449 01dc 23348100 		sd	s0,8(sp)
+ 450              		.cfi_offset 8, -8
+ 451 01e0 13040101 		addi	s0,sp,16
+ 452              		.cfi_def_cfa 8, 0
+ 453 01e4 93060500 		mv	a3,a0
+ 157:src/syscall_cpp.cpp ****     size_t numOfBlocks = (N * sizeOfElem + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
+ 454              		.loc 1 157 5
+ 455              		.loc 1 157 29 is_stmt 0
+ 456 01e8 3386C502 		mul	a2,a1,a2
+ 457              	.LVL29:
+ 458              		.loc 1 157 59
+ 459 01ec 1306F603 		addi	a2,a2,63
+ 460              		.loc 1 157 12
+ 461 01f0 13576600 		srli	a4,a2,6
+ 462              	.LVL30:
+ 158:src/syscall_cpp.cpp ****     FreeMem* temp = fmem_head;
+ 463              		.loc 1 158 5 is_stmt 1
+ 464              		.loc 1 158 14 is_stmt 0
+ 465 01f4 03350500 		ld	a0,0(a0)
+ 466              	.LVL31:
+ 467              	.L41:
+ 159:src/syscall_cpp.cpp **** 
+ 160:src/syscall_cpp.cpp ****     while(temp)
+ 468              		.loc 1 160 5 is_stmt 1
+ 469              		.loc 1 160 11
+ 470 01f8 63060504 		beqz	a0,.L32
+ 471              	.LBB14:
+ 161:src/syscall_cpp.cpp ****     {
+ 162:src/syscall_cpp.cpp ****         if(temp->size >= numOfBlocks)
+ 472              		.loc 1 162 9
+ 473              	.LBB15:
+ 474              		.loc 1 162 18 is_stmt 0
+ 475 01fc 83370501 		ld	a5,16(a0)
+ 476              		.loc 1 162 9
+ 477 0200 63F6E700 		bgeu	a5,a4,.L43
+ 478              	.LBE15:
+ 163:src/syscall_cpp.cpp ****         {
+ 164:src/syscall_cpp.cpp ****             char* addr = (char*)temp;
+ 165:src/syscall_cpp.cpp **** 
+ 166:src/syscall_cpp.cpp ****             if(temp->size == numOfBlocks){
+ 167:src/syscall_cpp.cpp ****                 // ceo blok se koristi - ukloni ga iz liste
+ 168:src/syscall_cpp.cpp ****                 if(temp->prev)
+ 169:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 170:src/syscall_cpp.cpp ****                 else
+ 171:src/syscall_cpp.cpp ****                 {
+ 172:src/syscall_cpp.cpp ****                     fmem_head = temp->next;
+ 173:src/syscall_cpp.cpp ****                 }
+ 174:src/syscall_cpp.cpp **** 
+ 175:src/syscall_cpp.cpp **** 
+GAS LISTING /tmp/ccRDNlkW.s 			page 13
+
+
+ 176:src/syscall_cpp.cpp ****                 if(temp->next)
+ 177:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 178:src/syscall_cpp.cpp ****             }
+ 179:src/syscall_cpp.cpp ****             else
+ 180:src/syscall_cpp.cpp ****             {
+ 181:src/syscall_cpp.cpp **** 
+ 182:src/syscall_cpp.cpp ****                 FreeMem* newnode = (FreeMem*)((char*)temp + numOfBlocks * MEM_BLOCK_SIZE);
+ 183:src/syscall_cpp.cpp **** 
+ 184:src/syscall_cpp.cpp ****                 newnode->size = temp->size - numOfBlocks;
+ 185:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 186:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 187:src/syscall_cpp.cpp **** 
+ 188:src/syscall_cpp.cpp ****                 if(newnode->prev)
+ 189:src/syscall_cpp.cpp ****                     newnode->prev->next = newnode;
+ 190:src/syscall_cpp.cpp ****                 else
+ 191:src/syscall_cpp.cpp ****                 {
+ 192:src/syscall_cpp.cpp ****                     fmem_head = newnode;
+ 193:src/syscall_cpp.cpp ****                 }
+ 194:src/syscall_cpp.cpp **** 
+ 195:src/syscall_cpp.cpp **** 
+ 196:src/syscall_cpp.cpp ****                 if(newnode->next)
+ 197:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 198:src/syscall_cpp.cpp ****             }
+ 199:src/syscall_cpp.cpp **** 
+ 200:src/syscall_cpp.cpp **** 
+ 201:src/syscall_cpp.cpp ****             return addr;
+ 202:src/syscall_cpp.cpp ****         }
+ 203:src/syscall_cpp.cpp **** 
+ 204:src/syscall_cpp.cpp ****         temp = temp->next;
+ 479              		.loc 1 204 9 is_stmt 1
+ 480              		.loc 1 204 14 is_stmt 0
+ 481 0204 03350500 		ld	a0,0(a0)
+ 482              	.LVL32:
+ 483              	.LBE14:
+ 160:src/syscall_cpp.cpp ****     {
+ 484              		.loc 1 160 5
+ 485 0208 6FF01FFF 		j	.L41
+ 486              	.L43:
+ 487              	.LBB24:
+ 488              	.LBB22:
+ 489              	.LBB16:
+ 164:src/syscall_cpp.cpp **** 
+ 490              		.loc 1 164 13 is_stmt 1
+ 491              	.LVL33:
+ 166:src/syscall_cpp.cpp ****                 // ceo blok se koristi - ukloni ga iz liste
+ 492              		.loc 1 166 13
+ 493              	.LBB17:
+ 494 020c 6382E704 		beq	a5,a4,.L44
+ 495              	.LBB18:
+ 182:src/syscall_cpp.cpp **** 
+ 496              		.loc 1 182 17
+ 182:src/syscall_cpp.cpp **** 
+ 497              		.loc 1 182 73 is_stmt 0
+ 498 0210 137606FC 		andi	a2,a2,-64
+ 182:src/syscall_cpp.cpp **** 
+ 499              		.loc 1 182 26
+ 500 0214 3306C500 		add	a2,a0,a2
+GAS LISTING /tmp/ccRDNlkW.s 			page 14
+
+
+ 501              	.LVL34:
+ 184:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 502              		.loc 1 184 17 is_stmt 1
+ 184:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 503              		.loc 1 184 44 is_stmt 0
+ 504 0218 B387E740 		sub	a5,a5,a4
+ 184:src/syscall_cpp.cpp ****                 newnode->next = temp->next;
+ 505              		.loc 1 184 31
+ 506 021c 2338F600 		sd	a5,16(a2)
+ 185:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 507              		.loc 1 185 17 is_stmt 1
+ 185:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 508              		.loc 1 185 39 is_stmt 0
+ 509 0220 83370500 		ld	a5,0(a0)
+ 185:src/syscall_cpp.cpp ****                 newnode->prev = temp->prev;
+ 510              		.loc 1 185 31
+ 511 0224 2330F600 		sd	a5,0(a2)
+ 186:src/syscall_cpp.cpp **** 
+ 512              		.loc 1 186 17 is_stmt 1
+ 186:src/syscall_cpp.cpp **** 
+ 513              		.loc 1 186 39 is_stmt 0
+ 514 0228 83378500 		ld	a5,8(a0)
+ 186:src/syscall_cpp.cpp **** 
+ 515              		.loc 1 186 31
+ 516 022c 2334F600 		sd	a5,8(a2)
+ 188:src/syscall_cpp.cpp ****                     newnode->prev->next = newnode;
+ 517              		.loc 1 188 17 is_stmt 1
+ 518 0230 63880704 		beqz	a5,.L39
+ 189:src/syscall_cpp.cpp ****                 else
+ 519              		.loc 1 189 21
+ 189:src/syscall_cpp.cpp ****                 else
+ 520              		.loc 1 189 41 is_stmt 0
+ 521 0234 23B0C700 		sd	a2,0(a5)
+ 522              	.L40:
+ 196:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 523              		.loc 1 196 17 is_stmt 1
+ 196:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 524              		.loc 1 196 29 is_stmt 0
+ 525 0238 83370600 		ld	a5,0(a2)
+ 196:src/syscall_cpp.cpp ****                     newnode->next->prev = newnode;
+ 526              		.loc 1 196 17
+ 527 023c 63840700 		beqz	a5,.L32
+ 197:src/syscall_cpp.cpp ****             }
+ 528              		.loc 1 197 21 is_stmt 1
+ 197:src/syscall_cpp.cpp ****             }
+ 529              		.loc 1 197 41 is_stmt 0
+ 530 0240 23B4C700 		sd	a2,8(a5)
+ 531              	.LBE18:
+ 532              	.LBE17:
+ 201:src/syscall_cpp.cpp ****         }
+ 533              		.loc 1 201 13 is_stmt 1
+ 534              	.LVL35:
+ 535              	.L32:
+ 536              	.LBE16:
+ 537              	.LBE22:
+ 538              	.LBE24:
+ 205:src/syscall_cpp.cpp ****     }
+GAS LISTING /tmp/ccRDNlkW.s 			page 15
+
+
+ 206:src/syscall_cpp.cpp **** 
+ 207:src/syscall_cpp.cpp ****     return nullptr;
+ 208:src/syscall_cpp.cpp **** }
+ 539              		.loc 1 208 1 is_stmt 0
+ 540 0244 03348100 		ld	s0,8(sp)
+ 541              		.cfi_remember_state
+ 542              		.cfi_restore 8
+ 543              		.cfi_def_cfa 2, 16
+ 544 0248 13010101 		addi	sp,sp,16
+ 545              		.cfi_def_cfa_offset 0
+ 546 024c 67800000 		jr	ra
+ 547              	.LVL36:
+ 548              	.L44:
+ 549              		.cfi_restore_state
+ 550              	.LBB25:
+ 551              	.LBB23:
+ 552              	.LBB21:
+ 553              	.LBB20:
+ 168:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 554              		.loc 1 168 17 is_stmt 1
+ 168:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 555              		.loc 1 168 26 is_stmt 0
+ 556 0250 83378500 		ld	a5,8(a0)
+ 168:src/syscall_cpp.cpp ****                     temp->prev->next = temp->next;
+ 557              		.loc 1 168 17
+ 558 0254 63800702 		beqz	a5,.L36
+ 169:src/syscall_cpp.cpp ****                 else
+ 559              		.loc 1 169 21 is_stmt 1
+ 169:src/syscall_cpp.cpp ****                 else
+ 560              		.loc 1 169 46 is_stmt 0
+ 561 0258 03370500 		ld	a4,0(a0)
+ 562              	.LVL37:
+ 169:src/syscall_cpp.cpp ****                 else
+ 563              		.loc 1 169 38
+ 564 025c 23B0E700 		sd	a4,0(a5)
+ 565              	.L37:
+ 176:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 566              		.loc 1 176 17 is_stmt 1
+ 176:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 567              		.loc 1 176 26 is_stmt 0
+ 568 0260 83370500 		ld	a5,0(a0)
+ 176:src/syscall_cpp.cpp ****                     temp->next->prev = temp->prev;
+ 569              		.loc 1 176 17
+ 570 0264 E38007FE 		beqz	a5,.L32
+ 177:src/syscall_cpp.cpp ****             }
+ 571              		.loc 1 177 21 is_stmt 1
+ 177:src/syscall_cpp.cpp ****             }
+ 572              		.loc 1 177 46 is_stmt 0
+ 573 0268 03378500 		ld	a4,8(a0)
+ 177:src/syscall_cpp.cpp ****             }
+ 574              		.loc 1 177 38
+ 575 026c 23B4E700 		sd	a4,8(a5)
+ 576 0270 6FF05FFD 		j	.L32
+ 577              	.LVL38:
+ 578              	.L36:
+ 172:src/syscall_cpp.cpp ****                 }
+ 579              		.loc 1 172 21 is_stmt 1
+GAS LISTING /tmp/ccRDNlkW.s 			page 16
+
+
+ 172:src/syscall_cpp.cpp ****                 }
+ 580              		.loc 1 172 39 is_stmt 0
+ 581 0274 83370500 		ld	a5,0(a0)
+ 172:src/syscall_cpp.cpp ****                 }
+ 582              		.loc 1 172 31
+ 583 0278 23B0F600 		sd	a5,0(a3)
+ 584 027c 6FF05FFE 		j	.L37
+ 585              	.LVL39:
+ 586              	.L39:
+ 587              	.LBB19:
+ 192:src/syscall_cpp.cpp ****                 }
+ 588              		.loc 1 192 21 is_stmt 1
+ 192:src/syscall_cpp.cpp ****                 }
+ 589              		.loc 1 192 31 is_stmt 0
+ 590 0280 23B0C600 		sd	a2,0(a3)
+ 591 0284 6FF05FFB 		j	.L40
+ 592              	.LBE19:
+ 593              	.LBE20:
+ 594              	.LBE21:
+ 595              	.LBE23:
+ 596              	.LBE25:
+ 597              		.cfi_endproc
+ 598              	.LFE20:
+ 600              		.align	2
+ 601              		.globl	_ZN15MemoryAllocatorC2Ev
+ 603              	_ZN15MemoryAllocatorC2Ev:
+ 604              	.LFB11:
+  24:src/syscall_cpp.cpp ****     fmem_head = (FreeMem*)(align((uint64)HEAP_START_ADDR) + (uint64)DEFAULT_STACK_SIZE);
+ 605              		.loc 1 24 1 is_stmt 1
+ 606              		.cfi_startproc
+ 607              	.LVL40:
+ 608 0288 130101FD 		addi	sp,sp,-48
+ 609              		.cfi_def_cfa_offset 48
+ 610 028c 23341102 		sd	ra,40(sp)
+ 611 0290 23308102 		sd	s0,32(sp)
+ 612 0294 233C9100 		sd	s1,24(sp)
+ 613 0298 23382101 		sd	s2,16(sp)
+ 614 029c 23343101 		sd	s3,8(sp)
+ 615 02a0 23304101 		sd	s4,0(sp)
+ 616              		.cfi_offset 1, -8
+ 617              		.cfi_offset 8, -16
+ 618              		.cfi_offset 9, -24
+ 619              		.cfi_offset 18, -32
+ 620              		.cfi_offset 19, -40
+ 621              		.cfi_offset 20, -48
+ 622 02a4 13040103 		addi	s0,sp,48
+ 623              		.cfi_def_cfa 8, 0
+ 624 02a8 93040500 		mv	s1,a0
+ 625              	.LBB26:
+  24:src/syscall_cpp.cpp ****     fmem_head = (FreeMem*)(align((uint64)HEAP_START_ADDR) + (uint64)DEFAULT_STACK_SIZE);
+ 626              		.loc 1 24 34 is_stmt 0
+ 627 02ac 130A8500 		addi	s4,a0,8
+ 628 02b0 13050A00 		mv	a0,s4
+ 629              	.LVL41:
+ 630 02b4 97000000 		call	_ZN10ThreadPoolC1Ev@plt
+ 630      E7800000 
+ 631              	.LVL42:
+GAS LISTING /tmp/ccRDNlkW.s 			page 17
+
+
+ 632 02bc 93898401 		addi	s3,s1,24
+ 633 02c0 13850900 		mv	a0,s3
+ 634 02c4 97000000 		call	_ZN13SemaphorePoolC1Ev@plt
+ 634      E7800000 
+ 635              	.LVL43:
+ 636              	.LBB27:
+  25:src/syscall_cpp.cpp ****     fmem_head->next = nullptr;
+ 637              		.loc 1 25 5 is_stmt 1
+  25:src/syscall_cpp.cpp ****     fmem_head->next = nullptr;
+ 638              		.loc 1 25 33 is_stmt 0
+ 639 02cc 97070000 		la	a5,HEAP_START_ADDR
+ 639      83B70700 
+ 640 02d4 83B50700 		ld	a1,0(a5)
+ 641 02d8 13850400 		mv	a0,s1
+ 642 02dc 97000000 		call	_ZN15MemoryAllocator5alignEm
+ 642      E7800000 
+ 643              	.LVL44:
+  25:src/syscall_cpp.cpp ****     fmem_head->next = nullptr;
+ 644              		.loc 1 25 59
+ 645 02e4 B7170000 		li	a5,4096
+ 646 02e8 3305F500 		add	a0,a0,a5
+  25:src/syscall_cpp.cpp ****     fmem_head->next = nullptr;
+ 647              		.loc 1 25 15
+ 648 02ec 23B0A400 		sd	a0,0(s1)
+  26:src/syscall_cpp.cpp ****     fmem_head->prev = nullptr;
+ 649              		.loc 1 26 5 is_stmt 1
+  26:src/syscall_cpp.cpp ****     fmem_head->prev = nullptr;
+ 650              		.loc 1 26 21 is_stmt 0
+ 651 02f0 23300500 		sd	zero,0(a0)
+  27:src/syscall_cpp.cpp **** 
+ 652              		.loc 1 27 5 is_stmt 1
+ 653 02f4 83B70400 		ld	a5,0(s1)
+  27:src/syscall_cpp.cpp **** 
+ 654              		.loc 1 27 21 is_stmt 0
+ 655 02f8 23B40700 		sd	zero,8(a5)
+  29:src/syscall_cpp.cpp ****                           (((uint64)HEAP_END_ADDR - (uint64)fmem_head) % MEM_BLOCK_SIZE)) / MEM_BLO
+ 656              		.loc 1 29 5 is_stmt 1
+  30:src/syscall_cpp.cpp ****     fmem_head->size = totalBlocks;
+ 657              		.loc 1 30 61 is_stmt 0
+ 658 02fc 03B70400 		ld	a4,0(s1)
+  30:src/syscall_cpp.cpp ****     fmem_head->size = totalBlocks;
+ 659              		.loc 1 30 51
+ 660 0300 97070000 		la	a5,HEAP_END_ADDR
+ 660      83B70700 
+ 661 0308 83B70700 		ld	a5,0(a5)
+ 662 030c B387E740 		sub	a5,a5,a4
+  29:src/syscall_cpp.cpp ****                           (((uint64)HEAP_END_ADDR - (uint64)fmem_head) % MEM_BLOCK_SIZE)) / MEM_BLO
+ 663              		.loc 1 29 12
+ 664 0310 93D76700 		srli	a5,a5,6
+ 665              	.LVL45:
+  31:src/syscall_cpp.cpp **** 
+ 666              		.loc 1 31 5 is_stmt 1
+  31:src/syscall_cpp.cpp **** 
+ 667              		.loc 1 31 21 is_stmt 0
+ 668 0314 2338F700 		sd	a5,16(a4)
+  33:src/syscall_cpp.cpp ****     void* threadManagerUsedArrayAddress = mem_alloc_for_managers(MAX_THREADS, sizeof(bool));
+ 669              		.loc 1 33 5 is_stmt 1
+GAS LISTING /tmp/ccRDNlkW.s 			page 18
+
+
+  33:src/syscall_cpp.cpp ****     void* threadManagerUsedArrayAddress = mem_alloc_for_managers(MAX_THREADS, sizeof(bool));
+ 670              		.loc 1 33 60 is_stmt 0
+ 671 0318 13068008 		li	a2,136
+ 672 031c 9305A000 		li	a1,10
+ 673 0320 13850400 		mv	a0,s1
+ 674 0324 97000000 		call	_ZN15MemoryAllocator22mem_alloc_for_managersEmm
+ 674      E7800000 
+ 675              	.LVL46:
+ 676 032c 13090500 		mv	s2,a0
+ 677              	.LVL47:
+  34:src/syscall_cpp.cpp ****     threadPool.init(threadManagerPoolAddress, threadManagerUsedArrayAddress);
+ 678              		.loc 1 34 5 is_stmt 1
+  34:src/syscall_cpp.cpp ****     threadPool.init(threadManagerPoolAddress, threadManagerUsedArrayAddress);
+ 679              		.loc 1 34 65 is_stmt 0
+ 680 0330 13061000 		li	a2,1
+ 681 0334 9305A000 		li	a1,10
+ 682 0338 13850400 		mv	a0,s1
+ 683              	.LVL48:
+ 684 033c 97000000 		call	_ZN15MemoryAllocator22mem_alloc_for_managersEmm
+ 684      E7800000 
+ 685              	.LVL49:
+ 686 0344 13060500 		mv	a2,a0
+ 687              	.LVL50:
+  35:src/syscall_cpp.cpp **** 
+ 688              		.loc 1 35 5 is_stmt 1
+  35:src/syscall_cpp.cpp **** 
+ 689              		.loc 1 35 20 is_stmt 0
+ 690 0348 93050900 		mv	a1,s2
+ 691 034c 13050A00 		mv	a0,s4
+ 692              	.LVL51:
+ 693 0350 97000000 		call	_ZN10ThreadPool4initEPvS0_@plt
+ 693      E7800000 
+ 694              	.LVL52:
+  37:src/syscall_cpp.cpp ****     void* semaphoreManagerUsedArrayAddress = mem_alloc_for_managers(MAX_SEMAPHORES, sizeof(bool));
+ 695              		.loc 1 37 5 is_stmt 1
+  37:src/syscall_cpp.cpp ****     void* semaphoreManagerUsedArrayAddress = mem_alloc_for_managers(MAX_SEMAPHORES, sizeof(bool));
+ 696              		.loc 1 37 63 is_stmt 0
+ 697 0358 13060002 		li	a2,32
+ 698 035c 9305A000 		li	a1,10
+ 699 0360 13850400 		mv	a0,s1
+ 700 0364 97000000 		call	_ZN15MemoryAllocator22mem_alloc_for_managersEmm
+ 700      E7800000 
+ 701              	.LVL53:
+ 702 036c 13090500 		mv	s2,a0
+ 703              	.LVL54:
+  38:src/syscall_cpp.cpp ****     semaphorePool.init(semaphoreManagerPoolAddress, semaphoreManagerUsedArrayAddress);
+ 704              		.loc 1 38 5 is_stmt 1
+  38:src/syscall_cpp.cpp ****     semaphorePool.init(semaphoreManagerPoolAddress, semaphoreManagerUsedArrayAddress);
+ 705              		.loc 1 38 68 is_stmt 0
+ 706 0370 13061000 		li	a2,1
+ 707 0374 9305A000 		li	a1,10
+ 708 0378 13850400 		mv	a0,s1
+ 709              	.LVL55:
+ 710 037c 97000000 		call	_ZN15MemoryAllocator22mem_alloc_for_managersEmm
+ 710      E7800000 
+ 711              	.LVL56:
+ 712 0384 13060500 		mv	a2,a0
+GAS LISTING /tmp/ccRDNlkW.s 			page 19
+
+
+ 713              	.LVL57:
+  39:src/syscall_cpp.cpp **** }
+ 714              		.loc 1 39 5 is_stmt 1
+  39:src/syscall_cpp.cpp **** }
+ 715              		.loc 1 39 23 is_stmt 0
+ 716 0388 93050900 		mv	a1,s2
+ 717 038c 13850900 		mv	a0,s3
+ 718              	.LVL58:
+ 719 0390 97000000 		call	_ZN13SemaphorePool4initEPvS0_@plt
+ 719      E7800000 
+ 720              	.LVL59:
+ 721              	.LBE27:
+ 722              	.LBE26:
+  40:src/syscall_cpp.cpp **** 
+ 723              		.loc 1 40 1
+ 724 0398 83308102 		ld	ra,40(sp)
+ 725              		.cfi_restore 1
+ 726 039c 03340102 		ld	s0,32(sp)
+ 727              		.cfi_restore 8
+ 728              		.cfi_def_cfa 2, 48
+ 729 03a0 83348101 		ld	s1,24(sp)
+ 730              		.cfi_restore 9
+ 731              	.LVL60:
+ 732 03a4 03390101 		ld	s2,16(sp)
+ 733              		.cfi_restore 18
+ 734              	.LVL61:
+ 735 03a8 83398100 		ld	s3,8(sp)
+ 736              		.cfi_restore 19
+ 737              	.LVL62:
+ 738 03ac 033A0100 		ld	s4,0(sp)
+ 739              		.cfi_restore 20
+ 740              	.LVL63:
+ 741 03b0 13010103 		addi	sp,sp,48
+ 742              		.cfi_def_cfa_offset 0
+ 743 03b4 67800000 		jr	ra
+ 744              		.cfi_endproc
+ 745              	.LFE11:
+ 747              		.globl	_ZN15MemoryAllocatorC1Ev
+ 748              		.set	_ZN15MemoryAllocatorC1Ev,_ZN15MemoryAllocatorC2Ev
+ 749              		.align	2
+ 750              		.globl	_ZN15MemoryAllocator8InstanceEv
+ 752              	_ZN15MemoryAllocator8InstanceEv:
+ 753              	.LFB8:
+  12:src/syscall_cpp.cpp ****     static MemoryAllocator instance;
+ 754              		.loc 1 12 46 is_stmt 1
+ 755              		.cfi_startproc
+  13:src/syscall_cpp.cpp ****     return &instance;
+ 756              		.loc 1 13 5
+  13:src/syscall_cpp.cpp ****     return &instance;
+ 757              		.loc 1 13 28 is_stmt 0
+ 758 03b8 97070000 		lbu	a5,.LANCHOR0
+ 758      83C70700 
+ 759 03c0 63880700 		beqz	a5,.L53
+  14:src/syscall_cpp.cpp **** }
+ 760              		.loc 1 14 5 is_stmt 1
+  15:src/syscall_cpp.cpp **** 
+ 761              		.loc 1 15 1 is_stmt 0
+GAS LISTING /tmp/ccRDNlkW.s 			page 20
+
+
+ 762 03c4 17050000 		lla	a0,.LANCHOR0+8
+ 762      13050500 
+ 763 03cc 67800000 		ret
+ 764              	.L53:
+  12:src/syscall_cpp.cpp ****     static MemoryAllocator instance;
+ 765              		.loc 1 12 46 discriminator 1
+ 766 03d0 130101FF 		addi	sp,sp,-16
+ 767              		.cfi_def_cfa_offset 16
+ 768 03d4 23341100 		sd	ra,8(sp)
+ 769 03d8 23308100 		sd	s0,0(sp)
+ 770              		.cfi_offset 1, -8
+ 771              		.cfi_offset 8, -16
+ 772 03dc 13040101 		addi	s0,sp,16
+ 773              		.cfi_def_cfa 8, 0
+  13:src/syscall_cpp.cpp ****     return &instance;
+ 774              		.loc 1 13 28 discriminator 1
+ 775 03e0 17050000 		lla	a0,.LANCHOR0+8
+ 775      13050500 
+ 776 03e8 97000000 		call	_ZN15MemoryAllocatorC1Ev
+ 776      E7800000 
+ 777              	.LVL64:
+ 778 03f0 93071000 		li	a5,1
+ 779 03f4 17070000 		sb	a5,.LANCHOR0,a4
+ 779      2300F700 
+  14:src/syscall_cpp.cpp **** }
+ 780              		.loc 1 14 5 is_stmt 1 discriminator 1
+  15:src/syscall_cpp.cpp **** 
+ 781              		.loc 1 15 1 is_stmt 0 discriminator 1
+ 782 03fc 17050000 		lla	a0,.LANCHOR0+8
+ 782      13050500 
+ 783 0404 83308100 		ld	ra,8(sp)
+ 784              		.cfi_restore 1
+ 785 0408 03340100 		ld	s0,0(sp)
+ 786              		.cfi_restore 8
+ 787              		.cfi_def_cfa 2, 16
+ 788 040c 13010101 		addi	sp,sp,16
+ 789              		.cfi_def_cfa_offset 0
+ 790 0410 67800000 		jr	ra
+ 791              		.cfi_endproc
+ 792              	.LFE8:
+ 794              		.align	2
+ 795              		.globl	_ZN15MemoryAllocator9tryToJoinEP7FreeMem
+ 797              	_ZN15MemoryAllocator9tryToJoinEP7FreeMem:
+ 798              	.LFB21:
+ 209:src/syscall_cpp.cpp **** 
+ 210:src/syscall_cpp.cpp **** void MemoryAllocator::tryToJoin(FreeMem *node) {
+ 799              		.loc 1 210 48 is_stmt 1
+ 800              		.cfi_startproc
+ 801              	.LVL65:
+ 802 0414 130101FF 		addi	sp,sp,-16
+ 803              		.cfi_def_cfa_offset 16
+ 804 0418 23348100 		sd	s0,8(sp)
+ 805              		.cfi_offset 8, -8
+ 806 041c 13040101 		addi	s0,sp,16
+ 807              		.cfi_def_cfa 8, 0
+ 211:src/syscall_cpp.cpp ****     if(!node) return;
+ 808              		.loc 1 211 5
+GAS LISTING /tmp/ccRDNlkW.s 			page 21
+
+
+ 809 0420 638E0500 		beqz	a1,.L54
+ 212:src/syscall_cpp.cpp ****     FreeMem* nextnode = node->next;
+ 810              		.loc 1 212 5
+ 811              		.loc 1 212 14 is_stmt 0
+ 812 0424 83B70500 		ld	a5,0(a1)
+ 813              	.LVL66:
+ 213:src/syscall_cpp.cpp ****     if(nextnode && (char*)nextnode == ((char*)node + node->size * MEM_BLOCK_SIZE)){
+ 814              		.loc 1 213 5 is_stmt 1
+ 815 0428 638A0700 		beqz	a5,.L54
+ 816              		.loc 1 213 60 is_stmt 0 discriminator 1
+ 817 042c 83B60501 		ld	a3,16(a1)
+ 818              		.loc 1 213 65 discriminator 1
+ 819 0430 13976600 		slli	a4,a3,6
+ 820              		.loc 1 213 52 discriminator 1
+ 821 0434 3387E500 		add	a4,a1,a4
+ 822              		.loc 1 213 17 discriminator 1
+ 823 0438 6308F700 		beq	a4,a5,.L57
+ 824              	.LVL67:
+ 825              	.L54:
+ 214:src/syscall_cpp.cpp ****         node->size += nextnode->size;
+ 215:src/syscall_cpp.cpp ****         node->next = nextnode->next;
+ 216:src/syscall_cpp.cpp ****         if(node->next)node->next->prev = node;
+ 217:src/syscall_cpp.cpp ****     }
+ 218:src/syscall_cpp.cpp **** }
+ 826              		.loc 1 218 1
+ 827 043c 03348100 		ld	s0,8(sp)
+ 828              		.cfi_remember_state
+ 829              		.cfi_restore 8
+ 830              		.cfi_def_cfa 2, 16
+ 831 0440 13010101 		addi	sp,sp,16
+ 832              		.cfi_def_cfa_offset 0
+ 833 0444 67800000 		jr	ra
+ 834              	.LVL68:
+ 835              	.L57:
+ 836              		.cfi_restore_state
+ 214:src/syscall_cpp.cpp ****         node->size += nextnode->size;
+ 837              		.loc 1 214 9 is_stmt 1
+ 214:src/syscall_cpp.cpp ****         node->size += nextnode->size;
+ 838              		.loc 1 214 33 is_stmt 0
+ 839 0448 03B70701 		ld	a4,16(a5)
+ 214:src/syscall_cpp.cpp ****         node->size += nextnode->size;
+ 840              		.loc 1 214 20
+ 841 044c B386E600 		add	a3,a3,a4
+ 842 0450 23B8D500 		sd	a3,16(a1)
+ 215:src/syscall_cpp.cpp ****         if(node->next)node->next->prev = node;
+ 843              		.loc 1 215 9 is_stmt 1
+ 215:src/syscall_cpp.cpp ****         if(node->next)node->next->prev = node;
+ 844              		.loc 1 215 32 is_stmt 0
+ 845 0454 83B70700 		ld	a5,0(a5)
+ 846              	.LVL69:
+ 215:src/syscall_cpp.cpp ****         if(node->next)node->next->prev = node;
+ 847              		.loc 1 215 20
+ 848 0458 23B0F500 		sd	a5,0(a1)
+ 849              	.LVL70:
+ 216:src/syscall_cpp.cpp ****     }
+ 850              		.loc 1 216 9 is_stmt 1
+ 851 045c E38007FE 		beqz	a5,.L54
+GAS LISTING /tmp/ccRDNlkW.s 			page 22
+
+
+ 216:src/syscall_cpp.cpp ****     }
+ 852              		.loc 1 216 23 discriminator 1
+ 216:src/syscall_cpp.cpp ****     }
+ 853              		.loc 1 216 40 is_stmt 0 discriminator 1
+ 854 0460 23B4B700 		sd	a1,8(a5)
+ 855 0464 6FF09FFD 		j	.L54
+ 856              		.cfi_endproc
+ 857              	.LFE21:
+ 859              		.align	2
+ 860              		.globl	_ZN15MemoryAllocator8mem_freeEPv
+ 862              	_ZN15MemoryAllocator8mem_freeEPv:
+ 863              	.LFB22:
+ 219:src/syscall_cpp.cpp **** 
+ 220:src/syscall_cpp.cpp **** int MemoryAllocator::mem_free(void *ptr) {
+ 864              		.loc 1 220 42 is_stmt 1
+ 865              		.cfi_startproc
+ 866              	.LVL71:
+ 221:src/syscall_cpp.cpp ****     if(!ptr) return -1;
+ 867              		.loc 1 221 5
+ 868 0468 6382050E 		beqz	a1,.L67
+ 220:src/syscall_cpp.cpp ****     if(!ptr) return -1;
+ 869              		.loc 1 220 42 is_stmt 0
+ 870 046c 130101FE 		addi	sp,sp,-32
+ 871              		.cfi_def_cfa_offset 32
+ 872 0470 233C1100 		sd	ra,24(sp)
+ 873 0474 23388100 		sd	s0,16(sp)
+ 874 0478 23349100 		sd	s1,8(sp)
+ 875 047c 23302101 		sd	s2,0(sp)
+ 876              		.cfi_offset 1, -8
+ 877              		.cfi_offset 8, -16
+ 878              		.cfi_offset 9, -24
+ 879              		.cfi_offset 18, -32
+ 880 0480 13040102 		addi	s0,sp,32
+ 881              		.cfi_def_cfa 8, 0
+ 882 0484 13090500 		mv	s2,a0
+ 222:src/syscall_cpp.cpp **** 
+ 223:src/syscall_cpp.cpp ****     Header* header = (Header*)ptr;
+ 883              		.loc 1 223 5 is_stmt 1
+ 884              	.LVL72:
+ 224:src/syscall_cpp.cpp **** 
+ 225:src/syscall_cpp.cpp ****     //outside of the heap error
+ 226:src/syscall_cpp.cpp ****     if((uint64)header < (uint64)HEAP_START_ADDR || (uint64)header > (uint64)HEAP_END_ADDR) return -
+ 885              		.loc 1 226 5
+ 886              		.loc 1 226 23 is_stmt 0
+ 887 0488 97070000 		la	a5,HEAP_START_ADDR
+ 887      83B70700 
+ 888 0490 83B70700 		ld	a5,0(a5)
+ 889              		.loc 1 226 5
+ 890 0494 63E0F50C 		bltu	a1,a5,.L68
+ 891              		.loc 1 226 67 discriminator 2
+ 892 0498 97070000 		la	a5,HEAP_END_ADDR
+ 892      83B70700 
+ 893 04a0 83B70700 		ld	a5,0(a5)
+ 894              		.loc 1 226 49 discriminator 2
+ 895 04a4 63ECB70A 		bgtu	a1,a5,.L69
+ 227:src/syscall_cpp.cpp ****     //not aligned to a block error
+ 228:src/syscall_cpp.cpp ****     //if(((char*)header - (char*)fmem_head) % MEM_BLOCK_SIZE != 0) return -3;
+GAS LISTING /tmp/ccRDNlkW.s 			page 23
+
+
+ 229:src/syscall_cpp.cpp **** 
+ 230:src/syscall_cpp.cpp ****     FreeMem* newnode = (FreeMem*)header;
+ 896              		.loc 1 230 5 is_stmt 1
+ 897              	.LVL73:
+ 231:src/syscall_cpp.cpp ****     newnode->size = header->numOfBlocks;
+ 898              		.loc 1 231 5
+ 899              		.loc 1 231 29 is_stmt 0
+ 900 04a8 83B70500 		ld	a5,0(a1)
+ 901              		.loc 1 231 19
+ 902 04ac 23B8F500 		sd	a5,16(a1)
+ 232:src/syscall_cpp.cpp ****     newnode->prev = nullptr;
+ 903              		.loc 1 232 5 is_stmt 1
+ 904              		.loc 1 232 19 is_stmt 0
+ 905 04b0 23B40500 		sd	zero,8(a1)
+ 233:src/syscall_cpp.cpp ****     newnode->next = nullptr;
+ 906              		.loc 1 233 5 is_stmt 1
+ 907              		.loc 1 233 19 is_stmt 0
+ 908 04b4 23B00500 		sd	zero,0(a1)
+ 234:src/syscall_cpp.cpp ****     FreeMem* temp = 0;
+ 909              		.loc 1 234 5 is_stmt 1
+ 910              	.LVL74:
+ 235:src/syscall_cpp.cpp ****     if(!fmem_head || (char*)fmem_head > (char*)newnode)
+ 911              		.loc 1 235 5
+ 912              		.loc 1 235 9 is_stmt 0
+ 913 04b8 03370500 		ld	a4,0(a0)
+ 914              		.loc 1 235 5
+ 915 04bc 63040702 		beqz	a4,.L70
+ 916              		.loc 1 235 19 discriminator 1
+ 917 04c0 63E6E502 		bgtu	a4,a1,.L71
+ 236:src/syscall_cpp.cpp ****     {
+ 237:src/syscall_cpp.cpp ****         temp = 0;
+ 238:src/syscall_cpp.cpp ****     }
+ 239:src/syscall_cpp.cpp ****     else
+ 240:src/syscall_cpp.cpp ****     {
+ 241:src/syscall_cpp.cpp ****         temp = fmem_head;
+ 918              		.loc 1 241 14
+ 919 04c4 93070700 		mv	a5,a4
+ 920              	.LVL75:
+ 921              	.L62:
+ 242:src/syscall_cpp.cpp ****         while(temp->next && (char*)temp->next < (char*)newnode)
+ 922              		.loc 1 242 9 is_stmt 1
+ 923              		.loc 1 242 26
+ 924 04c8 93840700 		mv	s1,a5
+ 925              		.loc 1 242 21 is_stmt 0
+ 926 04cc 83B70700 		ld	a5,0(a5)
+ 927              	.LVL76:
+ 928              		.loc 1 242 26
+ 929 04d0 63840700 		beqz	a5,.L61
+ 930              		.loc 1 242 26 discriminator 1
+ 931 04d4 E3EAB7FE 		bltu	a5,a1,.L62
+ 932              	.L61:
+ 243:src/syscall_cpp.cpp ****         {
+ 244:src/syscall_cpp.cpp ****             temp = temp->next;
+ 245:src/syscall_cpp.cpp ****         }
+ 246:src/syscall_cpp.cpp ****     }
+ 247:src/syscall_cpp.cpp ****     if(temp)
+ 933              		.loc 1 247 5 is_stmt 1
+GAS LISTING /tmp/ccRDNlkW.s 			page 24
+
+
+ 934 04d8 638C0400 		beqz	s1,.L60
+ 248:src/syscall_cpp.cpp ****     {
+ 249:src/syscall_cpp.cpp ****         newnode->next = temp->next;
+ 935              		.loc 1 249 9
+ 936              		.loc 1 249 23 is_stmt 0
+ 937 04dc 23B0F500 		sd	a5,0(a1)
+ 938 04e0 6F004001 		j	.L63
+ 939              	.LVL77:
+ 940              	.L70:
+ 237:src/syscall_cpp.cpp ****     }
+ 941              		.loc 1 237 14
+ 942 04e4 93040700 		mv	s1,a4
+ 943 04e8 6F008000 		j	.L60
+ 944              	.L71:
+ 945 04ec 93040000 		li	s1,0
+ 946              	.LVL78:
+ 947              	.L60:
+ 250:src/syscall_cpp.cpp ****     }
+ 251:src/syscall_cpp.cpp ****     else {
+ 252:src/syscall_cpp.cpp ****         newnode->next = fmem_head;
+ 948              		.loc 1 252 9 is_stmt 1
+ 949              		.loc 1 252 23 is_stmt 0
+ 950 04f0 23B0E500 		sd	a4,0(a1)
+ 951              	.L63:
+ 253:src/syscall_cpp.cpp ****     }
+ 254:src/syscall_cpp.cpp ****     if(newnode->next)
+ 952              		.loc 1 254 5 is_stmt 1
+ 953              		.loc 1 254 17 is_stmt 0
+ 954 04f4 83B70500 		ld	a5,0(a1)
+ 955              		.loc 1 254 5
+ 956 04f8 63840700 		beqz	a5,.L64
+ 255:src/syscall_cpp.cpp ****     {
+ 256:src/syscall_cpp.cpp ****         newnode->next->prev = newnode;
+ 957              		.loc 1 256 9 is_stmt 1
+ 958              		.loc 1 256 29 is_stmt 0
+ 959 04fc 23B4B700 		sd	a1,8(a5)
+ 960              	.L64:
+ 257:src/syscall_cpp.cpp ****     }
+ 258:src/syscall_cpp.cpp ****     if(temp){
+ 961              		.loc 1 258 5 is_stmt 1
+ 962 0500 63820404 		beqz	s1,.L65
+ 259:src/syscall_cpp.cpp ****         temp->next = newnode;
+ 963              		.loc 1 259 9
+ 964              		.loc 1 259 20 is_stmt 0
+ 965 0504 23B0B400 		sd	a1,0(s1)
+ 260:src/syscall_cpp.cpp ****         newnode->prev = temp;
+ 966              		.loc 1 260 9 is_stmt 1
+ 967              		.loc 1 260 23 is_stmt 0
+ 968 0508 23B49500 		sd	s1,8(a1)
+ 969              	.L66:
+ 261:src/syscall_cpp.cpp ****     }
+ 262:src/syscall_cpp.cpp ****     else
+ 263:src/syscall_cpp.cpp ****     {
+ 264:src/syscall_cpp.cpp ****         fmem_head = newnode;
+ 265:src/syscall_cpp.cpp ****     }
+ 266:src/syscall_cpp.cpp ****     tryToJoin(newnode);
+ 970              		.loc 1 266 5 is_stmt 1
+GAS LISTING /tmp/ccRDNlkW.s 			page 25
+
+
+ 971              		.loc 1 266 14 is_stmt 0
+ 972 050c 13050900 		mv	a0,s2
+ 973              	.LVL79:
+ 974 0510 97000000 		call	_ZN15MemoryAllocator9tryToJoinEP7FreeMem
+ 974      E7800000 
+ 975              	.LVL80:
+ 267:src/syscall_cpp.cpp ****     tryToJoin(temp);
+ 976              		.loc 1 267 5 is_stmt 1
+ 977              		.loc 1 267 14 is_stmt 0
+ 978 0518 93850400 		mv	a1,s1
+ 979 051c 13050900 		mv	a0,s2
+ 980 0520 97000000 		call	_ZN15MemoryAllocator9tryToJoinEP7FreeMem
+ 980      E7800000 
+ 981              	.LVL81:
+ 268:src/syscall_cpp.cpp ****     return 0;
+ 982              		.loc 1 268 5 is_stmt 1
+ 983              		.loc 1 268 12 is_stmt 0
+ 984 0528 13050000 		li	a0,0
+ 985              	.LVL82:
+ 986              	.L59:
+ 269:src/syscall_cpp.cpp **** }
+ 987              		.loc 1 269 1
+ 988 052c 83308101 		ld	ra,24(sp)
+ 989              		.cfi_remember_state
+ 990              		.cfi_restore 1
+ 991 0530 03340101 		ld	s0,16(sp)
+ 992              		.cfi_restore 8
+ 993              		.cfi_def_cfa 2, 32
+ 994 0534 83348100 		ld	s1,8(sp)
+ 995              		.cfi_restore 9
+ 996 0538 03390100 		ld	s2,0(sp)
+ 997              		.cfi_restore 18
+ 998              	.LVL83:
+ 999 053c 13010102 		addi	sp,sp,32
+ 1000              		.cfi_def_cfa_offset 0
+ 1001 0540 67800000 		jr	ra
+ 1002              	.LVL84:
+ 1003              	.L65:
+ 1004              		.cfi_restore_state
+ 264:src/syscall_cpp.cpp ****     }
+ 1005              		.loc 1 264 9 is_stmt 1
+ 264:src/syscall_cpp.cpp ****     }
+ 1006              		.loc 1 264 19 is_stmt 0
+ 1007 0544 2330B900 		sd	a1,0(s2)
+ 1008 0548 6FF05FFC 		j	.L66
+ 1009              	.LVL85:
+ 1010              	.L67:
+ 1011              		.cfi_def_cfa_register 2
+ 1012              		.cfi_restore 1
+ 1013              		.cfi_restore 8
+ 1014              		.cfi_restore 9
+ 1015              		.cfi_restore 18
+ 221:src/syscall_cpp.cpp **** 
+ 1016              		.loc 1 221 22
+ 1017 054c 1305F0FF 		li	a0,-1
+ 1018              	.LVL86:
+ 1019              		.loc 1 269 1
+GAS LISTING /tmp/ccRDNlkW.s 			page 26
+
+
+ 1020 0550 67800000 		ret
+ 1021              	.LVL87:
+ 1022              	.L68:
+ 1023              		.cfi_def_cfa_register 8
+ 1024              		.cfi_offset 1, -8
+ 1025              		.cfi_offset 8, -16
+ 1026              		.cfi_offset 9, -24
+ 1027              		.cfi_offset 18, -32
+ 226:src/syscall_cpp.cpp ****     //not aligned to a block error
+ 1028              		.loc 1 226 100
+ 1029 0554 1305E0FF 		li	a0,-2
+ 1030              	.LVL88:
+ 1031 0558 6FF05FFD 		j	.L59
+ 1032              	.LVL89:
+ 1033              	.L69:
+ 1034 055c 1305E0FF 		li	a0,-2
+ 1035              	.LVL90:
+ 1036 0560 6FF0DFFC 		j	.L59
+ 1037              		.cfi_endproc
+ 1038              	.LFE22:
+ 1040              		.align	2
+ 1041              		.globl	_ZN15MemoryAllocator15mem_free_kernelEPvmm
+ 1043              	_ZN15MemoryAllocator15mem_free_kernelEPvmm:
+ 1044              	.LFB23:
+ 270:src/syscall_cpp.cpp **** 
+ 271:src/syscall_cpp.cpp **** int MemoryAllocator::mem_free_kernel(void* ptr, size_t N, size_t sizeOfElem){
+ 1045              		.loc 1 271 77 is_stmt 1
+ 1046              		.cfi_startproc
+ 1047              	.LVL91:
+ 272:src/syscall_cpp.cpp ****     if(!ptr) return -1;
+ 1048              		.loc 1 272 5
+ 1049 0564 638E050E 		beqz	a1,.L85
+ 271:src/syscall_cpp.cpp ****     if(!ptr) return -1;
+ 1050              		.loc 1 271 77 is_stmt 0
+ 1051 0568 130101FE 		addi	sp,sp,-32
+ 1052              		.cfi_def_cfa_offset 32
+ 1053 056c 233C1100 		sd	ra,24(sp)
+ 1054 0570 23388100 		sd	s0,16(sp)
+ 1055 0574 23349100 		sd	s1,8(sp)
+ 1056 0578 23302101 		sd	s2,0(sp)
+ 1057              		.cfi_offset 1, -8
+ 1058              		.cfi_offset 8, -16
+ 1059              		.cfi_offset 9, -24
+ 1060              		.cfi_offset 18, -32
+ 1061 057c 13040102 		addi	s0,sp,32
+ 1062              		.cfi_def_cfa 8, 0
+ 1063 0580 13090500 		mv	s2,a0
+ 273:src/syscall_cpp.cpp **** 
+ 274:src/syscall_cpp.cpp **** 
+ 275:src/syscall_cpp.cpp ****     //outside of the heap error
+ 276:src/syscall_cpp.cpp ****     if((uint64)ptr < (uint64)HEAP_START_ADDR || (uint64)ptr > (uint64)HEAP_END_ADDR) return -2;
+ 1064              		.loc 1 276 5 is_stmt 1
+ 1065              		.loc 1 276 20 is_stmt 0
+ 1066 0584 97070000 		la	a5,HEAP_START_ADDR
+ 1066      83B70700 
+ 1067 058c 83B70700 		ld	a5,0(a5)
+ 1068              		.loc 1 276 5
+GAS LISTING /tmp/ccRDNlkW.s 			page 27
+
+
+ 1069 0590 63ECF50C 		bltu	a1,a5,.L86
+ 1070              		.loc 1 276 61 discriminator 2
+ 1071 0594 97070000 		la	a5,HEAP_END_ADDR
+ 1071      83B70700 
+ 1072 059c 83B70700 		ld	a5,0(a5)
+ 1073              		.loc 1 276 46 discriminator 2
+ 1074 05a0 63E8B70C 		bgtu	a1,a5,.L87
+ 277:src/syscall_cpp.cpp ****     //not aligned to a block error
+ 278:src/syscall_cpp.cpp ****     if(((char*)ptr - (char*)fmem_head) % MEM_BLOCK_SIZE != 0) return -3;
+ 1075              		.loc 1 278 5 is_stmt 1
+ 1076              		.loc 1 278 29 is_stmt 0
+ 1077 05a4 83370500 		ld	a5,0(a0)
+ 1078              		.loc 1 278 20
+ 1079 05a8 B387F540 		sub	a5,a1,a5
+ 1080              		.loc 1 278 40
+ 1081 05ac 93F7F703 		andi	a5,a5,63
+ 1082              		.loc 1 278 5
+ 1083 05b0 6394070C 		bnez	a5,.L88
+ 279:src/syscall_cpp.cpp ****     size_t numOfBlocks = (N * sizeOfElem + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
+ 1084              		.loc 1 279 5 is_stmt 1
+ 1085              		.loc 1 279 29 is_stmt 0
+ 1086 05b4 3306D602 		mul	a2,a2,a3
+ 1087              	.LVL92:
+ 1088              		.loc 1 279 59
+ 1089 05b8 1306F603 		addi	a2,a2,63
+ 1090              		.loc 1 279 12
+ 1091 05bc 13566600 		srli	a2,a2,6
+ 1092              	.LVL93:
+ 280:src/syscall_cpp.cpp **** 
+ 281:src/syscall_cpp.cpp ****     FreeMem* newnode = (FreeMem*)ptr;
+ 1093              		.loc 1 281 5 is_stmt 1
+ 282:src/syscall_cpp.cpp ****     newnode->size = numOfBlocks;
+ 1094              		.loc 1 282 5
+ 1095              		.loc 1 282 19 is_stmt 0
+ 1096 05c0 23B8C500 		sd	a2,16(a1)
+ 283:src/syscall_cpp.cpp ****     newnode->prev = nullptr;
+ 1097              		.loc 1 283 5 is_stmt 1
+ 1098              		.loc 1 283 19 is_stmt 0
+ 1099 05c4 23B40500 		sd	zero,8(a1)
+ 284:src/syscall_cpp.cpp ****     newnode->next = nullptr;
+ 1100              		.loc 1 284 5 is_stmt 1
+ 1101              		.loc 1 284 19 is_stmt 0
+ 1102 05c8 23B00500 		sd	zero,0(a1)
+ 285:src/syscall_cpp.cpp ****     FreeMem* temp = 0;
+ 1103              		.loc 1 285 5 is_stmt 1
+ 1104              	.LVL94:
+ 286:src/syscall_cpp.cpp ****     if(!fmem_head || (char*)fmem_head > (char*)newnode)
+ 1105              		.loc 1 286 5
+ 1106              		.loc 1 286 9 is_stmt 0
+ 1107 05cc 03370500 		ld	a4,0(a0)
+ 1108              		.loc 1 286 5
+ 1109 05d0 63040702 		beqz	a4,.L89
+ 1110              		.loc 1 286 19 discriminator 1
+ 1111 05d4 63E6E502 		bgtu	a4,a1,.L90
+ 287:src/syscall_cpp.cpp ****     {
+ 288:src/syscall_cpp.cpp ****         temp = 0;
+ 289:src/syscall_cpp.cpp ****     }
+GAS LISTING /tmp/ccRDNlkW.s 			page 28
+
+
+ 290:src/syscall_cpp.cpp ****     else
+ 291:src/syscall_cpp.cpp ****     {
+ 292:src/syscall_cpp.cpp ****         temp = fmem_head;
+ 1112              		.loc 1 292 14
+ 1113 05d8 93070700 		mv	a5,a4
+ 1114              	.LVL95:
+ 1115              	.L80:
+ 293:src/syscall_cpp.cpp ****         while(temp->next && (char*)temp->next < (char*)newnode)
+ 1116              		.loc 1 293 9 is_stmt 1
+ 1117              		.loc 1 293 26
+ 1118 05dc 93840700 		mv	s1,a5
+ 1119              		.loc 1 293 21 is_stmt 0
+ 1120 05e0 83B70700 		ld	a5,0(a5)
+ 1121              	.LVL96:
+ 1122              		.loc 1 293 26
+ 1123 05e4 63840700 		beqz	a5,.L79
+ 1124              		.loc 1 293 26 discriminator 1
+ 1125 05e8 E3EAB7FE 		bltu	a5,a1,.L80
+ 1126              	.L79:
+ 294:src/syscall_cpp.cpp ****         {
+ 295:src/syscall_cpp.cpp ****             temp = temp->next;
+ 296:src/syscall_cpp.cpp ****         }
+ 297:src/syscall_cpp.cpp ****     }
+ 298:src/syscall_cpp.cpp ****     if(temp)
+ 1127              		.loc 1 298 5 is_stmt 1
+ 1128 05ec 638C0400 		beqz	s1,.L78
+ 299:src/syscall_cpp.cpp ****     {
+ 300:src/syscall_cpp.cpp ****         newnode->next = temp->next;
+ 1129              		.loc 1 300 9
+ 1130              		.loc 1 300 23 is_stmt 0
+ 1131 05f0 23B0F500 		sd	a5,0(a1)
+ 1132 05f4 6F004001 		j	.L81
+ 1133              	.LVL97:
+ 1134              	.L89:
+ 288:src/syscall_cpp.cpp ****     }
+ 1135              		.loc 1 288 14
+ 1136 05f8 93040700 		mv	s1,a4
+ 1137 05fc 6F008000 		j	.L78
+ 1138              	.L90:
+ 1139 0600 93040000 		li	s1,0
+ 1140              	.LVL98:
+ 1141              	.L78:
+ 301:src/syscall_cpp.cpp ****     }
+ 302:src/syscall_cpp.cpp ****     else {
+ 303:src/syscall_cpp.cpp ****         newnode->next = fmem_head;
+ 1142              		.loc 1 303 9 is_stmt 1
+ 1143              		.loc 1 303 23 is_stmt 0
+ 1144 0604 23B0E500 		sd	a4,0(a1)
+ 1145              	.L81:
+ 304:src/syscall_cpp.cpp ****     }
+ 305:src/syscall_cpp.cpp ****     if(newnode->next)
+ 1146              		.loc 1 305 5 is_stmt 1
+ 1147              		.loc 1 305 17 is_stmt 0
+ 1148 0608 83B70500 		ld	a5,0(a1)
+ 1149              		.loc 1 305 5
+ 1150 060c 63840700 		beqz	a5,.L82
+ 306:src/syscall_cpp.cpp ****     {
+GAS LISTING /tmp/ccRDNlkW.s 			page 29
+
+
+ 307:src/syscall_cpp.cpp ****         newnode->next->prev = newnode;
+ 1151              		.loc 1 307 9 is_stmt 1
+ 1152              		.loc 1 307 29 is_stmt 0
+ 1153 0610 23B4B700 		sd	a1,8(a5)
+ 1154              	.L82:
+ 308:src/syscall_cpp.cpp ****     }
+ 309:src/syscall_cpp.cpp ****     if(temp){
+ 1155              		.loc 1 309 5 is_stmt 1
+ 1156 0614 63820404 		beqz	s1,.L83
+ 310:src/syscall_cpp.cpp ****         temp->next = newnode;
+ 1157              		.loc 1 310 9
+ 1158              		.loc 1 310 20 is_stmt 0
+ 1159 0618 23B0B400 		sd	a1,0(s1)
+ 311:src/syscall_cpp.cpp ****         newnode->prev = temp;
+ 1160              		.loc 1 311 9 is_stmt 1
+ 1161              		.loc 1 311 23 is_stmt 0
+ 1162 061c 23B49500 		sd	s1,8(a1)
+ 1163              	.L84:
+ 312:src/syscall_cpp.cpp ****     }
+ 313:src/syscall_cpp.cpp ****     else
+ 314:src/syscall_cpp.cpp ****     {
+ 315:src/syscall_cpp.cpp ****         fmem_head = newnode;
+ 316:src/syscall_cpp.cpp ****     }
+ 317:src/syscall_cpp.cpp ****     tryToJoin(newnode);
+ 1164              		.loc 1 317 5 is_stmt 1
+ 1165              		.loc 1 317 14 is_stmt 0
+ 1166 0620 13050900 		mv	a0,s2
+ 1167              	.LVL99:
+ 1168 0624 97000000 		call	_ZN15MemoryAllocator9tryToJoinEP7FreeMem
+ 1168      E7800000 
+ 1169              	.LVL100:
+ 318:src/syscall_cpp.cpp ****     tryToJoin(temp);
+ 1170              		.loc 1 318 5 is_stmt 1
+ 1171              		.loc 1 318 14 is_stmt 0
+ 1172 062c 93850400 		mv	a1,s1
+ 1173 0630 13050900 		mv	a0,s2
+ 1174 0634 97000000 		call	_ZN15MemoryAllocator9tryToJoinEP7FreeMem
+ 1174      E7800000 
+ 1175              	.LVL101:
+ 319:src/syscall_cpp.cpp ****     return 0;
+ 1176              		.loc 1 319 5 is_stmt 1
+ 1177              		.loc 1 319 12 is_stmt 0
+ 1178 063c 13050000 		li	a0,0
+ 1179              	.LVL102:
+ 1180              	.L77:
+ 320:src/syscall_cpp.cpp **** }
+ 1181              		.loc 1 320 1
+ 1182 0640 83308101 		ld	ra,24(sp)
+ 1183              		.cfi_remember_state
+ 1184              		.cfi_restore 1
+ 1185 0644 03340101 		ld	s0,16(sp)
+ 1186              		.cfi_restore 8
+ 1187              		.cfi_def_cfa 2, 32
+ 1188 0648 83348100 		ld	s1,8(sp)
+ 1189              		.cfi_restore 9
+ 1190 064c 03390100 		ld	s2,0(sp)
+ 1191              		.cfi_restore 18
+GAS LISTING /tmp/ccRDNlkW.s 			page 30
+
+
+ 1192              	.LVL103:
+ 1193 0650 13010102 		addi	sp,sp,32
+ 1194              		.cfi_def_cfa_offset 0
+ 1195 0654 67800000 		jr	ra
+ 1196              	.LVL104:
+ 1197              	.L83:
+ 1198              		.cfi_restore_state
+ 315:src/syscall_cpp.cpp ****     }
+ 1199              		.loc 1 315 9 is_stmt 1
+ 315:src/syscall_cpp.cpp ****     }
+ 1200              		.loc 1 315 19 is_stmt 0
+ 1201 0658 2330B900 		sd	a1,0(s2)
+ 1202 065c 6FF05FFC 		j	.L84
+ 1203              	.LVL105:
+ 1204              	.L85:
+ 1205              		.cfi_def_cfa_register 2
+ 1206              		.cfi_restore 1
+ 1207              		.cfi_restore 8
+ 1208              		.cfi_restore 9
+ 1209              		.cfi_restore 18
+ 272:src/syscall_cpp.cpp **** 
+ 1210              		.loc 1 272 22
+ 1211 0660 1305F0FF 		li	a0,-1
+ 1212              	.LVL106:
+ 1213              		.loc 1 320 1
+ 1214 0664 67800000 		ret
+ 1215              	.LVL107:
+ 1216              	.L86:
+ 1217              		.cfi_def_cfa_register 8
+ 1218              		.cfi_offset 1, -8
+ 1219              		.cfi_offset 8, -16
+ 1220              		.cfi_offset 9, -24
+ 1221              		.cfi_offset 18, -32
+ 276:src/syscall_cpp.cpp ****     //not aligned to a block error
+ 1222              		.loc 1 276 94
+ 1223 0668 1305E0FF 		li	a0,-2
+ 1224              	.LVL108:
+ 1225 066c 6FF05FFD 		j	.L77
+ 1226              	.LVL109:
+ 1227              	.L87:
+ 1228 0670 1305E0FF 		li	a0,-2
+ 1229              	.LVL110:
+ 1230 0674 6FF0DFFC 		j	.L77
+ 1231              	.LVL111:
+ 1232              	.L88:
+ 278:src/syscall_cpp.cpp ****     size_t numOfBlocks = (N * sizeOfElem + MEM_BLOCK_SIZE - 1) / MEM_BLOCK_SIZE;
+ 1233              		.loc 1 278 71
+ 1234 0678 1305D0FF 		li	a0,-3
+ 1235              	.LVL112:
+ 1236 067c 6FF05FFC 		j	.L77
+ 1237              		.cfi_endproc
+ 1238              	.LFE23:
+ 1240              		.align	2
+ 1241              		.globl	_ZN15MemoryAllocator21free_memory_remainingEv
+ 1243              	_ZN15MemoryAllocator21free_memory_remainingEv:
+ 1244              	.LFB24:
+ 321:src/syscall_cpp.cpp **** 
+GAS LISTING /tmp/ccRDNlkW.s 			page 31
+
+
+ 322:src/syscall_cpp.cpp **** size_t MemoryAllocator::free_memory_remaining() {
+ 1245              		.loc 1 322 49 is_stmt 1
+ 1246              		.cfi_startproc
+ 1247              	.LVL113:
+ 1248 0680 130101FF 		addi	sp,sp,-16
+ 1249              		.cfi_def_cfa_offset 16
+ 1250 0684 23348100 		sd	s0,8(sp)
+ 1251              		.cfi_offset 8, -8
+ 1252 0688 13040101 		addi	s0,sp,16
+ 1253              		.cfi_def_cfa 8, 0
+ 323:src/syscall_cpp.cpp ****     return fmem_head->size * MEM_BLOCK_SIZE;
+ 1254              		.loc 1 323 5
+ 1255              		.loc 1 323 12 is_stmt 0
+ 1256 068c 83370500 		ld	a5,0(a0)
+ 1257              		.loc 1 323 23
+ 1258 0690 03B50701 		ld	a0,16(a5)
+ 1259              	.LVL114:
+ 324:src/syscall_cpp.cpp **** }
+ 1260              		.loc 1 324 1
+ 1261 0694 13156500 		slli	a0,a0,6
+ 1262 0698 03348100 		ld	s0,8(sp)
+ 1263              		.cfi_restore 8
+ 1264              		.cfi_def_cfa 2, 16
+ 1265 069c 13010101 		addi	sp,sp,16
+ 1266              		.cfi_def_cfa_offset 0
+ 1267 06a0 67800000 		jr	ra
+ 1268              		.cfi_endproc
+ 1269              	.LFE24:
+ 1271              		.align	2
+ 1272              		.globl	_ZN15MemoryAllocator21get_largest_mem_blockEv
+ 1274              	_ZN15MemoryAllocator21get_largest_mem_blockEv:
+ 1275              	.LFB25:
+ 325:src/syscall_cpp.cpp **** size_t MemoryAllocator::get_largest_mem_block() {
+ 1276              		.loc 1 325 49 is_stmt 1
+ 1277              		.cfi_startproc
+ 1278              	.LVL115:
+ 1279 06a4 130101FF 		addi	sp,sp,-16
+ 1280              		.cfi_def_cfa_offset 16
+ 1281 06a8 23348100 		sd	s0,8(sp)
+ 1282              		.cfi_offset 8, -8
+ 1283 06ac 13040101 		addi	s0,sp,16
+ 1284              		.cfi_def_cfa 8, 0
+ 326:src/syscall_cpp.cpp ****     if(fmem_head == nullptr) return 0;
+ 1285              		.loc 1 326 5
+ 1286              		.loc 1 326 8 is_stmt 0
+ 1287 06b0 83370500 		ld	a5,0(a0)
+ 1288              		.loc 1 326 5
+ 1289 06b4 638A0702 		beqz	a5,.L102
+ 327:src/syscall_cpp.cpp ****     FreeMem* temp = fmem_head;
+ 1290              		.loc 1 327 5 is_stmt 1
+ 1291              	.LVL116:
+ 328:src/syscall_cpp.cpp ****     size_t maxBlocks = temp->size;
+ 1292              		.loc 1 328 5
+ 1293              		.loc 1 328 12 is_stmt 0
+ 1294 06b8 03B50701 		ld	a0,16(a5)
+ 1295              	.LVL117:
+ 1296 06bc 6F008000 		j	.L101
+GAS LISTING /tmp/ccRDNlkW.s 			page 32
+
+
+ 1297              	.LVL118:
+ 1298              	.L100:
+ 329:src/syscall_cpp.cpp ****     while(temp)
+ 330:src/syscall_cpp.cpp ****     {
+ 331:src/syscall_cpp.cpp ****         if(temp->size > maxBlocks){
+ 332:src/syscall_cpp.cpp ****             maxBlocks = temp->size;
+ 333:src/syscall_cpp.cpp ****         }
+ 334:src/syscall_cpp.cpp ****         temp = temp->next;
+ 1299              		.loc 1 334 9 is_stmt 1
+ 1300              		.loc 1 334 14 is_stmt 0
+ 1301 06c0 83B70700 		ld	a5,0(a5)
+ 1302              	.LVL119:
+ 1303              	.L101:
+ 329:src/syscall_cpp.cpp ****     while(temp)
+ 1304              		.loc 1 329 5 is_stmt 1
+ 329:src/syscall_cpp.cpp ****     while(temp)
+ 1305              		.loc 1 329 11
+ 1306 06c4 638A0700 		beqz	a5,.L99
+ 331:src/syscall_cpp.cpp ****             maxBlocks = temp->size;
+ 1307              		.loc 1 331 9
+ 331:src/syscall_cpp.cpp ****             maxBlocks = temp->size;
+ 1308              		.loc 1 331 18 is_stmt 0
+ 1309 06c8 03B70701 		ld	a4,16(a5)
+ 331:src/syscall_cpp.cpp ****             maxBlocks = temp->size;
+ 1310              		.loc 1 331 9
+ 1311 06cc E37AE5FE 		bleu	a4,a0,.L100
+ 332:src/syscall_cpp.cpp ****         }
+ 1312              		.loc 1 332 23
+ 1313 06d0 13050700 		mv	a0,a4
+ 1314              	.LVL120:
+ 1315 06d4 6FF0DFFE 		j	.L100
+ 1316              	.LVL121:
+ 1317              	.L99:
+ 335:src/syscall_cpp.cpp ****     }
+ 336:src/syscall_cpp.cpp ****     return maxBlocks * MEM_BLOCK_SIZE;
+ 1318              		.loc 1 336 5 is_stmt 1
+ 1319              		.loc 1 336 24 is_stmt 0
+ 1320 06d8 13156500 		slli	a0,a0,6
+ 1321              	.LVL122:
+ 1322              	.L97:
+ 337:src/syscall_cpp.cpp **** 
+ 338:src/syscall_cpp.cpp **** }
+ 1323              		.loc 1 338 1
+ 1324 06dc 03348100 		ld	s0,8(sp)
+ 1325              		.cfi_remember_state
+ 1326              		.cfi_restore 8
+ 1327              		.cfi_def_cfa 2, 16
+ 1328 06e0 13010101 		addi	sp,sp,16
+ 1329              		.cfi_def_cfa_offset 0
+ 1330 06e4 67800000 		jr	ra
+ 1331              	.LVL123:
+ 1332              	.L102:
+ 1333              		.cfi_restore_state
+ 326:src/syscall_cpp.cpp ****     FreeMem* temp = fmem_head;
+ 1334              		.loc 1 326 37
+ 1335 06e8 13050000 		li	a0,0
+ 1336              	.LVL124:
+GAS LISTING /tmp/ccRDNlkW.s 			page 33
+
+
+ 1337 06ec 6FF01FFF 		j	.L97
+ 1338              		.cfi_endproc
+ 1339              	.LFE25:
+ 1341              		.bss
+ 1342              		.align	3
+ 1343              		.set	.LANCHOR0,. + 0
+ 1346              	_ZGVZN15MemoryAllocator8InstanceEvE8instance:
+ 1347 0000 00000000 		.zero	8
+ 1347      00000000 
+ 1350              	_ZZN15MemoryAllocator8InstanceEvE8instance:
+ 1351 0008 00000000 		.zero	40
+ 1351      00000000 
+ 1351      00000000 
+ 1351      00000000 
+ 1351      00000000 
+ 1352              		.text
+ 1353              	.Letext0:
+ 1354              		.file 2 "src/../h/../lib/hw.h"
+ 1355              		.file 3 "src/../h/memory_structs.h"
+ 1356              		.file 4 "src/../h/ThreadPool.hpp"
+ 1357              		.file 5 "src/../h/SemaphorePool.hpp"
+ 1358              		.file 6 "src/../h/syscall_cpp.hpp"
+ 1359              		.file 7 "src/../h/syscall_c.h"
+ 4742              		.align	3
+ 4745              	DW.ref.__gxx_personality_v0:
+ 4746 0000 00000000 		.dword	__gxx_personality_v0
+ 4746      00000000 
+ 4747              		.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04) 9.4.0"
+ 4748              		.section	.note.GNU-stack,"",@progbits
+GAS LISTING /tmp/ccRDNlkW.s 			page 34
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 syscall_cpp.cpp
+     /tmp/ccRDNlkW.s:9      .text:0000000000000000 _Z23getWaitStatusForRunningv
+     /tmp/ccRDNlkW.s:13     .text:0000000000000000 .L0 
+     /tmp/ccRDNlkW.s:14     .text:0000000000000000 .L0 
+     /tmp/ccRDNlkW.s:15     .text:0000000000000004 .L0 
+     /tmp/ccRDNlkW.s:17     .text:0000000000000008 .L0 
+     /tmp/ccRDNlkW.s:19     .text:000000000000000c .L0 
+     /tmp/ccRDNlkW.s:21     .text:000000000000000c .L0 
+     /tmp/ccRDNlkW.s:22     .text:000000000000000c .L0 
+     /tmp/ccRDNlkW.s:25     .text:0000000000000018 .L0 
+     /tmp/ccRDNlkW.s:27     .text:0000000000000020 .L0 
+     /tmp/ccRDNlkW.s:28     .text:0000000000000020 .L0 
+     /tmp/ccRDNlkW.s:30     .text:0000000000000024 .L0 
+     /tmp/ccRDNlkW.s:32     .text:0000000000000028 .L0 
+     /tmp/ccRDNlkW.s:38     .text:0000000000000028 _ZN15MemoryAllocator5alignEm
+     /tmp/ccRDNlkW.s:41     .text:0000000000000028 .L0 
+     /tmp/ccRDNlkW.s:43     .text:0000000000000028 .L0 
+     /tmp/ccRDNlkW.s:44     .text:000000000000002c .L0 
+     /tmp/ccRDNlkW.s:46     .text:0000000000000030 .L0 
+     /tmp/ccRDNlkW.s:48     .text:0000000000000034 .L0 
+     /tmp/ccRDNlkW.s:50     .text:0000000000000034 .L0 
+     /tmp/ccRDNlkW.s:51     .text:0000000000000034 .L0 
+     /tmp/ccRDNlkW.s:53     .text:0000000000000038 .L0 
+     /tmp/ccRDNlkW.s:55     .text:000000000000003c .L0 
+     /tmp/ccRDNlkW.s:56     .text:000000000000003c .L0 
+     /tmp/ccRDNlkW.s:59     .text:0000000000000040 .L0 
+     /tmp/ccRDNlkW.s:63     .text:0000000000000044 .L0 
+     /tmp/ccRDNlkW.s:64     .text:0000000000000048 .L0 
+     /tmp/ccRDNlkW.s:65     .text:0000000000000048 .L0 
+     /tmp/ccRDNlkW.s:66     .text:0000000000000048 .L0 
+     /tmp/ccRDNlkW.s:68     .text:000000000000004c .L0 
+     /tmp/ccRDNlkW.s:72     .text:0000000000000050 .L0 
+     /tmp/ccRDNlkW.s:74     .text:0000000000000050 .L0 
+     /tmp/ccRDNlkW.s:77     .text:0000000000000058 .L0 
+     /tmp/ccRDNlkW.s:83     .text:0000000000000058 _ZN15MemoryAllocator13getThreadPoolEv
+     /tmp/ccRDNlkW.s:86     .text:0000000000000058 .L0 
+     /tmp/ccRDNlkW.s:88     .text:0000000000000058 .L0 
+     /tmp/ccRDNlkW.s:89     .text:000000000000005c .L0 
+     /tmp/ccRDNlkW.s:91     .text:0000000000000060 .L0 
+     /tmp/ccRDNlkW.s:93     .text:0000000000000064 .L0 
+     /tmp/ccRDNlkW.s:95     .text:0000000000000064 .L0 
+     /tmp/ccRDNlkW.s:96     .text:0000000000000064 .L0 
+     /tmp/ccRDNlkW.s:99     .text:000000000000006c .L0 
+     /tmp/ccRDNlkW.s:100    .text:000000000000006c .L0 
+     /tmp/ccRDNlkW.s:102    .text:0000000000000070 .L0 
+     /tmp/ccRDNlkW.s:104    .text:0000000000000074 .L0 
+     /tmp/ccRDNlkW.s:110    .text:0000000000000074 _ZN15MemoryAllocator16getSemaphorePoolEv
+     /tmp/ccRDNlkW.s:113    .text:0000000000000074 .L0 
+     /tmp/ccRDNlkW.s:115    .text:0000000000000074 .L0 
+     /tmp/ccRDNlkW.s:116    .text:0000000000000078 .L0 
+     /tmp/ccRDNlkW.s:118    .text:000000000000007c .L0 
+     /tmp/ccRDNlkW.s:120    .text:0000000000000080 .L0 
+     /tmp/ccRDNlkW.s:122    .text:0000000000000080 .L0 
+     /tmp/ccRDNlkW.s:123    .text:0000000000000080 .L0 
+     /tmp/ccRDNlkW.s:126    .text:0000000000000088 .L0 
+     /tmp/ccRDNlkW.s:127    .text:0000000000000088 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 35
+
+
+     /tmp/ccRDNlkW.s:129    .text:000000000000008c .L0 
+     /tmp/ccRDNlkW.s:131    .text:0000000000000090 .L0 
+     /tmp/ccRDNlkW.s:137    .text:0000000000000090 _Znwm
+     /tmp/ccRDNlkW.s:140    .text:0000000000000090 .L0 
+     /tmp/ccRDNlkW.s:142    .text:0000000000000090 .L0 
+     /tmp/ccRDNlkW.s:143    .text:0000000000000094 .L0 
+     /tmp/ccRDNlkW.s:146    .text:000000000000009c .L0 
+     /tmp/ccRDNlkW.s:147    .text:000000000000009c .L0 
+     /tmp/ccRDNlkW.s:149    .text:00000000000000a0 .L0 
+     /tmp/ccRDNlkW.s:151    .text:00000000000000a0 .L0 
+     /tmp/ccRDNlkW.s:152    .text:00000000000000a0 .L0 
+     /tmp/ccRDNlkW.s:155    .text:00000000000000a8 .L0 
+     /tmp/ccRDNlkW.s:156    .text:00000000000000ac .L0 
+     /tmp/ccRDNlkW.s:158    .text:00000000000000b0 .L0 
+     /tmp/ccRDNlkW.s:159    .text:00000000000000b0 .L0 
+     /tmp/ccRDNlkW.s:161    .text:00000000000000b4 .L0 
+     /tmp/ccRDNlkW.s:163    .text:00000000000000b8 .L0 
+     /tmp/ccRDNlkW.s:169    .text:00000000000000b8 _Znam
+     /tmp/ccRDNlkW.s:172    .text:00000000000000b8 .L0 
+     /tmp/ccRDNlkW.s:174    .text:00000000000000b8 .L0 
+     /tmp/ccRDNlkW.s:175    .text:00000000000000bc .L0 
+     /tmp/ccRDNlkW.s:178    .text:00000000000000c4 .L0 
+     /tmp/ccRDNlkW.s:179    .text:00000000000000c4 .L0 
+     /tmp/ccRDNlkW.s:181    .text:00000000000000c8 .L0 
+     /tmp/ccRDNlkW.s:183    .text:00000000000000c8 .L0 
+     /tmp/ccRDNlkW.s:184    .text:00000000000000c8 .L0 
+     /tmp/ccRDNlkW.s:187    .text:00000000000000d0 .L0 
+     /tmp/ccRDNlkW.s:188    .text:00000000000000d4 .L0 
+     /tmp/ccRDNlkW.s:190    .text:00000000000000d8 .L0 
+     /tmp/ccRDNlkW.s:191    .text:00000000000000d8 .L0 
+     /tmp/ccRDNlkW.s:193    .text:00000000000000dc .L0 
+     /tmp/ccRDNlkW.s:195    .text:00000000000000e0 .L0 
+     /tmp/ccRDNlkW.s:201    .text:00000000000000e0 _ZdlPv
+     /tmp/ccRDNlkW.s:204    .text:00000000000000e0 .L0 
+     /tmp/ccRDNlkW.s:4745   .data.rel.local.DW.ref.__gxx_personality_v0:0000000000000000 DW.ref.__gxx_personality_v0
+     /tmp/ccRDNlkW.s:208    .text:00000000000000e0 .L0 
+     /tmp/ccRDNlkW.s:209    .text:00000000000000e4 .L0 
+     /tmp/ccRDNlkW.s:212    .text:00000000000000ec .L0 
+     /tmp/ccRDNlkW.s:213    .text:00000000000000ec .L0 
+     /tmp/ccRDNlkW.s:215    .text:00000000000000f0 .L0 
+     /tmp/ccRDNlkW.s:217    .text:00000000000000f0 .L0 
+     /tmp/ccRDNlkW.s:218    .text:00000000000000f0 .L0 
+     /tmp/ccRDNlkW.s:221    .text:00000000000000f8 .L0 
+     /tmp/ccRDNlkW.s:222    .text:00000000000000fc .L0 
+     /tmp/ccRDNlkW.s:224    .text:0000000000000100 .L0 
+     /tmp/ccRDNlkW.s:225    .text:0000000000000100 .L0 
+     /tmp/ccRDNlkW.s:227    .text:0000000000000104 .L0 
+     /tmp/ccRDNlkW.s:229    .text:0000000000000108 .L0 
+     /tmp/ccRDNlkW.s:243    .text:0000000000000108 _ZdaPv
+     /tmp/ccRDNlkW.s:246    .text:0000000000000108 .L0 
+     /tmp/ccRDNlkW.s:250    .text:0000000000000108 .L0 
+     /tmp/ccRDNlkW.s:251    .text:000000000000010c .L0 
+     /tmp/ccRDNlkW.s:254    .text:0000000000000114 .L0 
+     /tmp/ccRDNlkW.s:255    .text:0000000000000114 .L0 
+     /tmp/ccRDNlkW.s:257    .text:0000000000000118 .L0 
+     /tmp/ccRDNlkW.s:259    .text:0000000000000118 .L0 
+     /tmp/ccRDNlkW.s:260    .text:0000000000000118 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 36
+
+
+     /tmp/ccRDNlkW.s:263    .text:0000000000000120 .L0 
+     /tmp/ccRDNlkW.s:264    .text:0000000000000124 .L0 
+     /tmp/ccRDNlkW.s:266    .text:0000000000000128 .L0 
+     /tmp/ccRDNlkW.s:267    .text:0000000000000128 .L0 
+     /tmp/ccRDNlkW.s:269    .text:000000000000012c .L0 
+     /tmp/ccRDNlkW.s:271    .text:0000000000000130 .L0 
+     /tmp/ccRDNlkW.s:284    .text:0000000000000130 _ZN15MemoryAllocator9mem_allocEm
+     /tmp/ccRDNlkW.s:287    .text:0000000000000130 .L0 
+     /tmp/ccRDNlkW.s:289    .text:0000000000000130 .L0 
+     /tmp/ccRDNlkW.s:290    .text:0000000000000134 .L0 
+     /tmp/ccRDNlkW.s:292    .text:0000000000000138 .L0 
+     /tmp/ccRDNlkW.s:294    .text:000000000000013c .L0 
+     /tmp/ccRDNlkW.s:297    .text:0000000000000140 .L0 
+     /tmp/ccRDNlkW.s:298    .text:0000000000000140 .L0 
+     /tmp/ccRDNlkW.s:302    .text:0000000000000144 .L0 
+     /tmp/ccRDNlkW.s:303    .text:0000000000000144 .L0 
+     /tmp/ccRDNlkW.s:307    .text:0000000000000148 .L0 
+     /tmp/ccRDNlkW.s:308    .text:0000000000000148 .L0 
+     /tmp/ccRDNlkW.s:310    .text:000000000000014c .L0 
+     /tmp/ccRDNlkW.s:313    .text:0000000000000150 .L0 
+     /tmp/ccRDNlkW.s:314    .text:0000000000000150 .L0 
+     /tmp/ccRDNlkW.s:318    .text:0000000000000154 .L0 
+     /tmp/ccRDNlkW.s:325    .text:0000000000000158 .L0 
+     /tmp/ccRDNlkW.s:327    .text:0000000000000158 .L0 
+     /tmp/ccRDNlkW.s:330    .text:000000000000015c .L0 
+     /tmp/ccRDNlkW.s:331    .text:000000000000015c .L0 
+     /tmp/ccRDNlkW.s:333    .text:0000000000000160 .L0 
+     /tmp/ccRDNlkW.s:336    .text:0000000000000164 .L0 
+     /tmp/ccRDNlkW.s:337    .text:0000000000000164 .L0 
+     /tmp/ccRDNlkW.s:339    .text:0000000000000168 .L0 
+     /tmp/ccRDNlkW.s:341    .text:000000000000016c .L0 
+     /tmp/ccRDNlkW.s:342    .text:000000000000016c .L0 
+     /tmp/ccRDNlkW.s:344    .text:0000000000000170 .L0 
+     /tmp/ccRDNlkW.s:346    .text:0000000000000174 .L0 
+     /tmp/ccRDNlkW.s:347    .text:0000000000000174 .L0 
+     /tmp/ccRDNlkW.s:349    .text:0000000000000178 .L0 
+     /tmp/ccRDNlkW.s:351    .text:000000000000017c .L0 
+     /tmp/ccRDNlkW.s:353    .text:0000000000000180 .L0 
+     /tmp/ccRDNlkW.s:354    .text:0000000000000180 .L0 
+     /tmp/ccRDNlkW.s:357    .text:0000000000000184 .L0 
+     /tmp/ccRDNlkW.s:358    .text:0000000000000184 .L0 
+     /tmp/ccRDNlkW.s:360    .text:0000000000000188 .L0 
+     /tmp/ccRDNlkW.s:362    .text:000000000000018c .L0 
+     /tmp/ccRDNlkW.s:363    .text:000000000000018c .L0 
+     /tmp/ccRDNlkW.s:369    .text:0000000000000190 .L0 
+     /tmp/ccRDNlkW.s:370    .text:0000000000000190 .L0 
+     /tmp/ccRDNlkW.s:371    .text:0000000000000190 .L0 
+     /tmp/ccRDNlkW.s:378    .text:0000000000000194 .L0 
+     /tmp/ccRDNlkW.s:379    .text:0000000000000194 .L0 
+     /tmp/ccRDNlkW.s:380    .text:0000000000000198 .L0 
+     /tmp/ccRDNlkW.s:381    .text:0000000000000198 .L0 
+     /tmp/ccRDNlkW.s:382    .text:0000000000000198 .L0 
+     /tmp/ccRDNlkW.s:384    .text:000000000000019c .L0 
+     /tmp/ccRDNlkW.s:388    .text:00000000000001a0 .L0 
+     /tmp/ccRDNlkW.s:394    .text:00000000000001a0 .L0 
+     /tmp/ccRDNlkW.s:395    .text:00000000000001a0 .L0 
+     /tmp/ccRDNlkW.s:397    .text:00000000000001a4 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 37
+
+
+     /tmp/ccRDNlkW.s:399    .text:00000000000001a8 .L0 
+     /tmp/ccRDNlkW.s:400    .text:00000000000001a8 .L0 
+     /tmp/ccRDNlkW.s:403    .text:00000000000001ac .L0 
+     /tmp/ccRDNlkW.s:406    .text:00000000000001b0 .L0 
+     /tmp/ccRDNlkW.s:407    .text:00000000000001b0 .L0 
+     /tmp/ccRDNlkW.s:409    .text:00000000000001b4 .L0 
+     /tmp/ccRDNlkW.s:411    .text:00000000000001b8 .L0 
+     /tmp/ccRDNlkW.s:412    .text:00000000000001b8 .L0 
+     /tmp/ccRDNlkW.s:414    .text:00000000000001bc .L0 
+     /tmp/ccRDNlkW.s:419    .text:00000000000001c4 .L0 
+     /tmp/ccRDNlkW.s:420    .text:00000000000001c4 .L0 
+     /tmp/ccRDNlkW.s:422    .text:00000000000001c8 .L0 
+     /tmp/ccRDNlkW.s:428    .text:00000000000001d0 .L0 
+     /tmp/ccRDNlkW.s:429    .text:00000000000001d0 .L0 
+     /tmp/ccRDNlkW.s:436    .text:00000000000001d8 .L0 
+     /tmp/ccRDNlkW.s:442    .text:00000000000001d8 _ZN15MemoryAllocator22mem_alloc_for_managersEmm
+     /tmp/ccRDNlkW.s:445    .text:00000000000001d8 .L0 
+     /tmp/ccRDNlkW.s:447    .text:00000000000001d8 .L0 
+     /tmp/ccRDNlkW.s:448    .text:00000000000001dc .L0 
+     /tmp/ccRDNlkW.s:450    .text:00000000000001e0 .L0 
+     /tmp/ccRDNlkW.s:452    .text:00000000000001e4 .L0 
+     /tmp/ccRDNlkW.s:455    .text:00000000000001e8 .L0 
+     /tmp/ccRDNlkW.s:456    .text:00000000000001e8 .L0 
+     /tmp/ccRDNlkW.s:459    .text:00000000000001ec .L0 
+     /tmp/ccRDNlkW.s:461    .text:00000000000001f0 .L0 
+     /tmp/ccRDNlkW.s:464    .text:00000000000001f4 .L0 
+     /tmp/ccRDNlkW.s:465    .text:00000000000001f4 .L0 
+     /tmp/ccRDNlkW.s:469    .text:00000000000001f8 .L0 
+     /tmp/ccRDNlkW.s:470    .text:00000000000001f8 .L0 
+     /tmp/ccRDNlkW.s:474    .text:00000000000001fc .L0 
+     /tmp/ccRDNlkW.s:475    .text:00000000000001fc .L0 
+     /tmp/ccRDNlkW.s:477    .text:0000000000000200 .L0 
+     /tmp/ccRDNlkW.s:480    .text:0000000000000204 .L0 
+     /tmp/ccRDNlkW.s:481    .text:0000000000000204 .L0 
+     /tmp/ccRDNlkW.s:485    .text:0000000000000208 .L0 
+     /tmp/ccRDNlkW.s:492    .text:000000000000020c .L0 
+     /tmp/ccRDNlkW.s:494    .text:000000000000020c .L0 
+     /tmp/ccRDNlkW.s:497    .text:0000000000000210 .L0 
+     /tmp/ccRDNlkW.s:498    .text:0000000000000210 .L0 
+     /tmp/ccRDNlkW.s:500    .text:0000000000000214 .L0 
+     /tmp/ccRDNlkW.s:503    .text:0000000000000218 .L0 
+     /tmp/ccRDNlkW.s:504    .text:0000000000000218 .L0 
+     /tmp/ccRDNlkW.s:506    .text:000000000000021c .L0 
+     /tmp/ccRDNlkW.s:508    .text:0000000000000220 .L0 
+     /tmp/ccRDNlkW.s:509    .text:0000000000000220 .L0 
+     /tmp/ccRDNlkW.s:511    .text:0000000000000224 .L0 
+     /tmp/ccRDNlkW.s:513    .text:0000000000000228 .L0 
+     /tmp/ccRDNlkW.s:514    .text:0000000000000228 .L0 
+     /tmp/ccRDNlkW.s:516    .text:000000000000022c .L0 
+     /tmp/ccRDNlkW.s:518    .text:0000000000000230 .L0 
+     /tmp/ccRDNlkW.s:520    .text:0000000000000234 .L0 
+     /tmp/ccRDNlkW.s:521    .text:0000000000000234 .L0 
+     /tmp/ccRDNlkW.s:524    .text:0000000000000238 .L0 
+     /tmp/ccRDNlkW.s:525    .text:0000000000000238 .L0 
+     /tmp/ccRDNlkW.s:527    .text:000000000000023c .L0 
+     /tmp/ccRDNlkW.s:529    .text:0000000000000240 .L0 
+     /tmp/ccRDNlkW.s:530    .text:0000000000000240 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 38
+
+
+     /tmp/ccRDNlkW.s:539    .text:0000000000000244 .L0 
+     /tmp/ccRDNlkW.s:540    .text:0000000000000244 .L0 
+     /tmp/ccRDNlkW.s:541    .text:0000000000000248 .L0 
+     /tmp/ccRDNlkW.s:542    .text:0000000000000248 .L0 
+     /tmp/ccRDNlkW.s:543    .text:0000000000000248 .L0 
+     /tmp/ccRDNlkW.s:545    .text:000000000000024c .L0 
+     /tmp/ccRDNlkW.s:549    .text:0000000000000250 .L0 
+     /tmp/ccRDNlkW.s:555    .text:0000000000000250 .L0 
+     /tmp/ccRDNlkW.s:556    .text:0000000000000250 .L0 
+     /tmp/ccRDNlkW.s:558    .text:0000000000000254 .L0 
+     /tmp/ccRDNlkW.s:560    .text:0000000000000258 .L0 
+     /tmp/ccRDNlkW.s:561    .text:0000000000000258 .L0 
+     /tmp/ccRDNlkW.s:564    .text:000000000000025c .L0 
+     /tmp/ccRDNlkW.s:567    .text:0000000000000260 .L0 
+     /tmp/ccRDNlkW.s:568    .text:0000000000000260 .L0 
+     /tmp/ccRDNlkW.s:570    .text:0000000000000264 .L0 
+     /tmp/ccRDNlkW.s:572    .text:0000000000000268 .L0 
+     /tmp/ccRDNlkW.s:573    .text:0000000000000268 .L0 
+     /tmp/ccRDNlkW.s:575    .text:000000000000026c .L0 
+     /tmp/ccRDNlkW.s:580    .text:0000000000000274 .L0 
+     /tmp/ccRDNlkW.s:581    .text:0000000000000274 .L0 
+     /tmp/ccRDNlkW.s:583    .text:0000000000000278 .L0 
+     /tmp/ccRDNlkW.s:589    .text:0000000000000280 .L0 
+     /tmp/ccRDNlkW.s:590    .text:0000000000000280 .L0 
+     /tmp/ccRDNlkW.s:597    .text:0000000000000288 .L0 
+     /tmp/ccRDNlkW.s:603    .text:0000000000000288 _ZN15MemoryAllocatorC2Ev
+     /tmp/ccRDNlkW.s:606    .text:0000000000000288 .L0 
+     /tmp/ccRDNlkW.s:608    .text:0000000000000288 .L0 
+     /tmp/ccRDNlkW.s:609    .text:000000000000028c .L0 
+     /tmp/ccRDNlkW.s:616    .text:00000000000002a4 .L0 
+     /tmp/ccRDNlkW.s:617    .text:00000000000002a4 .L0 
+     /tmp/ccRDNlkW.s:618    .text:00000000000002a4 .L0 
+     /tmp/ccRDNlkW.s:619    .text:00000000000002a4 .L0 
+     /tmp/ccRDNlkW.s:620    .text:00000000000002a4 .L0 
+     /tmp/ccRDNlkW.s:621    .text:00000000000002a4 .L0 
+     /tmp/ccRDNlkW.s:623    .text:00000000000002a8 .L0 
+     /tmp/ccRDNlkW.s:627    .text:00000000000002ac .L0 
+     /tmp/ccRDNlkW.s:638    .text:00000000000002cc .L0 
+     /tmp/ccRDNlkW.s:639    .text:00000000000002cc .L0 
+     /tmp/ccRDNlkW.s:645    .text:00000000000002e4 .L0 
+     /tmp/ccRDNlkW.s:648    .text:00000000000002ec .L0 
+     /tmp/ccRDNlkW.s:650    .text:00000000000002f0 .L0 
+     /tmp/ccRDNlkW.s:651    .text:00000000000002f0 .L0 
+     /tmp/ccRDNlkW.s:653    .text:00000000000002f4 .L0 
+     /tmp/ccRDNlkW.s:655    .text:00000000000002f8 .L0 
+     /tmp/ccRDNlkW.s:657    .text:00000000000002fc .L0 
+     /tmp/ccRDNlkW.s:658    .text:00000000000002fc .L0 
+     /tmp/ccRDNlkW.s:660    .text:0000000000000300 .L0 
+     /tmp/ccRDNlkW.s:664    .text:0000000000000310 .L0 
+     /tmp/ccRDNlkW.s:667    .text:0000000000000314 .L0 
+     /tmp/ccRDNlkW.s:668    .text:0000000000000314 .L0 
+     /tmp/ccRDNlkW.s:670    .text:0000000000000318 .L0 
+     /tmp/ccRDNlkW.s:671    .text:0000000000000318 .L0 
+     /tmp/ccRDNlkW.s:679    .text:0000000000000330 .L0 
+     /tmp/ccRDNlkW.s:680    .text:0000000000000330 .L0 
+     /tmp/ccRDNlkW.s:689    .text:0000000000000348 .L0 
+     /tmp/ccRDNlkW.s:690    .text:0000000000000348 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 39
+
+
+     /tmp/ccRDNlkW.s:696    .text:0000000000000358 .L0 
+     /tmp/ccRDNlkW.s:697    .text:0000000000000358 .L0 
+     /tmp/ccRDNlkW.s:705    .text:0000000000000370 .L0 
+     /tmp/ccRDNlkW.s:706    .text:0000000000000370 .L0 
+     /tmp/ccRDNlkW.s:715    .text:0000000000000388 .L0 
+     /tmp/ccRDNlkW.s:716    .text:0000000000000388 .L0 
+     /tmp/ccRDNlkW.s:724    .text:0000000000000398 .L0 
+     /tmp/ccRDNlkW.s:725    .text:000000000000039c .L0 
+     /tmp/ccRDNlkW.s:727    .text:00000000000003a0 .L0 
+     /tmp/ccRDNlkW.s:728    .text:00000000000003a0 .L0 
+     /tmp/ccRDNlkW.s:730    .text:00000000000003a4 .L0 
+     /tmp/ccRDNlkW.s:733    .text:00000000000003a8 .L0 
+     /tmp/ccRDNlkW.s:736    .text:00000000000003ac .L0 
+     /tmp/ccRDNlkW.s:739    .text:00000000000003b0 .L0 
+     /tmp/ccRDNlkW.s:742    .text:00000000000003b4 .L0 
+     /tmp/ccRDNlkW.s:744    .text:00000000000003b8 .L0 
+     /tmp/ccRDNlkW.s:603    .text:0000000000000288 _ZN15MemoryAllocatorC1Ev
+     /tmp/ccRDNlkW.s:752    .text:00000000000003b8 _ZN15MemoryAllocator8InstanceEv
+     /tmp/ccRDNlkW.s:755    .text:00000000000003b8 .L0 
+     /tmp/ccRDNlkW.s:756    .text:00000000000003b8 .L0 
+     /tmp/ccRDNlkW.s:757    .text:00000000000003b8 .L0 
+     /tmp/ccRDNlkW.s:758    .text:00000000000003b8 .L0 
+     /tmp/ccRDNlkW.s:761    .text:00000000000003c4 .L0 
+     /tmp/ccRDNlkW.s:762    .text:00000000000003c4 .L0 
+     /tmp/ccRDNlkW.s:766    .text:00000000000003d0 .L0 
+     /tmp/ccRDNlkW.s:767    .text:00000000000003d4 .L0 
+     /tmp/ccRDNlkW.s:770    .text:00000000000003dc .L0 
+     /tmp/ccRDNlkW.s:771    .text:00000000000003dc .L0 
+     /tmp/ccRDNlkW.s:773    .text:00000000000003e0 .L0 
+     /tmp/ccRDNlkW.s:775    .text:00000000000003e0 .L0 
+     /tmp/ccRDNlkW.s:781    .text:00000000000003fc .L0 
+     /tmp/ccRDNlkW.s:782    .text:00000000000003fc .L0 
+     /tmp/ccRDNlkW.s:784    .text:0000000000000408 .L0 
+     /tmp/ccRDNlkW.s:786    .text:000000000000040c .L0 
+     /tmp/ccRDNlkW.s:787    .text:000000000000040c .L0 
+     /tmp/ccRDNlkW.s:789    .text:0000000000000410 .L0 
+     /tmp/ccRDNlkW.s:791    .text:0000000000000414 .L0 
+     /tmp/ccRDNlkW.s:797    .text:0000000000000414 _ZN15MemoryAllocator9tryToJoinEP7FreeMem
+     /tmp/ccRDNlkW.s:800    .text:0000000000000414 .L0 
+     /tmp/ccRDNlkW.s:802    .text:0000000000000414 .L0 
+     /tmp/ccRDNlkW.s:803    .text:0000000000000418 .L0 
+     /tmp/ccRDNlkW.s:805    .text:000000000000041c .L0 
+     /tmp/ccRDNlkW.s:807    .text:0000000000000420 .L0 
+     /tmp/ccRDNlkW.s:809    .text:0000000000000420 .L0 
+     /tmp/ccRDNlkW.s:811    .text:0000000000000424 .L0 
+     /tmp/ccRDNlkW.s:812    .text:0000000000000424 .L0 
+     /tmp/ccRDNlkW.s:815    .text:0000000000000428 .L0 
+     /tmp/ccRDNlkW.s:817    .text:000000000000042c .L0 
+     /tmp/ccRDNlkW.s:819    .text:0000000000000430 .L0 
+     /tmp/ccRDNlkW.s:821    .text:0000000000000434 .L0 
+     /tmp/ccRDNlkW.s:823    .text:0000000000000438 .L0 
+     /tmp/ccRDNlkW.s:827    .text:000000000000043c .L0 
+     /tmp/ccRDNlkW.s:828    .text:0000000000000440 .L0 
+     /tmp/ccRDNlkW.s:829    .text:0000000000000440 .L0 
+     /tmp/ccRDNlkW.s:830    .text:0000000000000440 .L0 
+     /tmp/ccRDNlkW.s:832    .text:0000000000000444 .L0 
+     /tmp/ccRDNlkW.s:836    .text:0000000000000448 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 40
+
+
+     /tmp/ccRDNlkW.s:838    .text:0000000000000448 .L0 
+     /tmp/ccRDNlkW.s:839    .text:0000000000000448 .L0 
+     /tmp/ccRDNlkW.s:841    .text:000000000000044c .L0 
+     /tmp/ccRDNlkW.s:844    .text:0000000000000454 .L0 
+     /tmp/ccRDNlkW.s:845    .text:0000000000000454 .L0 
+     /tmp/ccRDNlkW.s:848    .text:0000000000000458 .L0 
+     /tmp/ccRDNlkW.s:851    .text:000000000000045c .L0 
+     /tmp/ccRDNlkW.s:853    .text:0000000000000460 .L0 
+     /tmp/ccRDNlkW.s:854    .text:0000000000000460 .L0 
+     /tmp/ccRDNlkW.s:856    .text:0000000000000468 .L0 
+     /tmp/ccRDNlkW.s:862    .text:0000000000000468 _ZN15MemoryAllocator8mem_freeEPv
+     /tmp/ccRDNlkW.s:865    .text:0000000000000468 .L0 
+     /tmp/ccRDNlkW.s:867    .text:0000000000000468 .L0 
+     /tmp/ccRDNlkW.s:868    .text:0000000000000468 .L0 
+     /tmp/ccRDNlkW.s:870    .text:000000000000046c .L0 
+     /tmp/ccRDNlkW.s:871    .text:0000000000000470 .L0 
+     /tmp/ccRDNlkW.s:876    .text:0000000000000480 .L0 
+     /tmp/ccRDNlkW.s:877    .text:0000000000000480 .L0 
+     /tmp/ccRDNlkW.s:878    .text:0000000000000480 .L0 
+     /tmp/ccRDNlkW.s:879    .text:0000000000000480 .L0 
+     /tmp/ccRDNlkW.s:881    .text:0000000000000484 .L0 
+     /tmp/ccRDNlkW.s:885    .text:0000000000000488 .L0 
+     /tmp/ccRDNlkW.s:886    .text:0000000000000488 .L0 
+     /tmp/ccRDNlkW.s:887    .text:0000000000000488 .L0 
+     /tmp/ccRDNlkW.s:890    .text:0000000000000494 .L0 
+     /tmp/ccRDNlkW.s:892    .text:0000000000000498 .L0 
+     /tmp/ccRDNlkW.s:895    .text:00000000000004a4 .L0 
+     /tmp/ccRDNlkW.s:898    .text:00000000000004a8 .L0 
+     /tmp/ccRDNlkW.s:899    .text:00000000000004a8 .L0 
+     /tmp/ccRDNlkW.s:900    .text:00000000000004a8 .L0 
+     /tmp/ccRDNlkW.s:902    .text:00000000000004ac .L0 
+     /tmp/ccRDNlkW.s:904    .text:00000000000004b0 .L0 
+     /tmp/ccRDNlkW.s:905    .text:00000000000004b0 .L0 
+     /tmp/ccRDNlkW.s:907    .text:00000000000004b4 .L0 
+     /tmp/ccRDNlkW.s:908    .text:00000000000004b4 .L0 
+     /tmp/ccRDNlkW.s:911    .text:00000000000004b8 .L0 
+     /tmp/ccRDNlkW.s:912    .text:00000000000004b8 .L0 
+     /tmp/ccRDNlkW.s:913    .text:00000000000004b8 .L0 
+     /tmp/ccRDNlkW.s:915    .text:00000000000004bc .L0 
+     /tmp/ccRDNlkW.s:917    .text:00000000000004c0 .L0 
+     /tmp/ccRDNlkW.s:919    .text:00000000000004c4 .L0 
+     /tmp/ccRDNlkW.s:923    .text:00000000000004c8 .L0 
+     /tmp/ccRDNlkW.s:924    .text:00000000000004c8 .L0 
+     /tmp/ccRDNlkW.s:926    .text:00000000000004cc .L0 
+     /tmp/ccRDNlkW.s:929    .text:00000000000004d0 .L0 
+     /tmp/ccRDNlkW.s:931    .text:00000000000004d4 .L0 
+     /tmp/ccRDNlkW.s:934    .text:00000000000004d8 .L0 
+     /tmp/ccRDNlkW.s:936    .text:00000000000004dc .L0 
+     /tmp/ccRDNlkW.s:937    .text:00000000000004dc .L0 
+     /tmp/ccRDNlkW.s:942    .text:00000000000004e4 .L0 
+     /tmp/ccRDNlkW.s:949    .text:00000000000004f0 .L0 
+     /tmp/ccRDNlkW.s:950    .text:00000000000004f0 .L0 
+     /tmp/ccRDNlkW.s:953    .text:00000000000004f4 .L0 
+     /tmp/ccRDNlkW.s:954    .text:00000000000004f4 .L0 
+     /tmp/ccRDNlkW.s:956    .text:00000000000004f8 .L0 
+     /tmp/ccRDNlkW.s:958    .text:00000000000004fc .L0 
+     /tmp/ccRDNlkW.s:959    .text:00000000000004fc .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 41
+
+
+     /tmp/ccRDNlkW.s:962    .text:0000000000000500 .L0 
+     /tmp/ccRDNlkW.s:964    .text:0000000000000504 .L0 
+     /tmp/ccRDNlkW.s:965    .text:0000000000000504 .L0 
+     /tmp/ccRDNlkW.s:967    .text:0000000000000508 .L0 
+     /tmp/ccRDNlkW.s:968    .text:0000000000000508 .L0 
+     /tmp/ccRDNlkW.s:971    .text:000000000000050c .L0 
+     /tmp/ccRDNlkW.s:972    .text:000000000000050c .L0 
+     /tmp/ccRDNlkW.s:977    .text:0000000000000518 .L0 
+     /tmp/ccRDNlkW.s:978    .text:0000000000000518 .L0 
+     /tmp/ccRDNlkW.s:983    .text:0000000000000528 .L0 
+     /tmp/ccRDNlkW.s:984    .text:0000000000000528 .L0 
+     /tmp/ccRDNlkW.s:988    .text:000000000000052c .L0 
+     /tmp/ccRDNlkW.s:989    .text:0000000000000530 .L0 
+     /tmp/ccRDNlkW.s:990    .text:0000000000000530 .L0 
+     /tmp/ccRDNlkW.s:992    .text:0000000000000534 .L0 
+     /tmp/ccRDNlkW.s:993    .text:0000000000000534 .L0 
+     /tmp/ccRDNlkW.s:995    .text:0000000000000538 .L0 
+     /tmp/ccRDNlkW.s:997    .text:000000000000053c .L0 
+     /tmp/ccRDNlkW.s:1000   .text:0000000000000540 .L0 
+     /tmp/ccRDNlkW.s:1004   .text:0000000000000544 .L0 
+     /tmp/ccRDNlkW.s:1006   .text:0000000000000544 .L0 
+     /tmp/ccRDNlkW.s:1007   .text:0000000000000544 .L0 
+     /tmp/ccRDNlkW.s:1011   .text:000000000000054c .L0 
+     /tmp/ccRDNlkW.s:1012   .text:000000000000054c .L0 
+     /tmp/ccRDNlkW.s:1013   .text:000000000000054c .L0 
+     /tmp/ccRDNlkW.s:1014   .text:000000000000054c .L0 
+     /tmp/ccRDNlkW.s:1015   .text:000000000000054c .L0 
+     /tmp/ccRDNlkW.s:1017   .text:000000000000054c .L0 
+     /tmp/ccRDNlkW.s:1020   .text:0000000000000550 .L0 
+     /tmp/ccRDNlkW.s:1023   .text:0000000000000554 .L0 
+     /tmp/ccRDNlkW.s:1024   .text:0000000000000554 .L0 
+     /tmp/ccRDNlkW.s:1025   .text:0000000000000554 .L0 
+     /tmp/ccRDNlkW.s:1026   .text:0000000000000554 .L0 
+     /tmp/ccRDNlkW.s:1027   .text:0000000000000554 .L0 
+     /tmp/ccRDNlkW.s:1029   .text:0000000000000554 .L0 
+     /tmp/ccRDNlkW.s:1037   .text:0000000000000564 .L0 
+     /tmp/ccRDNlkW.s:1043   .text:0000000000000564 _ZN15MemoryAllocator15mem_free_kernelEPvmm
+     /tmp/ccRDNlkW.s:1046   .text:0000000000000564 .L0 
+     /tmp/ccRDNlkW.s:1048   .text:0000000000000564 .L0 
+     /tmp/ccRDNlkW.s:1049   .text:0000000000000564 .L0 
+     /tmp/ccRDNlkW.s:1051   .text:0000000000000568 .L0 
+     /tmp/ccRDNlkW.s:1052   .text:000000000000056c .L0 
+     /tmp/ccRDNlkW.s:1057   .text:000000000000057c .L0 
+     /tmp/ccRDNlkW.s:1058   .text:000000000000057c .L0 
+     /tmp/ccRDNlkW.s:1059   .text:000000000000057c .L0 
+     /tmp/ccRDNlkW.s:1060   .text:000000000000057c .L0 
+     /tmp/ccRDNlkW.s:1062   .text:0000000000000580 .L0 
+     /tmp/ccRDNlkW.s:1065   .text:0000000000000584 .L0 
+     /tmp/ccRDNlkW.s:1066   .text:0000000000000584 .L0 
+     /tmp/ccRDNlkW.s:1069   .text:0000000000000590 .L0 
+     /tmp/ccRDNlkW.s:1071   .text:0000000000000594 .L0 
+     /tmp/ccRDNlkW.s:1074   .text:00000000000005a0 .L0 
+     /tmp/ccRDNlkW.s:1076   .text:00000000000005a4 .L0 
+     /tmp/ccRDNlkW.s:1077   .text:00000000000005a4 .L0 
+     /tmp/ccRDNlkW.s:1079   .text:00000000000005a8 .L0 
+     /tmp/ccRDNlkW.s:1081   .text:00000000000005ac .L0 
+     /tmp/ccRDNlkW.s:1083   .text:00000000000005b0 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 42
+
+
+     /tmp/ccRDNlkW.s:1085   .text:00000000000005b4 .L0 
+     /tmp/ccRDNlkW.s:1086   .text:00000000000005b4 .L0 
+     /tmp/ccRDNlkW.s:1089   .text:00000000000005b8 .L0 
+     /tmp/ccRDNlkW.s:1091   .text:00000000000005bc .L0 
+     /tmp/ccRDNlkW.s:1094   .text:00000000000005c0 .L0 
+     /tmp/ccRDNlkW.s:1095   .text:00000000000005c0 .L0 
+     /tmp/ccRDNlkW.s:1096   .text:00000000000005c0 .L0 
+     /tmp/ccRDNlkW.s:1098   .text:00000000000005c4 .L0 
+     /tmp/ccRDNlkW.s:1099   .text:00000000000005c4 .L0 
+     /tmp/ccRDNlkW.s:1101   .text:00000000000005c8 .L0 
+     /tmp/ccRDNlkW.s:1102   .text:00000000000005c8 .L0 
+     /tmp/ccRDNlkW.s:1105   .text:00000000000005cc .L0 
+     /tmp/ccRDNlkW.s:1106   .text:00000000000005cc .L0 
+     /tmp/ccRDNlkW.s:1107   .text:00000000000005cc .L0 
+     /tmp/ccRDNlkW.s:1109   .text:00000000000005d0 .L0 
+     /tmp/ccRDNlkW.s:1111   .text:00000000000005d4 .L0 
+     /tmp/ccRDNlkW.s:1113   .text:00000000000005d8 .L0 
+     /tmp/ccRDNlkW.s:1117   .text:00000000000005dc .L0 
+     /tmp/ccRDNlkW.s:1118   .text:00000000000005dc .L0 
+     /tmp/ccRDNlkW.s:1120   .text:00000000000005e0 .L0 
+     /tmp/ccRDNlkW.s:1123   .text:00000000000005e4 .L0 
+     /tmp/ccRDNlkW.s:1125   .text:00000000000005e8 .L0 
+     /tmp/ccRDNlkW.s:1128   .text:00000000000005ec .L0 
+     /tmp/ccRDNlkW.s:1130   .text:00000000000005f0 .L0 
+     /tmp/ccRDNlkW.s:1131   .text:00000000000005f0 .L0 
+     /tmp/ccRDNlkW.s:1136   .text:00000000000005f8 .L0 
+     /tmp/ccRDNlkW.s:1143   .text:0000000000000604 .L0 
+     /tmp/ccRDNlkW.s:1144   .text:0000000000000604 .L0 
+     /tmp/ccRDNlkW.s:1147   .text:0000000000000608 .L0 
+     /tmp/ccRDNlkW.s:1148   .text:0000000000000608 .L0 
+     /tmp/ccRDNlkW.s:1150   .text:000000000000060c .L0 
+     /tmp/ccRDNlkW.s:1152   .text:0000000000000610 .L0 
+     /tmp/ccRDNlkW.s:1153   .text:0000000000000610 .L0 
+     /tmp/ccRDNlkW.s:1156   .text:0000000000000614 .L0 
+     /tmp/ccRDNlkW.s:1158   .text:0000000000000618 .L0 
+     /tmp/ccRDNlkW.s:1159   .text:0000000000000618 .L0 
+     /tmp/ccRDNlkW.s:1161   .text:000000000000061c .L0 
+     /tmp/ccRDNlkW.s:1162   .text:000000000000061c .L0 
+     /tmp/ccRDNlkW.s:1165   .text:0000000000000620 .L0 
+     /tmp/ccRDNlkW.s:1166   .text:0000000000000620 .L0 
+     /tmp/ccRDNlkW.s:1171   .text:000000000000062c .L0 
+     /tmp/ccRDNlkW.s:1172   .text:000000000000062c .L0 
+     /tmp/ccRDNlkW.s:1177   .text:000000000000063c .L0 
+     /tmp/ccRDNlkW.s:1178   .text:000000000000063c .L0 
+     /tmp/ccRDNlkW.s:1182   .text:0000000000000640 .L0 
+     /tmp/ccRDNlkW.s:1183   .text:0000000000000644 .L0 
+     /tmp/ccRDNlkW.s:1184   .text:0000000000000644 .L0 
+     /tmp/ccRDNlkW.s:1186   .text:0000000000000648 .L0 
+     /tmp/ccRDNlkW.s:1187   .text:0000000000000648 .L0 
+     /tmp/ccRDNlkW.s:1189   .text:000000000000064c .L0 
+     /tmp/ccRDNlkW.s:1191   .text:0000000000000650 .L0 
+     /tmp/ccRDNlkW.s:1194   .text:0000000000000654 .L0 
+     /tmp/ccRDNlkW.s:1198   .text:0000000000000658 .L0 
+     /tmp/ccRDNlkW.s:1200   .text:0000000000000658 .L0 
+     /tmp/ccRDNlkW.s:1201   .text:0000000000000658 .L0 
+     /tmp/ccRDNlkW.s:1205   .text:0000000000000660 .L0 
+     /tmp/ccRDNlkW.s:1206   .text:0000000000000660 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 43
+
+
+     /tmp/ccRDNlkW.s:1207   .text:0000000000000660 .L0 
+     /tmp/ccRDNlkW.s:1208   .text:0000000000000660 .L0 
+     /tmp/ccRDNlkW.s:1209   .text:0000000000000660 .L0 
+     /tmp/ccRDNlkW.s:1211   .text:0000000000000660 .L0 
+     /tmp/ccRDNlkW.s:1214   .text:0000000000000664 .L0 
+     /tmp/ccRDNlkW.s:1217   .text:0000000000000668 .L0 
+     /tmp/ccRDNlkW.s:1218   .text:0000000000000668 .L0 
+     /tmp/ccRDNlkW.s:1219   .text:0000000000000668 .L0 
+     /tmp/ccRDNlkW.s:1220   .text:0000000000000668 .L0 
+     /tmp/ccRDNlkW.s:1221   .text:0000000000000668 .L0 
+     /tmp/ccRDNlkW.s:1223   .text:0000000000000668 .L0 
+     /tmp/ccRDNlkW.s:1234   .text:0000000000000678 .L0 
+     /tmp/ccRDNlkW.s:1237   .text:0000000000000680 .L0 
+     /tmp/ccRDNlkW.s:1243   .text:0000000000000680 _ZN15MemoryAllocator21free_memory_remainingEv
+     /tmp/ccRDNlkW.s:1246   .text:0000000000000680 .L0 
+     /tmp/ccRDNlkW.s:1248   .text:0000000000000680 .L0 
+     /tmp/ccRDNlkW.s:1249   .text:0000000000000684 .L0 
+     /tmp/ccRDNlkW.s:1251   .text:0000000000000688 .L0 
+     /tmp/ccRDNlkW.s:1253   .text:000000000000068c .L0 
+     /tmp/ccRDNlkW.s:1255   .text:000000000000068c .L0 
+     /tmp/ccRDNlkW.s:1256   .text:000000000000068c .L0 
+     /tmp/ccRDNlkW.s:1258   .text:0000000000000690 .L0 
+     /tmp/ccRDNlkW.s:1261   .text:0000000000000694 .L0 
+     /tmp/ccRDNlkW.s:1263   .text:000000000000069c .L0 
+     /tmp/ccRDNlkW.s:1264   .text:000000000000069c .L0 
+     /tmp/ccRDNlkW.s:1266   .text:00000000000006a0 .L0 
+     /tmp/ccRDNlkW.s:1268   .text:00000000000006a4 .L0 
+     /tmp/ccRDNlkW.s:1274   .text:00000000000006a4 _ZN15MemoryAllocator21get_largest_mem_blockEv
+     /tmp/ccRDNlkW.s:1277   .text:00000000000006a4 .L0 
+     /tmp/ccRDNlkW.s:1279   .text:00000000000006a4 .L0 
+     /tmp/ccRDNlkW.s:1280   .text:00000000000006a8 .L0 
+     /tmp/ccRDNlkW.s:1282   .text:00000000000006ac .L0 
+     /tmp/ccRDNlkW.s:1284   .text:00000000000006b0 .L0 
+     /tmp/ccRDNlkW.s:1286   .text:00000000000006b0 .L0 
+     /tmp/ccRDNlkW.s:1287   .text:00000000000006b0 .L0 
+     /tmp/ccRDNlkW.s:1289   .text:00000000000006b4 .L0 
+     /tmp/ccRDNlkW.s:1292   .text:00000000000006b8 .L0 
+     /tmp/ccRDNlkW.s:1293   .text:00000000000006b8 .L0 
+     /tmp/ccRDNlkW.s:1294   .text:00000000000006b8 .L0 
+     /tmp/ccRDNlkW.s:1300   .text:00000000000006c0 .L0 
+     /tmp/ccRDNlkW.s:1301   .text:00000000000006c0 .L0 
+     /tmp/ccRDNlkW.s:1305   .text:00000000000006c4 .L0 
+     /tmp/ccRDNlkW.s:1306   .text:00000000000006c4 .L0 
+     /tmp/ccRDNlkW.s:1308   .text:00000000000006c8 .L0 
+     /tmp/ccRDNlkW.s:1309   .text:00000000000006c8 .L0 
+     /tmp/ccRDNlkW.s:1311   .text:00000000000006cc .L0 
+     /tmp/ccRDNlkW.s:1313   .text:00000000000006d0 .L0 
+     /tmp/ccRDNlkW.s:1319   .text:00000000000006d8 .L0 
+     /tmp/ccRDNlkW.s:1320   .text:00000000000006d8 .L0 
+     /tmp/ccRDNlkW.s:1324   .text:00000000000006dc .L0 
+     /tmp/ccRDNlkW.s:1325   .text:00000000000006e0 .L0 
+     /tmp/ccRDNlkW.s:1326   .text:00000000000006e0 .L0 
+     /tmp/ccRDNlkW.s:1327   .text:00000000000006e0 .L0 
+     /tmp/ccRDNlkW.s:1329   .text:00000000000006e4 .L0 
+     /tmp/ccRDNlkW.s:1333   .text:00000000000006e8 .L0 
+     /tmp/ccRDNlkW.s:1335   .text:00000000000006e8 .L0 
+     /tmp/ccRDNlkW.s:1338   .text:00000000000006f0 .L0 
+GAS LISTING /tmp/ccRDNlkW.s 			page 44
+
+
+     /tmp/ccRDNlkW.s:1343   .bss:0000000000000000 .LANCHOR0
+     /tmp/ccRDNlkW.s:1346   .bss:0000000000000000 _ZGVZN15MemoryAllocator8InstanceEvE8instance
+     /tmp/ccRDNlkW.s:1350   .bss:0000000000000008 _ZZN15MemoryAllocator8InstanceEvE8instance
+     /tmp/ccRDNlkW.s:1360   .text:00000000000006f0 .L0 
+     /tmp/ccRDNlkW.s:22     .text:000000000000000c .L0 
+     /tmp/ccRDNlkW.s:639    .text:00000000000002cc .L0 
+     /tmp/ccRDNlkW.s:660    .text:0000000000000300 .L0 
+     /tmp/ccRDNlkW.s:758    .text:00000000000003b8 .L0 
+     /tmp/ccRDNlkW.s:762    .text:00000000000003c4 .L0 
+     /tmp/ccRDNlkW.s:775    .text:00000000000003e0 .L0 
+     /tmp/ccRDNlkW.s:779    .text:00000000000003f4 .L0 
+     /tmp/ccRDNlkW.s:782    .text:00000000000003fc .L0 
+     /tmp/ccRDNlkW.s:887    .text:0000000000000488 .L0 
+     /tmp/ccRDNlkW.s:892    .text:0000000000000498 .L0 
+     /tmp/ccRDNlkW.s:1066   .text:0000000000000584 .L0 
+     /tmp/ccRDNlkW.s:1071   .text:0000000000000594 .L0 
+     /tmp/ccRDNlkW.s:71     .text:0000000000000050 .L5
+     /tmp/ccRDNlkW.s:61     .text:0000000000000044 .L3
+     /tmp/ccRDNlkW.s:374    .text:0000000000000194 .L19
+     /tmp/ccRDNlkW.s:319    .text:0000000000000158 .L30
+     /tmp/ccRDNlkW.s:300    .text:0000000000000144 .L28
+     /tmp/ccRDNlkW.s:387    .text:00000000000001a0 .L31
+     /tmp/ccRDNlkW.s:425    .text:00000000000001d0 .L26
+     /tmp/ccRDNlkW.s:365    .text:0000000000000190 .L25
+     /tmp/ccRDNlkW.s:417    .text:00000000000001c4 .L23
+     /tmp/ccRDNlkW.s:404    .text:00000000000001b0 .L24
+     /tmp/ccRDNlkW.s:355    .text:0000000000000184 .L27
+     /tmp/ccRDNlkW.s:535    .text:0000000000000244 .L32
+     /tmp/ccRDNlkW.s:486    .text:000000000000020c .L43
+     /tmp/ccRDNlkW.s:467    .text:00000000000001f8 .L41
+     /tmp/ccRDNlkW.s:548    .text:0000000000000250 .L44
+     /tmp/ccRDNlkW.s:586    .text:0000000000000280 .L39
+     /tmp/ccRDNlkW.s:578    .text:0000000000000274 .L36
+     /tmp/ccRDNlkW.s:565    .text:0000000000000260 .L37
+     /tmp/ccRDNlkW.s:522    .text:0000000000000238 .L40
+     /tmp/ccRDNlkW.s:764    .text:00000000000003d0 .L53
+     /tmp/ccRDNlkW.s:825    .text:000000000000043c .L54
+     /tmp/ccRDNlkW.s:835    .text:0000000000000448 .L57
+     /tmp/ccRDNlkW.s:1010   .text:000000000000054c .L67
+     /tmp/ccRDNlkW.s:1022   .text:0000000000000554 .L68
+     /tmp/ccRDNlkW.s:1033   .text:000000000000055c .L69
+     /tmp/ccRDNlkW.s:940    .text:00000000000004e4 .L70
+     /tmp/ccRDNlkW.s:944    .text:00000000000004ec .L71
+     /tmp/ccRDNlkW.s:932    .text:00000000000004d8 .L61
+     /tmp/ccRDNlkW.s:921    .text:00000000000004c8 .L62
+     /tmp/ccRDNlkW.s:947    .text:00000000000004f0 .L60
+     /tmp/ccRDNlkW.s:951    .text:00000000000004f4 .L63
+     /tmp/ccRDNlkW.s:960    .text:0000000000000500 .L64
+     /tmp/ccRDNlkW.s:1003   .text:0000000000000544 .L65
+     /tmp/ccRDNlkW.s:969    .text:000000000000050c .L66
+     /tmp/ccRDNlkW.s:986    .text:000000000000052c .L59
+     /tmp/ccRDNlkW.s:1204   .text:0000000000000660 .L85
+     /tmp/ccRDNlkW.s:1216   .text:0000000000000668 .L86
+     /tmp/ccRDNlkW.s:1227   .text:0000000000000670 .L87
+     /tmp/ccRDNlkW.s:1232   .text:0000000000000678 .L88
+     /tmp/ccRDNlkW.s:1134   .text:00000000000005f8 .L89
+     /tmp/ccRDNlkW.s:1138   .text:0000000000000600 .L90
+GAS LISTING /tmp/ccRDNlkW.s 			page 45
+
+
+     /tmp/ccRDNlkW.s:1126   .text:00000000000005ec .L79
+     /tmp/ccRDNlkW.s:1115   .text:00000000000005dc .L80
+     /tmp/ccRDNlkW.s:1141   .text:0000000000000604 .L78
+     /tmp/ccRDNlkW.s:1145   .text:0000000000000608 .L81
+     /tmp/ccRDNlkW.s:1154   .text:0000000000000614 .L82
+     /tmp/ccRDNlkW.s:1197   .text:0000000000000658 .L83
+     /tmp/ccRDNlkW.s:1163   .text:0000000000000620 .L84
+     /tmp/ccRDNlkW.s:1180   .text:0000000000000640 .L77
+     /tmp/ccRDNlkW.s:1332   .text:00000000000006e8 .L102
+     /tmp/ccRDNlkW.s:1303   .text:00000000000006c4 .L101
+     /tmp/ccRDNlkW.s:1317   .text:00000000000006d8 .L99
+     /tmp/ccRDNlkW.s:1298   .text:00000000000006c0 .L100
+     /tmp/ccRDNlkW.s:1322   .text:00000000000006dc .L97
+     /tmp/ccRDNlkW.s:2837   .debug_abbrev:0000000000000000 .Ldebug_abbrev0
+     /tmp/ccRDNlkW.s:4705   .debug_str:0000000000000648 .LASF99
+     /tmp/ccRDNlkW.s:4603   .debug_str:000000000000029b .LASF100
+     /tmp/ccRDNlkW.s:4581   .debug_str:00000000000001ed .LASF101
+     /tmp/ccRDNlkW.s:5      .text:0000000000000000 .Ltext0
+     /tmp/ccRDNlkW.s:1353   .text:00000000000006f0 .Letext0
+     /tmp/ccRDNlkW.s:4521   .debug_line:0000000000000000 .Ldebug_line0
+     /tmp/ccRDNlkW.s:4597   .debug_str:000000000000027e .LASF0
+     /tmp/ccRDNlkW.s:4617   .debug_str:0000000000000340 .LASF1
+     /tmp/ccRDNlkW.s:4665   .debug_str:000000000000051b .LASF2
+     /tmp/ccRDNlkW.s:4669   .debug_str:000000000000052e .LASF4
+     /tmp/ccRDNlkW.s:4605   .debug_str:00000000000002af .LASF3
+     /tmp/ccRDNlkW.s:4527   .debug_str:0000000000000029 .LASF5
+     /tmp/ccRDNlkW.s:4713   .debug_str:000000000000075f .LASF6
+     /tmp/ccRDNlkW.s:4721   .debug_str:000000000000078f .LASF7
+     /tmp/ccRDNlkW.s:4651   .debug_str:0000000000000470 .LASF8
+     /tmp/ccRDNlkW.s:4611   .debug_str:0000000000000301 .LASF9
+     /tmp/ccRDNlkW.s:4555   .debug_str:00000000000000f1 .LASF10
+     /tmp/ccRDNlkW.s:4577   .debug_str:00000000000001b7 .LASF11
+     /tmp/ccRDNlkW.s:4583   .debug_str:000000000000020b .LASF12
+     /tmp/ccRDNlkW.s:4547   .debug_str:00000000000000b6 .LASF13
+     /tmp/ccRDNlkW.s:4571   .debug_str:0000000000000175 .LASF14
+     /tmp/ccRDNlkW.s:4557   .debug_str:00000000000000ff .LASF15
+     /tmp/ccRDNlkW.s:4545   .debug_str:00000000000000a6 .LASF16
+     /tmp/ccRDNlkW.s:4695   .debug_str:000000000000061e .LASF17
+     /tmp/ccRDNlkW.s:4563   .debug_str:0000000000000130 .LASF18
+     /tmp/ccRDNlkW.s:4687   .debug_str:00000000000005d8 .LASF19
+     /tmp/ccRDNlkW.s:4703   .debug_str:0000000000000640 .LASF23
+     /tmp/ccRDNlkW.s:4549   .debug_str:00000000000000c5 .LASF20
+     /tmp/ccRDNlkW.s:4533   .debug_str:000000000000006a .LASF21
+     /tmp/ccRDNlkW.s:4615   .debug_str:000000000000033b .LASF22
+     /tmp/ccRDNlkW.s:4535   .debug_str:000000000000006f .LASF24
+     /tmp/ccRDNlkW.s:4623   .debug_str:0000000000000371 .LASF25
+     /tmp/ccRDNlkW.s:4627   .debug_str:00000000000003a1 .LASF26
+     /tmp/ccRDNlkW.s:4715   .debug_str:0000000000000768 .LASF28
+     /tmp/ccRDNlkW.s:4537   .debug_str:0000000000000076 .LASF27
+     /tmp/ccRDNlkW.s:4637   .debug_str:00000000000003f4 .LASF29
+     /tmp/ccRDNlkW.s:4677   .debug_str:0000000000000585 .LASF30
+     /tmp/ccRDNlkW.s:4625   .debug_str:000000000000037d .LASF32
+     /tmp/ccRDNlkW.s:4735   .debug_str:0000000000000805 .LASF31
+     /tmp/ccRDNlkW.s:4565   .debug_str:0000000000000146 .LASF33
+     /tmp/ccRDNlkW.s:4629   .debug_str:00000000000003ac .LASF34
+     /tmp/ccRDNlkW.s:4673   .debug_str:0000000000000555 .LASF35
+     /tmp/ccRDNlkW.s:4717   .debug_str:000000000000077c .LASF36
+GAS LISTING /tmp/ccRDNlkW.s 			page 46
+
+
+     /tmp/ccRDNlkW.s:4655   .debug_str:00000000000004a0 .LASF37
+     /tmp/ccRDNlkW.s:4585   .debug_str:0000000000000219 .LASF45
+     /tmp/ccRDNlkW.s:4621   .debug_str:000000000000036c .LASF38
+     /tmp/ccRDNlkW.s:4645   .debug_str:0000000000000429 .LASF39
+     /tmp/ccRDNlkW.s:4681   .debug_str:00000000000005a4 .LASF40
+     /tmp/ccRDNlkW.s:4551   .debug_str:00000000000000ca .LASF41
+     /tmp/ccRDNlkW.s:4613   .debug_str:0000000000000314 .LASF42
+     /tmp/ccRDNlkW.s:4711   .debug_str:0000000000000741 .LASF43
+     /tmp/ccRDNlkW.s:4595   .debug_str:0000000000000253 .LASF44
+     /tmp/ccRDNlkW.s:4691   .debug_str:000000000000060b .LASF46
+     /tmp/ccRDNlkW.s:4561   .debug_str:0000000000000127 .LASF47
+     /tmp/ccRDNlkW.s:4567   .debug_str:0000000000000161 .LASF48
+     /tmp/ccRDNlkW.s:4639   .debug_str:000000000000040f .LASF49
+     /tmp/ccRDNlkW.s:4631   .debug_str:00000000000003b7 .LASF102
+     /tmp/ccRDNlkW.s:4701   .debug_str:000000000000063b .LASF50
+     /tmp/ccRDNlkW.s:4647   .debug_str:0000000000000437 .LASF51
+     /tmp/ccRDNlkW.s:4659   .debug_str:00000000000004c6 .LASF103
+     /tmp/ccRDNlkW.s:4671   .debug_str:0000000000000535 .LASF104
+     /tmp/ccRDNlkW.s:4633   .debug_str:00000000000003c9 .LASF52
+     /tmp/ccRDNlkW.s:4529   .debug_str:0000000000000030 .LASF53
+     /tmp/ccRDNlkW.s:4699   .debug_str:0000000000000632 .LASF54
+     /tmp/ccRDNlkW.s:4635   .debug_str:00000000000003d3 .LASF55
+     /tmp/ccRDNlkW.s:4609   .debug_str:00000000000002ea .LASF56
+     /tmp/ccRDNlkW.s:4723   .debug_str:0000000000000795 .LASF57
+     /tmp/ccRDNlkW.s:4733   .debug_str:00000000000007f5 .LASF58
+     /tmp/ccRDNlkW.s:4709   .debug_str:0000000000000716 .LASF59
+     /tmp/ccRDNlkW.s:4737   .debug_str:000000000000080e .LASF60
+     /tmp/ccRDNlkW.s:4573   .debug_str:0000000000000184 .LASF61
+     /tmp/ccRDNlkW.s:4543   .debug_str:0000000000000090 .LASF62
+     /tmp/ccRDNlkW.s:4663   .debug_str:00000000000004ed .LASF63
+     /tmp/ccRDNlkW.s:4719   .debug_str:0000000000000781 .LASF64
+     /tmp/ccRDNlkW.s:4579   .debug_str:00000000000001c7 .LASF65
+     /tmp/ccRDNlkW.s:4731   .debug_str:00000000000007e4 .LASF66
+     /tmp/ccRDNlkW.s:4649   .debug_str:0000000000000447 .LASF67
+     /tmp/ccRDNlkW.s:4531   .debug_str:0000000000000051 .LASF72
+     /tmp/ccRDNlkW.s:4683   .debug_str:00000000000005bb .LASF68
+     /tmp/ccRDNlkW.s:4593   .debug_str:000000000000024d .LASF69
+     /tmp/ccRDNlkW.s:4653   .debug_str:0000000000000483 .LASF70
+     /tmp/ccRDNlkW.s:4601   .debug_str:0000000000000291 .LASF71
+     /tmp/ccRDNlkW.s:4607   .debug_str:00000000000002c1 .LASF73
+     /tmp/ccRDNlkW.s:4727   .debug_str:00000000000007cc .LASF74
+     /tmp/ccRDNlkW.s:4679   .debug_str:0000000000000596 .LASF75
+     /tmp/ccRDNlkW.s:1275   .text:00000000000006a4 .LFB25
+     /tmp/ccRDNlkW.s:1339   .text:00000000000006f0 .LFE25
+     /tmp/ccRDNlkW.s:4575   .debug_str:00000000000001b2 .LASF78
+     /tmp/ccRDNlkW.s:3761   .debug_loc:0000000000000000 .LLST37
+     /tmp/ccRDNlkW.s:4591   .debug_str:0000000000000248 .LASF76
+     /tmp/ccRDNlkW.s:3786   .debug_loc:0000000000000062 .LLST38
+     /tmp/ccRDNlkW.s:4707   .debug_str:000000000000070c .LASF77
+     /tmp/ccRDNlkW.s:3793   .debug_loc:0000000000000085 .LLST39
+     /tmp/ccRDNlkW.s:1244   .text:0000000000000680 .LFB24
+     /tmp/ccRDNlkW.s:1269   .text:00000000000006a4 .LFE24
+     /tmp/ccRDNlkW.s:3804   .debug_loc:00000000000000bb .LLST36
+     /tmp/ccRDNlkW.s:1044   .text:0000000000000564 .LFB23
+     /tmp/ccRDNlkW.s:1238   .text:0000000000000680 .LFE23
+     /tmp/ccRDNlkW.s:3818   .debug_loc:00000000000000f4 .LLST29
+     /tmp/ccRDNlkW.s:3871   .debug_loc:00000000000001db .LLST30
+GAS LISTING /tmp/ccRDNlkW.s 			page 47
+
+
+     /tmp/ccRDNlkW.s:3889   .debug_loc:0000000000000227 .LLST31
+     /tmp/ccRDNlkW.s:4675   .debug_str:000000000000057a .LASF79
+     /tmp/ccRDNlkW.s:3907   .debug_loc:0000000000000273 .LLST32
+     /tmp/ccRDNlkW.s:3925   .debug_loc:00000000000002bf .LLST33
+     /tmp/ccRDNlkW.s:4697   .debug_str:000000000000062a .LASF80
+     /tmp/ccRDNlkW.s:3951   .debug_loc:0000000000000313 .LLST34
+     /tmp/ccRDNlkW.s:3969   .debug_loc:000000000000035f .LLST35
+     /tmp/ccRDNlkW.s:1169   .text:000000000000062c .LVL100
+     /tmp/ccRDNlkW.s:1175   .text:000000000000063c .LVL101
+     /tmp/ccRDNlkW.s:863    .text:0000000000000468 .LFB22
+     /tmp/ccRDNlkW.s:1038   .text:0000000000000564 .LFE22
+     /tmp/ccRDNlkW.s:3990   .debug_loc:00000000000003bd .LLST24
+     /tmp/ccRDNlkW.s:4035   .debug_loc:000000000000047e .LLST25
+     /tmp/ccRDNlkW.s:4725   .debug_str:00000000000007c5 .LASF81
+     /tmp/ccRDNlkW.s:4053   .debug_loc:00000000000004ca .LLST26
+     /tmp/ccRDNlkW.s:4075   .debug_loc:0000000000000529 .LLST27
+     /tmp/ccRDNlkW.s:4093   .debug_loc:0000000000000575 .LLST28
+     /tmp/ccRDNlkW.s:975    .text:0000000000000518 .LVL80
+     /tmp/ccRDNlkW.s:981    .text:0000000000000528 .LVL81
+     /tmp/ccRDNlkW.s:798    .text:0000000000000414 .LFB21
+     /tmp/ccRDNlkW.s:857    .text:0000000000000468 .LFE21
+     /tmp/ccRDNlkW.s:4667   .debug_str:0000000000000529 .LASF82
+     /tmp/ccRDNlkW.s:4693   .debug_str:0000000000000615 .LASF83
+     /tmp/ccRDNlkW.s:4114   .debug_loc:00000000000005d3 .LLST23
+     /tmp/ccRDNlkW.s:443    .text:00000000000001d8 .LFB20
+     /tmp/ccRDNlkW.s:598    .text:0000000000000288 .LFE20
+     /tmp/ccRDNlkW.s:4130   .debug_loc:000000000000061d .LLST12
+     /tmp/ccRDNlkW.s:4141   .debug_loc:0000000000000653 .LLST13
+     /tmp/ccRDNlkW.s:4155   .debug_loc:000000000000068c .LLST14
+     /tmp/ccRDNlkW.s:4495   .debug_ranges:0000000000000000 .Ldebug_ranges0
+     /tmp/ccRDNlkW.s:4541   .debug_str:000000000000008b .LASF84
+     /tmp/ccRDNlkW.s:4192   .debug_loc:0000000000000709 .LLST15
+     /tmp/ccRDNlkW.s:4203   .debug_loc:000000000000073f .LLST16
+     /tmp/ccRDNlkW.s:285    .text:0000000000000130 .LFB19
+     /tmp/ccRDNlkW.s:437    .text:00000000000001d8 .LFE19
+     /tmp/ccRDNlkW.s:4214   .debug_loc:0000000000000775 .LLST8
+     /tmp/ccRDNlkW.s:4247   .debug_loc:00000000000007fd .LLST9
+     /tmp/ccRDNlkW.s:4258   .debug_loc:0000000000000833 .LLST10
+     /tmp/ccRDNlkW.s:4265   .debug_loc:0000000000000856 .LLST11
+     /tmp/ccRDNlkW.s:4685   .debug_str:00000000000005c5 .LASF85
+     /tmp/ccRDNlkW.s:4641   .debug_str:000000000000041b .LASF86
+     /tmp/ccRDNlkW.s:244    .text:0000000000000108 .LFB18
+     /tmp/ccRDNlkW.s:272    .text:0000000000000130 .LFE18
+     /tmp/ccRDNlkW.s:4276   .debug_loc:000000000000088c .LLST7
+     /tmp/ccRDNlkW.s:261    .text:0000000000000120 .LVL16
+     /tmp/ccRDNlkW.s:4525   .debug_str:0000000000000019 .LASF87
+     /tmp/ccRDNlkW.s:4643   .debug_str:0000000000000422 .LASF88
+     /tmp/ccRDNlkW.s:202    .text:00000000000000e0 .LFB17
+     /tmp/ccRDNlkW.s:230    .text:0000000000000108 .LFE17
+     /tmp/ccRDNlkW.s:4290   .debug_loc:00000000000008c5 .LLST6
+     /tmp/ccRDNlkW.s:219    .text:00000000000000f8 .LVL14
+     /tmp/ccRDNlkW.s:4539   .debug_str:000000000000007b .LASF89
+     /tmp/ccRDNlkW.s:4599   .debug_str:000000000000028b .LASF91
+     /tmp/ccRDNlkW.s:170    .text:00000000000000b8 .LFB16
+     /tmp/ccRDNlkW.s:196    .text:00000000000000e0 .LFE16
+     /tmp/ccRDNlkW.s:4304   .debug_loc:00000000000008fe .LLST5
+     /tmp/ccRDNlkW.s:185    .text:00000000000000d0 .LVL12
+GAS LISTING /tmp/ccRDNlkW.s 			page 48
+
+
+     /tmp/ccRDNlkW.s:4729   .debug_str:00000000000007d7 .LASF90
+     /tmp/ccRDNlkW.s:4569   .debug_str:000000000000016f .LASF92
+     /tmp/ccRDNlkW.s:138    .text:0000000000000090 .LFB15
+     /tmp/ccRDNlkW.s:164    .text:00000000000000b8 .LFE15
+     /tmp/ccRDNlkW.s:4318   .debug_loc:0000000000000937 .LLST4
+     /tmp/ccRDNlkW.s:153    .text:00000000000000a8 .LVL10
+     /tmp/ccRDNlkW.s:111    .text:0000000000000074 .LFB14
+     /tmp/ccRDNlkW.s:132    .text:0000000000000090 .LFE14
+     /tmp/ccRDNlkW.s:4332   .debug_loc:0000000000000970 .LLST3
+     /tmp/ccRDNlkW.s:84     .text:0000000000000058 .LFB13
+     /tmp/ccRDNlkW.s:105    .text:0000000000000074 .LFE13
+     /tmp/ccRDNlkW.s:4345   .debug_loc:00000000000009a8 .LLST2
+     /tmp/ccRDNlkW.s:4589   .debug_str:000000000000023c .LASF93
+     /tmp/ccRDNlkW.s:4523   .debug_str:0000000000000000 .LASF94
+     /tmp/ccRDNlkW.s:4661   .debug_str:00000000000004cf .LASF95
+     /tmp/ccRDNlkW.s:4587   .debug_str:0000000000000220 .LASF96
+     /tmp/ccRDNlkW.s:4657   .debug_str:00000000000004a5 .LASF97
+     /tmp/ccRDNlkW.s:4619   .debug_str:0000000000000353 .LASF105
+     /tmp/ccRDNlkW.s:604    .text:0000000000000288 .LFB11
+     /tmp/ccRDNlkW.s:745    .text:00000000000003b8 .LFE11
+     /tmp/ccRDNlkW.s:4358   .debug_loc:00000000000009e0 .LLST17
+     /tmp/ccRDNlkW.s:643    .text:00000000000002e4 .LVL44
+     /tmp/ccRDNlkW.s:675    .text:000000000000032c .LVL46
+     /tmp/ccRDNlkW.s:685    .text:0000000000000344 .LVL49
+     /tmp/ccRDNlkW.s:694    .text:0000000000000358 .LVL52
+     /tmp/ccRDNlkW.s:701    .text:000000000000036c .LVL53
+     /tmp/ccRDNlkW.s:711    .text:0000000000000384 .LVL56
+     /tmp/ccRDNlkW.s:720    .text:0000000000000398 .LVL59
+     /tmp/ccRDNlkW.s:636    .text:00000000000002cc .LBB27
+     /tmp/ccRDNlkW.s:721    .text:0000000000000398 .LBE27
+     /tmp/ccRDNlkW.s:4388   .debug_loc:0000000000000a56 .LLST18
+     /tmp/ccRDNlkW.s:4395   .debug_loc:0000000000000a79 .LLST19
+     /tmp/ccRDNlkW.s:4406   .debug_loc:0000000000000aaf .LLST20
+     /tmp/ccRDNlkW.s:4417   .debug_loc:0000000000000ae5 .LLST21
+     /tmp/ccRDNlkW.s:4428   .debug_loc:0000000000000b1b .LLST22
+     /tmp/ccRDNlkW.s:631    .text:00000000000002bc .LVL42
+     /tmp/ccRDNlkW.s:635    .text:00000000000002cc .LVL43
+     /tmp/ccRDNlkW.s:39     .text:0000000000000028 .LFB9
+     /tmp/ccRDNlkW.s:78     .text:0000000000000058 .LFE9
+     /tmp/ccRDNlkW.s:4439   .debug_loc:0000000000000b51 .LLST0
+     /tmp/ccRDNlkW.s:4464   .debug_loc:0000000000000bb3 .LLST1
+     /tmp/ccRDNlkW.s:753    .text:00000000000003b8 .LFB8
+     /tmp/ccRDNlkW.s:792    .text:0000000000000414 .LFE8
+     /tmp/ccRDNlkW.s:4553   .debug_str:00000000000000e8 .LASF98
+     /tmp/ccRDNlkW.s:777    .text:00000000000003f0 .LVL64
+     /tmp/ccRDNlkW.s:4559   .debug_str:000000000000010f .LASF106
+     /tmp/ccRDNlkW.s:4689   .debug_str:00000000000005ee .LASF107
+     /tmp/ccRDNlkW.s:10     .text:0000000000000000 .LFB7
+     /tmp/ccRDNlkW.s:33     .text:0000000000000028 .LFE7
+     /tmp/ccRDNlkW.s:1278   .text:00000000000006a4 .LVL115
+     /tmp/ccRDNlkW.s:1295   .text:00000000000006bc .LVL117
+     /tmp/ccRDNlkW.s:1331   .text:00000000000006e8 .LVL123
+     /tmp/ccRDNlkW.s:1336   .text:00000000000006ec .LVL124
+     /tmp/ccRDNlkW.s:1291   .text:00000000000006b8 .LVL116
+     /tmp/ccRDNlkW.s:1321   .text:00000000000006dc .LVL122
+     /tmp/ccRDNlkW.s:1314   .text:00000000000006d4 .LVL120
+     /tmp/ccRDNlkW.s:1316   .text:00000000000006d8 .LVL121
+GAS LISTING /tmp/ccRDNlkW.s 			page 49
+
+
+     /tmp/ccRDNlkW.s:1247   .text:0000000000000680 .LVL113
+     /tmp/ccRDNlkW.s:1259   .text:0000000000000694 .LVL114
+     /tmp/ccRDNlkW.s:1047   .text:0000000000000564 .LVL91
+     /tmp/ccRDNlkW.s:1167   .text:0000000000000624 .LVL99
+     /tmp/ccRDNlkW.s:1192   .text:0000000000000650 .LVL103
+     /tmp/ccRDNlkW.s:1196   .text:0000000000000658 .LVL104
+     /tmp/ccRDNlkW.s:1212   .text:0000000000000664 .LVL106
+     /tmp/ccRDNlkW.s:1215   .text:0000000000000668 .LVL107
+     /tmp/ccRDNlkW.s:1224   .text:000000000000066c .LVL108
+     /tmp/ccRDNlkW.s:1226   .text:0000000000000670 .LVL109
+     /tmp/ccRDNlkW.s:1229   .text:0000000000000674 .LVL110
+     /tmp/ccRDNlkW.s:1231   .text:0000000000000678 .LVL111
+     /tmp/ccRDNlkW.s:1235   .text:000000000000067c .LVL112
+     /tmp/ccRDNlkW.s:1087   .text:00000000000005b8 .LVL92
+     /tmp/ccRDNlkW.s:1203   .text:0000000000000660 .LVL105
+     /tmp/ccRDNlkW.s:1092   .text:00000000000005c0 .LVL93
+     /tmp/ccRDNlkW.s:1179   .text:0000000000000640 .LVL102
+     /tmp/ccRDNlkW.s:1104   .text:00000000000005cc .LVL94
+     /tmp/ccRDNlkW.s:1114   .text:00000000000005dc .LVL95
+     /tmp/ccRDNlkW.s:1121   .text:00000000000005e4 .LVL96
+     /tmp/ccRDNlkW.s:1133   .text:00000000000005f8 .LVL97
+     /tmp/ccRDNlkW.s:1140   .text:0000000000000604 .LVL98
+     /tmp/ccRDNlkW.s:866    .text:0000000000000468 .LVL71
+     /tmp/ccRDNlkW.s:973    .text:0000000000000510 .LVL79
+     /tmp/ccRDNlkW.s:998    .text:000000000000053c .LVL83
+     /tmp/ccRDNlkW.s:1002   .text:0000000000000544 .LVL84
+     /tmp/ccRDNlkW.s:1018   .text:0000000000000550 .LVL86
+     /tmp/ccRDNlkW.s:1021   .text:0000000000000554 .LVL87
+     /tmp/ccRDNlkW.s:1030   .text:0000000000000558 .LVL88
+     /tmp/ccRDNlkW.s:1032   .text:000000000000055c .LVL89
+     /tmp/ccRDNlkW.s:1035   .text:0000000000000560 .LVL90
+     /tmp/ccRDNlkW.s:884    .text:0000000000000488 .LVL72
+     /tmp/ccRDNlkW.s:1009   .text:000000000000054c .LVL85
+     /tmp/ccRDNlkW.s:897    .text:00000000000004a8 .LVL73
+     /tmp/ccRDNlkW.s:985    .text:000000000000052c .LVL82
+     /tmp/ccRDNlkW.s:910    .text:00000000000004b8 .LVL74
+     /tmp/ccRDNlkW.s:920    .text:00000000000004c8 .LVL75
+     /tmp/ccRDNlkW.s:927    .text:00000000000004d0 .LVL76
+     /tmp/ccRDNlkW.s:939    .text:00000000000004e4 .LVL77
+     /tmp/ccRDNlkW.s:946    .text:00000000000004f0 .LVL78
+     /tmp/ccRDNlkW.s:813    .text:0000000000000428 .LVL66
+     /tmp/ccRDNlkW.s:824    .text:000000000000043c .LVL67
+     /tmp/ccRDNlkW.s:834    .text:0000000000000448 .LVL68
+     /tmp/ccRDNlkW.s:846    .text:0000000000000458 .LVL69
+     /tmp/ccRDNlkW.s:849    .text:000000000000045c .LVL70
+     /tmp/ccRDNlkW.s:446    .text:00000000000001d8 .LVL28
+     /tmp/ccRDNlkW.s:466    .text:00000000000001f8 .LVL31
+     /tmp/ccRDNlkW.s:457    .text:00000000000001ec .LVL29
+     /tmp/ccRDNlkW.s:462    .text:00000000000001f4 .LVL30
+     /tmp/ccRDNlkW.s:534    .text:0000000000000244 .LVL35
+     /tmp/ccRDNlkW.s:547    .text:0000000000000250 .LVL36
+     /tmp/ccRDNlkW.s:562    .text:000000000000025c .LVL37
+     /tmp/ccRDNlkW.s:577    .text:0000000000000274 .LVL38
+     /tmp/ccRDNlkW.s:491    .text:000000000000020c .LVL33
+     /tmp/ccRDNlkW.s:501    .text:0000000000000218 .LVL34
+     /tmp/ccRDNlkW.s:585    .text:0000000000000280 .LVL39
+     /tmp/ccRDNlkW.s:288    .text:0000000000000130 .LVL17
+GAS LISTING /tmp/ccRDNlkW.s 			page 50
+
+
+     /tmp/ccRDNlkW.s:299    .text:0000000000000144 .LVL18
+     /tmp/ccRDNlkW.s:364    .text:0000000000000190 .LVL22
+     /tmp/ccRDNlkW.s:386    .text:00000000000001a0 .LVL24
+     /tmp/ccRDNlkW.s:401    .text:00000000000001ac .LVL25
+     /tmp/ccRDNlkW.s:416    .text:00000000000001c4 .LVL26
+     /tmp/ccRDNlkW.s:324    .text:0000000000000158 .LVL20
+     /tmp/ccRDNlkW.s:373    .text:0000000000000194 .LVL23
+     /tmp/ccRDNlkW.s:334    .text:0000000000000164 .LVL21
+     /tmp/ccRDNlkW.s:424    .text:00000000000001d0 .LVL27
+     /tmp/ccRDNlkW.s:249    .text:0000000000000108 .LVL15
+     /tmp/ccRDNlkW.s:207    .text:00000000000000e0 .LVL13
+     /tmp/ccRDNlkW.s:173    .text:00000000000000b8 .LVL11
+     /tmp/ccRDNlkW.s:141    .text:0000000000000090 .LVL9
+     /tmp/ccRDNlkW.s:114    .text:0000000000000074 .LVL7
+     /tmp/ccRDNlkW.s:124    .text:0000000000000084 .LVL8
+     /tmp/ccRDNlkW.s:87     .text:0000000000000058 .LVL5
+     /tmp/ccRDNlkW.s:97     .text:0000000000000068 .LVL6
+     /tmp/ccRDNlkW.s:607    .text:0000000000000288 .LVL40
+     /tmp/ccRDNlkW.s:629    .text:00000000000002b4 .LVL41
+     /tmp/ccRDNlkW.s:731    .text:00000000000003a4 .LVL60
+     /tmp/ccRDNlkW.s:737    .text:00000000000003ac .LVL62
+     /tmp/ccRDNlkW.s:740    .text:00000000000003b0 .LVL63
+     /tmp/ccRDNlkW.s:665    .text:0000000000000314 .LVL45
+     /tmp/ccRDNlkW.s:677    .text:0000000000000330 .LVL47
+     /tmp/ccRDNlkW.s:683    .text:000000000000033c .LVL48
+     /tmp/ccRDNlkW.s:703    .text:0000000000000370 .LVL54
+     /tmp/ccRDNlkW.s:687    .text:0000000000000348 .LVL50
+     /tmp/ccRDNlkW.s:692    .text:0000000000000350 .LVL51
+     /tmp/ccRDNlkW.s:709    .text:000000000000037c .LVL55
+     /tmp/ccRDNlkW.s:734    .text:00000000000003a8 .LVL61
+     /tmp/ccRDNlkW.s:713    .text:0000000000000388 .LVL57
+     /tmp/ccRDNlkW.s:718    .text:0000000000000390 .LVL58
+     /tmp/ccRDNlkW.s:42     .text:0000000000000028 .LVL0
+     /tmp/ccRDNlkW.s:60     .text:0000000000000044 .LVL2
+     /tmp/ccRDNlkW.s:70     .text:0000000000000050 .LVL3
+     /tmp/ccRDNlkW.s:75     .text:0000000000000054 .LVL4
+     /tmp/ccRDNlkW.s:57     .text:0000000000000040 .LVL1
+     /tmp/ccRDNlkW.s:1361   .debug_info:0000000000000000 .Ldebug_info0
+     /tmp/ccRDNlkW.s:322    .text:0000000000000158 .LBB4
+     /tmp/ccRDNlkW.s:375    .text:0000000000000194 .LBE4
+     /tmp/ccRDNlkW.s:391    .text:00000000000001a0 .LBB9
+     /tmp/ccRDNlkW.s:433    .text:00000000000001d8 .LBE9
+     /tmp/ccRDNlkW.s:328    .text:000000000000015c .LBB6
+     /tmp/ccRDNlkW.s:366    .text:0000000000000190 .LBE6
+     /tmp/ccRDNlkW.s:426    .text:00000000000001d0 .LBB7
+     /tmp/ccRDNlkW.s:431    .text:00000000000001d8 .LBE7
+     /tmp/ccRDNlkW.s:489    .text:000000000000020c .LBB16
+     /tmp/ccRDNlkW.s:536    .text:0000000000000244 .LBE16
+     /tmp/ccRDNlkW.s:552    .text:0000000000000250 .LBB21
+     /tmp/ccRDNlkW.s:594    .text:0000000000000288 .LBE21
+     /tmp/ccRDNlkW.s:495    .text:0000000000000210 .LBB18
+     /tmp/ccRDNlkW.s:531    .text:0000000000000244 .LBE18
+     /tmp/ccRDNlkW.s:587    .text:0000000000000280 .LBB19
+     /tmp/ccRDNlkW.s:592    .text:0000000000000288 .LBE19
+     /tmp/ccRDNlkW.s:233    .gcc_except_table:0000000000000000 .LLSDA17
+     /tmp/ccRDNlkW.s:274    .gcc_except_table:0000000000000004 .LLSDA18
+
+GAS LISTING /tmp/ccRDNlkW.s 			page 51
+
+
+UNDEFINED SYMBOLS
+_ZN6Thread7runningE
+mem_alloc
+mem_free
+__gxx_personality_v0
+_ZN10ThreadPoolC1Ev
+_ZN13SemaphorePoolC1Ev
+HEAP_START_ADDR
+HEAP_END_ADDR
+_ZN10ThreadPool4initEPvS0_
+_ZN13SemaphorePool4initEPvS0_
