@@ -8,12 +8,9 @@
 extern "C" {
 #endif
 
-void save_context_kernel_mode(ThreadContext* oldContext);
 void restore_context_kernel_mode(ThreadContext* newContext);
-void start_thread_for_the_first_time_dispatch(ThreadContext* newContext);
-void thread_wrapper(ThreadContext* context, ThreadWrapperArgs* args);
-extern "C" void thread_cpp_entry_point(ThreadContext* tc, ThreadWrapperArgs* wa);
 
+void context_switch(ThreadContext* c1, ThreadContext* c2);
 
 #ifdef __cplusplus
 }
@@ -22,39 +19,46 @@ extern "C" void thread_cpp_entry_point(ThreadContext* tc, ThreadWrapperArgs* wa)
 class Thread{
     friend class ThreadPool;
 public:
-    Thread (void (*body)(void*), void* arg, void* stack_top);
     Thread();
+    Thread(void(*kernelBody)(void*), void* arg);
     virtual ~Thread ();
     int start ();
-    static int create_thread_kernel(thread_t* handle, void(*routine)(void*) , void* args, void* stack_top);
-    static int sleep (time_t);
+    static void dispatch();
     static void* operator new(size_t size);
     static void operator delete(void*) noexcept;
+    virtual void run (){};
     static Thread* running;
+    int semWaitStatus;
+    ThreadContext* getContext();
+    ThreadWrapperArgs* getWrapperArgs();
+    static int create_thread_kernel(thread_t* handle, void(*routine)(void*) , void* args, void* stack_top);
+    static int sleep (time_t);
     static int thread_exit_kernel();
     static void thread_dispatch_kernel();
-    static void wrapper();
+    Thread* next;
+    static void threadWrapper();
+    static void kernelThreadWrapper();
     static void clearTimeSliceCounter();
     static uint64 getTimeSliceCounter();
     static void incrementtimeSliceCounter();
-    static void dispatch();
-    uint64 getTimeSlice();
-    ThreadContext* getContext();
-    ThreadWrapperArgs* getWrapperArgs();
-    Thread* next;
-    int semWaitStatus;
 
-    virtual void run (){};
+    uint64 getTimeSlice();
 private:
     static int cnt;
     static uint64 timeSliceCounter;
 
     thread_t threadId;
+
     ThreadContext context;
     ThreadWrapperArgs wrapperArgs;
     List<Thread>* suspended;
     void (*body)(void*);
     void* arg;
+
+    Thread (void (*body)(void*), void* arg, void* stack_top);
+
+    static void wrapper();
+
 
 };
 

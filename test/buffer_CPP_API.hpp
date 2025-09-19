@@ -1,8 +1,9 @@
 #ifndef OS1_BUFFERCPP_H
 #define OS1_BUFFERCPP_H
 
-#include "../h/syscall_cpp.hpp"
+#include "../h/MemoryAllocator.hpp"
 #include "printing.hpp"
+#include "../h/syscall_cpp.hpp"
 
 class BufferCPP {
 private:

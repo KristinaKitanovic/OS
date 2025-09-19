@@ -1,7 +1,6 @@
 #ifndef C_API_H
 #define C_API_H
 
-#include <stddef.h>
 #include "../lib/hw.h"
 
 #ifdef __cplusplus
@@ -27,11 +26,7 @@ char getc();
 #ifdef __cplusplus
 } // kraj extern "C"
 
-// C++ operatori – samo deklaracija ovde
-void* operator new(size_t size);
-void* operator new[](size_t size);
-void operator delete(void* ptr) noexcept;
-void operator delete[](void* ptr) noexcept;
+
 
 #endif
 

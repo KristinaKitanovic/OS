@@ -1,4 +1,4 @@
-#include "../h/syscall_cpp.hpp"
+#include "../h/MemoryAllocator.hpp"
 
 #include "printing.hpp"
 
@@ -55,7 +55,9 @@ public:
 
 void WorkerA::workerBodyA(void *arg) {
     for (uint64 i = 0; i < 10; i++) {
-        printString("A: i="); printInt(i); printString("\n");
+        printString("A: i=");
+        printInt(i);
+        printString("\n");
         for (uint64 j = 0; j < 10; j++) {
             for (uint64 k = 0; k < 30; k++) { /* busy wait */ }
             thread_dispatch();
@@ -136,12 +138,11 @@ void WorkerD::workerBodyD(void* arg) {
 
 }
 
-
 void Threads_CPP_API_test() {
     Thread* threads[4];
 
     threads[0] = new WorkerA();
-    printString("ThreadA created\n");
+   printString("ThreadA created\n");
 
     threads[1] = new WorkerB();
     printString("ThreadB created\n");
@@ -156,11 +157,10 @@ void Threads_CPP_API_test() {
         threads[i]->start();
     }
 
+
     while (!(finishedA && finishedB && finishedC && finishedD)) {
 
-
         Thread::dispatch();
-
     }
 
     for (auto thread: threads) { delete thread; }

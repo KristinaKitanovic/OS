@@ -12,11 +12,16 @@ int sem_open_trap(ThreadContext *t, sem_t* handle, int init);
 int sem_wait_trap(ThreadContext* t, sem_t id);
 int sem_signal_trap(ThreadContext* t, sem_t id);
 int sem_close_trap(ThreadContext* t, sem_t id);
+char getc_trap(ThreadContext* t);
+void putc_trap(ThreadContext* t, char c);
+
 
 void* abi_mem_alloc(ThreadContext* c, size_t blocks) {
 
-    uint64 result = mem_alloc_trap(c, blocks);
-    return (void*)result;
+    uint64 result =  mem_alloc_trap(c, blocks);
+    void* res = (void*)result;
+    return res;
+
 }
 
 int abi_mem_free(ThreadContext* c, void* ptr){
@@ -51,4 +56,11 @@ int abi_sem_signal(ThreadContext* t, sem_t id){
 }
 int abi_sem_close(ThreadContext* t, sem_t id){
     return sem_close_trap(t, id);
+}
+
+char abi_getc(ThreadContext* t){
+    return getc_trap(t);
+}
+void abi_putc(ThreadContext* t, char c){
+     putc_trap(t, c);
 }

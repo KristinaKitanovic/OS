@@ -20,9 +20,12 @@ typedef struct ThreadContext{
     uint64 sp;
     uint64 ssp;
     uint64 sstatus;
+    uint64 ra;
     uint64 startedOnce;
     uint64 wasActive;
     uint64 timeSlice;
+    uint64 isKernelThread;
+
 }ThreadContext;
 
 typedef struct ThreadWrapperArgs{

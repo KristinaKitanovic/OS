@@ -1,11 +1,13 @@
-#include "../h/syscall_c.h"
+#include "../h/syscall_c.hpp"
 #include "../h/abi.h"
 #include "../lib/hw.h"
 #include "../h/memory_structs.h"
 #include "../lib/console.h"
+#include "../h/Thread.hpp"
 
 
-extern ThreadContext * getRunningThreadContext();
+
+extern "C" ThreadContext * getRunningThreadContext();
 extern int getWaitStatusForRunning();
 
 void* mem_alloc(size_t size) {
@@ -67,25 +69,15 @@ int sem_close(sem_t id){
     return abi_sem_close(t, id);
 }
 
-void putc(char x) {
-    unsigned long sstatus_old, sstatus_new;
+char getc () {
 
-    // Učitaj trenutni sstatus
-    asm volatile("csrr %0, sstatus" : "=r"(sstatus_old));
-
-    // Maskiraj spoljne prekide (SIE = 0)
-    sstatus_new = sstatus_old & ~(1UL << 1);
-    asm volatile("csrw sstatus, %0" :: "r"(sstatus_new));
-
-    // Poziv niskonivojske funkcije
-    __putc(x);
-
-    // Vrati sstatus na staru vrednost
-    asm volatile("csrw sstatus, %0" :: "r"(sstatus_old));
+    ThreadContext* t = getRunningThreadContext();
+    return abi_getc(t);
 }
 
-char getc() {
-    return __getc();
+void putc (char c){
+    ThreadContext* t = getRunningThreadContext();
+    abi_putc(t, c);
 }
 
 

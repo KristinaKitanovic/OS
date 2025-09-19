@@ -13,10 +13,6 @@ LIBS = \
   ${DIR_LIBS}/console.lib
 
 # riscv64-unknown-elf- or riscv64-linux-gnu-
-# perhaps in /opt/riscv/bin
-#TOOLPREFIX =
-
-# Try to infer the correct TOOLPREFIX if not set
 ifndef TOOLPREFIX
 TOOLPREFIX := $(shell if riscv64-unknown-elf-objdump -i 2>&1 | grep 'elf64-big' >/dev/null 2>&1; \
 	then echo 'riscv64-unknown-elf-'; \
@@ -26,7 +22,7 @@ TOOLPREFIX := $(shell if riscv64-unknown-elf-objdump -i 2>&1 | grep 'elf64-big' 
 	then echo 'riscv64-unknown-linux-gnu-'; \
 	else echo "***" 1>&2; \
 	echo "*** Error: Couldn't find a riscv64 version of GCC/binutils." 1>&2; \
-	echo "*** To turn off this error, run 'gmake TOOLPREFIX= ...'." 1>&2; \
+	echo "*** To turn off this error, run 'make TOOLPREFIX= ...'." 1>&2; \
 	echo "***" 1>&2; exit 1; fi)
 endif
 
@@ -47,10 +43,8 @@ CFLAGS += -march=rv64ima -mabi=lp64 -mcmodel=medany -mno-relax
 CFLAGS += -fno-omit-frame-pointer -ffreestanding -fno-common
 CFLAGS += $(shell ${CC} -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 CFLAGS += ${DEBUG_FLAG}
-#CFLAGS += -I./${DIR_LIBS} -I./${DIR_INC}
 CFLAGS += -MMD -MP -MF"${@:%.o=%.d}"
 
-# Disable PIE when possible (for Ubuntu 16.10 toolchain)
 ifneq ($(shell ${CC} -dumpspecs 2>/dev/null | grep -e '[^f]no-pie'),)
 CFLAGS += -fno-pie -no-pie
 endif
@@ -63,7 +57,6 @@ CXXFLAGS += -nostdlib -std=c++11
 CXXFLAGS += -march=rv64ima -mabi=lp64 -mcmodel=medany -mno-relax
 CXXFLAGS += -fno-omit-frame-pointer -ffreestanding -fno-common
 CXXFLAGS += -fno-rtti -fno-threadsafe-statics
-#CXXFLAGS += -I./${DIR_LIBS} -I./${DIR_INC}
 CXXFLAGS += $(shell ${CXX} -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
 CXXFLAGS += ${DEBUG_FLAG}
 CXXFLAGS += -MMD -MP -MF"${@:%.o=%.d}"
@@ -72,22 +65,24 @@ LDSCRIPT = kernel.ld
 LDFLAGS  = -z max-page-size=4096 --script ${LDSCRIPT}
 LDLIBS   = --library-path . $(patsubst %,--library=:%,${LIBS})
 
+# automatski pokupi sve .S, .c i .cpp fajlove
 SOURCES_ASM = $(shell find . -name "*.S" -printf "%P ")
-OBJECTS += $(addprefix ${DIR_BUILD}/,${SOURCES_ASM:.S=.o})
-vpath %.S $(sort $(dir ${SOURCES_ASM}))
+OBJECTS = $(addprefix ${DIR_BUILD}/,${SOURCES_ASM:.S=.o})
 
-SOURCES = $(shell find . -name "*.c" -printf "%P ")
-OBJECTS += $(addprefix ${DIR_BUILD}/,${SOURCES:.c=.o})
-vpath %.c $(sort $(dir ${SOURCES}))
+SOURCES_C = $(shell find . -name "*.c" -printf "%P ")
+OBJECTS += $(addprefix ${DIR_BUILD}/,${SOURCES_C:.c=.o})
 
 SOURCES_CPP = $(shell find . -name "*.cpp" -printf "%P ")
 OBJECTS += $(addprefix ${DIR_BUILD}/,${SOURCES_CPP:.cpp=.o})
+
+vpath %.S $(sort $(dir ${SOURCES_ASM}))
+vpath %.c $(sort $(dir ${SOURCES_C}))
 vpath %.cpp $(sort $(dir ${SOURCES_CPP}))
 
 all: ${KERNEL_IMG}
 
 ${KERNEL_IMG}: ${LIBS} ${OBJECTS} ${LDSCRIPT} | ${DIR_BUILD}
-	${LD} ${LDFLAGS} -o ${@} ${OBJECTS} ${LDLIBS} ${LDLIBS}
+	${LD} ${LDFLAGS} -o ${@} ${OBJECTS} ${LDLIBS}
 	${OBJDUMP} --source ${KERNEL_IMG} > ${KERNEL_ASM}
 
 ${DIR_BUILD}/%.o: %.cpp Makefile | ${DIR_BUILD}
@@ -111,7 +106,7 @@ clean:
 	rm -fr ${DIR_BUILD}
 	rm -f .gdbinit
 
-# try to generate a unique GDB port
+# GDB i QEMU opcije
 GDBPORT = $(shell expr `id -u` % 5000 + 25000)
 
 QEMUGDB = $(shell if ${QEMU} -help | grep -q '^-gdb'; \
@@ -128,12 +123,8 @@ qemu: ${KERNEL_IMG}
 	sed "s/:1234/:${GDBPORT}/" < ${^} > ${@}
 
 qemu-gdb: ${KERNEL_IMG} .gdbinit
-	@echo "*** Now run 'gdb-multiarch' in another window with target remote args 'localhost:${GDBPORT}'." 1>&2
+	@echo "*** Run 'gdb-multiarch' with target remote localhost:${GDBPORT}" 1>&2
 	${QEMU} ${QEMUOPTS} -S ${QEMUGDB}
 
-# Prevent deletion of intermediate files, e.g. cat.o, after first build, so
-# that disk image changes after first build are persistent until clean.
-# http://www.gnu.org/software/make/manual/html_node/Chained-Rules.html
 .PRECIOUS: %.o
-
 -include $(wildcard ${DIR_BUILD}/*.d)

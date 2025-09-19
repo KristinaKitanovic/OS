@@ -4,12 +4,15 @@
 
 class RiscV {
 public:
+    static uint64 last_sepc;
+    static uint64 last_sstatus;
 
     // Bit maskovi za SIP (interrupt pending)
     enum BitMask : uint64 {
         SIP_SSIP = (1ULL << 1),  // Software interrupt
         SIP_STIP = (1ULL << 5),  // Timer interrupt
         SIP_SEIP = (1ULL << 8)   // External interrupt
+
     };
 
     // Bit maskovi za SSTATUS (status register)
@@ -46,6 +49,11 @@ public:
 
 
     static void switchToUserMode();
+    static uint64 r_scause();
+
+
+    static void w_last_sstatus();
+    static void w_last_sepc();
 };
 
 #endif

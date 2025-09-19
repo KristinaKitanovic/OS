@@ -1,6 +1,7 @@
 
-#include "../h/syscall_c.h"
+#include "../h/syscall_c.hpp"
 #include "../h/syscall_cpp.hpp"
+
 
 #include "buffer.hpp"
 
@@ -78,16 +79,16 @@ static void consumer(void *arg) {
 }
 
 void producerConsumer_C_API() {
-    char input[30];
+    //char input[30];
     int n, threadNum;
 
     printString("Unesite broj proizvodjaca?\n");
-    getString(input, 30);
-    threadNum = stringToInt(input);
+    //getString(input, 30);
+    threadNum = 10;//stringToInt(input);
 
     printString("Unesite velicinu bafera?\n");
-    getString(input, 30);
-    n = stringToInt(input);
+    //getString(input, 30);
+    n = 15;//stringToInt(input);
 
     printString("Broj proizvodjaca "); printInt(threadNum);
     printString(" i velicina bafera "); printInt(n);

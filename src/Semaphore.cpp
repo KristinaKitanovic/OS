@@ -1,5 +1,5 @@
 #include "../h/Semaphore.hpp"
-#include "../h/syscall_cpp.hpp"
+#include "../h/MemoryAllocator.hpp"
 #include "../h/Scheduler.hpp"
 
 int Semaphore::cnt = 1;
@@ -54,20 +54,23 @@ int Semaphore::sem_wait(sem_t id) {
     Thread::running->semWaitStatus = 0;
     semaphore->val--;
     if(semaphore->val < 0){
+        Thread* oldRunning = Thread::running;
         semaphore->waiting.add_end(Thread::running);
 
         Thread::running = scheduler.get();
         if(Thread::running == nullptr) return -1;
+        if(Thread::running->getContext()->isKernelThread){
+            ThreadWrapperArgs* wa = Thread::running->getWrapperArgs();
+            wa->userFunc(wa->userArgs);
+        }
         if(Thread::running->getContext()->wasActive == 1){
+            RiscV::w_last_sstatus();
+            RiscV::w_last_sepc();
             restore_context_kernel_mode(Thread::running->getContext());
         }
         else
         {
-            Thread::running->getContext()->wasActive = 1;
-            ThreadContext* tc = Thread::running->getContext();
-            ThreadWrapperArgs* wa = Thread::running->getWrapperArgs();
-            //start_thread_for_the_first_time_dispatch(&Thread::running->context);
-            thread_wrapper(tc, wa);
+            context_switch(oldRunning->getContext(), Thread::running->getContext());
         }
     }
     return 0;
@@ -77,7 +80,7 @@ int Semaphore::sem_signal(sem_t id) {
     Semaphore* semaphore = MemoryAllocator::Instance()->getSemaphorePool().getSemaphoreById(id);
     if(semaphore == nullptr) return -1;
     semaphore->val++;
-    if(semaphore->val >= 0 && !semaphore->waiting.empty()){
+    if(!semaphore->waiting.empty()){
         //Unblock one thread and put it in Scheduler as ready
         Thread* thread = semaphore->waiting.remove_beginning();
         scheduler.put(thread);

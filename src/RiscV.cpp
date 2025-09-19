@@ -1,5 +1,9 @@
 #include "../h/RiscV.hpp"
 
+
+uint64 RiscV::last_sepc = 0;
+uint64 RiscV::last_sstatus = 0;
+
 // --- Initial SSTATUS za novu nit ---
 uint64 RiscV::initialSstatusForThread() {
     uint64 sstatus = 0;
@@ -43,16 +47,21 @@ void RiscV::w_stvec(uint64 val) {
 }
 
 // --- SEPC manipulacija ---
-uint64 RiscV::r_sepc() {
+
+
+ uint64 RiscV::r_sepc() {
     uint64 val;
-    __asm__ volatile("csrr %[val], sepc" : [val] "=r"(val));
+    __asm__ volatile("csrr %0, sepc" : "=r"(val));
+    last_sepc = val;
     return val;
 }
 
-void RiscV::w_sepc(uint64 val) {
-    __asm__ volatile("csrw sepc, %[val]" :: [val] "r"(val));
+ uint64 RiscV::r_sstatus() {
+    uint64 val;
+    __asm__ volatile("csrr %0, sstatus" : "=r"(val));
+    last_sstatus = val;
+    return val;
 }
-
 // --- SSTATUS manipulacija ---
 void RiscV::ms_sstatus(uint64 mask) {
     __asm__ volatile("csrs sstatus, %[mask]" :: [mask] "r"(mask));
@@ -62,11 +71,7 @@ void RiscV::mc_sstatus(uint64 mask) {
     __asm__ volatile("csrc sstatus, %[mask]" :: [mask] "r"(mask));
 }
 
-uint64 RiscV::r_sstatus() {
-    uint64 val;
-    __asm__ volatile("csrr %[val], sstatus" : [val] "=r"(val));
-    return val;
-}
+
 
 void RiscV::w_sstatus(uint64 val) {
     __asm__ volatile("csrw sstatus, %[val]" :: [val] "r"(val));
@@ -83,13 +88,27 @@ void RiscV::w_ra(uint64 val) {
     __asm__ volatile("mv ra, %[val]" :: [val] "r"(val));
 }
 
+void RiscV::w_sepc(uint64 val) {
+    __asm__ volatile("csrw sepc, %0" :: "r"(val));
+}
 
 
 void RiscV::switchToUserMode(){
-    uint64 sstatus = r_sstatus();
-    sstatus = sstatus & (~SSTATUS_SPP);
-    sstatus = sstatus | SSTATUS_SPIE;
-    w_sstatus(sstatus);
+    __asm__ volatile("csrc sstatus, %0" ::"r"(SSTATUS_SPP)); // prebaci u U-mode
+    __asm__  volatile("csrw sepc, ra");
+    __asm__  volatile("sret");
+}
 
-    return;
+void RiscV::w_last_sepc() {
+    __asm__ volatile("csrw sepc, %0" :: "r"(last_sepc));
+}
+
+void RiscV::w_last_sstatus() {
+    __asm__ volatile("csrw sstatus, %0" :: "r"(last_sstatus));
+}
+uint64 RiscV::r_scause() {
+    uint64 val;
+    __asm__ volatile("csrr %0, scause" : "=r"(val));
+
+    return val;
 }

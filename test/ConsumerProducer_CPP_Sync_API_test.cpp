@@ -1,4 +1,6 @@
+#include "../h/MemoryAllocator.hpp"
 #include "../h/syscall_cpp.hpp"
+#include "../h/syscall_c.hpp"
 
 #include "buffer_CPP_API.hpp"
 
