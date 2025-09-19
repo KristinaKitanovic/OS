@@ -20,7 +20,7 @@ int abi_sem_signal(ThreadContext* t, sem_t id);
 int abi_sem_close(ThreadContext* t, sem_t id);
 char abi_getc(ThreadContext* t);
 void abi_putc(ThreadContext* t, char c);
-
+void abi_time_sleep(ThreadContext* t, time_t slice);
 #ifdef __cplusplus
 }
 #endif

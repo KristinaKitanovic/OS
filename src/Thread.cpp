@@ -9,7 +9,7 @@
 int Thread::cnt = 0;
 extern Scheduler scheduler;
 Thread* Thread::running = nullptr;
-uint64 Thread::timeSliceCounter = 0;
+
 
 
 
@@ -150,13 +150,13 @@ int Thread::create_thread_kernel(thread_t* handle, void(*routine)(void*) , void*
 
 
 void Thread::clearTimeSliceCounter() {
-    Thread::timeSliceCounter = 0;
+    this->timeSliceCounter = 0;
 }
 uint64 Thread::getTimeSliceCounter() {
-    return Thread::timeSliceCounter;
+    return this->timeSliceCounter;
 }
 void Thread::incrementtimeSliceCounter() {
-    Thread::timeSliceCounter++;
+    this->timeSliceCounter++;
 }
 uint64 Thread::getTimeSlice() {
     return this->context.timeSlice;

@@ -38,15 +38,19 @@ public:
     Thread* next;
     static void threadWrapper();
     static void kernelThreadWrapper();
-    static void clearTimeSliceCounter();
-    static uint64 getTimeSliceCounter();
-    static void incrementtimeSliceCounter();
+    void clearTimeSliceCounter();
+    uint64 getTimeSliceCounter();
+    void incrementtimeSliceCounter();
+    bool isSleeping() const { return sleeping; }
+    void setSleeping(bool value) { sleeping = value; }
+
 
     uint64 getTimeSlice();
 private:
     static int cnt;
-    static uint64 timeSliceCounter;
+    uint64 timeSliceCounter;
 
+    bool sleeping;
     thread_t threadId;
 
     ThreadContext context;

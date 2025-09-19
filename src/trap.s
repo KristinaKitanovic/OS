@@ -25,6 +25,7 @@
 .global context_switch
 .global putc_trap
 .global getc_trap
+
 .type context_switch, @function
 
 handle_interrupt:
@@ -80,14 +81,13 @@ handle_interrupt:
 
          call interrupt
          mv t0, a0 # t0 = kod prekida
-
+            csrw sscratch, ra
             # Ubaci running thread context u a1
             call getRunningThreadContext
             mv a1, a0 # a1 = context
-
+            csrr ra, sscratch
             # Vrati a0 nazad
             mv a0, t0
-
 
             ld sp, 24(a1)
             ld ra, 0(sp)

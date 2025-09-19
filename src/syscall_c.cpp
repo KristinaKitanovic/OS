@@ -80,6 +80,11 @@ void putc (char c){
     abi_putc(t, c);
 }
 
+void time_sleep(time_t slice){
+    ThreadContext *t = getRunningThreadContext();
+    abi_time_sleep(t, slice);
+}
+
 
 
 

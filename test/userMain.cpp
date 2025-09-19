@@ -35,7 +35,7 @@ extern "C" void userMain() {
     printString("Unesite broj testa? [1-7]\n");
 //    int test = getc() - '0';
 //    getc(); // Enter posle broja
-int test = 3;
+int test = 1;
 
     if ((test >= 1 && test <= 2) || test == 7) {
         if (LEVEL_2_IMPLEMENTED == 0) {

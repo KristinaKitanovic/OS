@@ -31,6 +31,7 @@ void userMainWrapper(void* args){
 
     //RiscV::switchToUserMode();
     userMain();
+    thread_exit();
 }
 void idleBody(void*) {
     while (true){

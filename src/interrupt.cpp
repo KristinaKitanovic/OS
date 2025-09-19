@@ -5,6 +5,7 @@
 #include "../h/RiscV.hpp"
 #include "../h/codes.h"
 #include "../h/Console.hpp"
+#include "../h/SleepingThreadsList.hpp"
 
 
 
@@ -83,14 +84,32 @@ extern "C" uint64 interrupt(uint64 a0, uint64 a1, uint64 a2, uint64 a3, uint64 a
 
 
     else if(cause == TIMER_INTERRUPT){
+//        time_t temp = SleepingThreadList::Instance()->peekFirstSlice();
+//        time_t t1 = -1;
+//
+//        if (temp != t1){
+//            SleepingThreadList::Instance()->decFirst();
+//            if (SleepingThreadList::Instance()->peekFirstSlice() == 0) {
+//                SleepingThreadList::Instance()->removeFinishedThreads();
+//            }
+//        }
         RiscV::mc_sip(RiscV::SIP_SSIP);
-        Thread::incrementtimeSliceCounter();
-        if(Thread::running && Thread::getTimeSliceCounter() >= Thread::running->getTimeSlice()){
-            Thread::clearTimeSliceCounter();
+        Thread::running->incrementtimeSliceCounter();
+        if(Thread::running && Thread::running->getTimeSliceCounter() >= Thread::running->getTimeSlice()){
+            Thread::running->clearTimeSliceCounter();
             Thread::thread_dispatch_kernel();
 
         }
 
+    }
+    else if(cause == TIME_SLEEP){
+        time_t slice = (time_t)a2;
+        if(slice != 0) {
+            Thread::running->setSleeping(true);
+            SleepingThreadList::Instance()->put(Thread::running, slice);
+        }
+
+        Thread::thread_dispatch_kernel();
     }
     else
     {

@@ -14,6 +14,7 @@ int sem_signal_trap(ThreadContext* t, sem_t id);
 int sem_close_trap(ThreadContext* t, sem_t id);
 char getc_trap(ThreadContext* t);
 void putc_trap(ThreadContext* t, char c);
+void time_sleep_trap(ThreadContext* t, time_t slice);
 
 
 void* abi_mem_alloc(ThreadContext* c, size_t blocks) {
@@ -63,4 +64,7 @@ char abi_getc(ThreadContext* t){
 }
 void abi_putc(ThreadContext* t, char c){
      putc_trap(t, c);
+}
+void abi_time_sleep(ThreadContext* t, time_t slice){
+    //return time_sleep_trap(t, slice);
 }

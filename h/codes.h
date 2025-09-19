@@ -19,3 +19,5 @@
 
 #define GET_C 0x41
 #define PUT_C 0x42
+
+#define TIME_SLEEP 0x31

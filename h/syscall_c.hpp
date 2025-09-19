@@ -22,6 +22,7 @@ int sem_signal(sem_t id);
 int sem_close(sem_t id);
 void putc(char x);
 char getc();
+void time_sleep(time_t slice);
 
 #ifdef __cplusplus
 } // kraj extern "C"
